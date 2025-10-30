@@ -1,0 +1,58 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Allow read access to devices, playlists, shops, units for player
+    match /devices/{deviceId} {
+      allow read: if true;
+      allow write: if request.auth != null || 
+        (resource != null && request.writeFields.hasOnly(['heartbeat_ts']) && 
+         request.resource.data.heartbeat_ts is number);
+    }
+    
+    match /playlists/{playlistId} {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+    
+    match /shops/{shopId} {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+    
+    match /units/{unitId} {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+    
+    // Allow write access for orders and leads from player
+    match /orders/{orderId} {
+      allow read: if request.auth != null;
+      allow create: if true;
+      allow update: if request.auth != null || 
+        (resource != null && request.writeFields.hasOnly(['payment', 'status']) && 
+         request.resource.data.payment.status in ['pending', 'paid']);
+    }
+    
+    match /leads/{leadId} {
+      allow read: if request.auth != null;
+      allow create: if true;
+      allow update: if request.auth != null;
+    }
+    
+    // Analytics events
+    match /analytics/{eventId} {
+      allow create: if true;
+      allow read: if request.auth != null;
+    }
+    
+    // Logs for functions
+    match /logs/{logId} {
+      allow read, write: if request.auth != null;
+    }
+    
+    // Default: deny all other access
+    match /{document=**} {
+      allow read, write: if request.auth != null;
+    }
+  }
+}

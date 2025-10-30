@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Restaurant Details - Signage</title>
+
+  <style>
+    /* ================== Reset & Base ================== */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html, body {
+      width: 100vw;
+      height: 100vh;
+      background: black;
+      overflow: hidden;
+      font-family: 'Nunito', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* ================== Signage Container (9:16) ================== */
+    .signage-wrapper {
+      aspect-ratio: 9 / 16;
+      width: 100%;
+      height: 100vh;
+      max-width: 56.25vh;
+      display: flex;
+      flex-direction: column;
+      background: white;
+      position: relative;
+    }
+
+    /* ================== Header Section ================== */
+    .rest-header {
+      background: linear-gradient(135deg, #FF6900 0%, #e05d00 100%);
+      color: white;
+      padding: 20px;
+      text-align: center;
+      position: relative;
+    }
+
+    .rest-title {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 5px;
+      line-height: 1.2;
+    }
+
+    .rest-subtitle {
+      font-size: 1.2rem;
+      font-weight: 400;
+      opacity: 0.9;
+      line-height: 1.3;
+    }
+
+    /* ================== Back Button ================== */
+    .back-button {
+      position: absolute;
+      top: 15px;
+      left: 15px;
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-radius: 12px;
+      padding: 8px 12px;
+      font-size: 14px;
+      cursor: pointer;
+      backdrop-filter: blur(10px);
+      transition: all 0.3s ease;
+    }
+
+    .back-button:hover {
+      background: rgba(255, 255, 255, 0.3);
+      border-color: rgba(255, 255, 255, 0.5);
+    }
+
+    /* ================== Content Section ================== */
+    .content-container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      padding: 15px;
+      overflow-y: auto;
+    }
+
+    /* ================== Image Gallery ================== */
+    .image-section {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      background: #f5f7fa;
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .main-media {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .media-nav {
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      display: flex;
+      gap: 6px;
+      background: rgba(0, 0, 0, 0.5);
+      padding: 8px 12px;
+      border-radius: 20px;
+    }
+
+    .nav-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.6);
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .nav-dot.active {
+      background: white;
+      transform: scale(1.2);
+    }
+
+    /* ================== Service Badges ================== */
+    .service-section {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 20px;
+      justify-content: center;
+    }
+
+    .service-badge {
+      background: #0033cc;
+      color: white;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      text-align: center;
+    }
+
+    .service-badge.delivery { background: #28a745; }
+    .service-badge.walkin { background: #17a2b8; }
+    .service-badge.mobile { background: #6f42c1; }
+    .service-badge.reservation { background: #fd7e14; }
+
+    /* ================== Details Grid ================== */
+    .details-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    .detail-card {
+      background: #f8f9ff;
+      border: 1px solid #e4e8ff;
+      border-radius: 12px;
+      padding: 15px;
+    }
+
+    .detail-label {
+      font-size: 0.9rem;
+      color: #666;
+      font-weight: 600;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .detail-value {
+      font-size: 1.1rem;
+      color: #001D56;
+      font-weight: 500;
+      line-height: 1.4;
+    }
+
+    /* ================== Contact Section ================== */
+    .contact-section {
+      background: linear-gradient(135deg, #001D56 0%, #0033cc 100%);
+      color: white;
+      padding: 20px;
+      border-radius: 12px;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .contact-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .contact-info {
+      font-size: 1.1rem;
+      font-weight: 500;
+      opacity: 0.9;
+    }
+
+    /* ================== Promotion Section ================== */
+    .promo-section {
+      background: linear-gradient(135deg, #f8f9ff 0%, #e4e8ff 100%);
+      border: 2px solid #d6e8ff;
+      border-radius: 12px;
+      padding: 15px;
+      margin-bottom: 15px;
+    }
+
+    .promo-title {
+      font-size: 1.1rem;
+      color: #001D56;
+      font-weight: 700;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+
+    .promo-item {
+      background: white;
+      border-radius: 8px;
+      padding: 10px;
+      margin-bottom: 10px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    }
+
+    .promo-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .promo-name {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #001D56;
+      margin-bottom: 4px;
+    }
+
+    .promo-desc {
+      font-size: 0.9rem;
+      color: #666;
+      line-height: 1.3;
+    }
+
+    /* ================== Auto-return Message ================== */
+    .auto-return {
+      position: absolute;
+      bottom: 10px;
+      right: 15px;
+      background: rgba(0, 0, 0, 0.7);
+      color: white;
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      backdrop-filter: blur(10px);
+    }
+
+    /* ================== Loading State ================== */
+    .loading {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      font-size: 1.2rem;
+      color: #666;
+    }
+  </style>
+</head>
+<body>
+  <div class="signage-wrapper">
+    <!-- Header -->
+    <div class="rest-header">
+      <button class="back-button" id="backBtn">← Back</button>
+      <div class="rest-title" id="restTitle">Loading...</div>
+      <div class="rest-subtitle" id="restSubtitle"></div>
+    </div>
+
+    <!-- Content -->
+    <div class="content-container" id="contentContainer">
+      <div class="loading">Loading restaurant details...</div>
+    </div>
+
+    <!-- Auto-return notice -->
+    <div class="auto-return">Returns to menu in 60s</div>
+  </div>
+
+  <script>
+    // ===== PARAMETERS =====
+    const qs = new URLSearchParams(location.search);
+    const restId = qs.get('rest') || 'rest001';
+    const projectId = qs.get('project_id') || '';
+
+    // ===== UTILITY FUNCTIONS =====
+    const withBase = (p) => './' + p.replace(/^\.?\//, '');
+
+    function escapeHtml(s) {
+      return String(s || '').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+    }
+
+    function serviceBadges(arr) {
+      if (!Array.isArray(arr)) return [];
+      const map = {
+        walk_in: { text: 'Walk-in', class: 'walkin' },
+        delivery: { text: 'Delivery', class: 'delivery' },
+        mobile_order: { text: 'Mobile Order', class: 'mobile' },
+        reservation: { text: 'Reservation', class: 'reservation' },
+        ads_only: { text: 'Ads Only', class: 'ads' }
+      };
+      return arr.map(k => map[k] || { text: k, class: 'default' });
+    }
+
+    // ===== MEDIA GALLERY =====
+    function createMediaGallery(images, videos) {
+      let currentIndex = 0;
+      const media = [];
+
+      // Combine images and videos
+      if (Array.isArray(images)) {
+        images.forEach(src => media.push({ type: 'image', src }));
+      }
+      if (Array.isArray(videos)) {
+        videos.forEach(src => media.push({ type: 'video', src }));
+      }
+
+      if (media.length === 0) {
+        media.push({ type: 'image', src: 'medias/placeholder.jpg' });
+      }
+
+      const imageSection = document.createElement('div');
+      imageSection.className = 'image-section';
+
+      const mainMedia = document.createElement('img');
+      mainMedia.className = 'main-media';
+      mainMedia.src = withBase(media[0].src);
+      mainMedia.alt = 'Restaurant Media';
+
+      const mediaNav = document.createElement('div');
+      mediaNav.className = 'media-nav';
+
+      // Create navigation dots
+      media.forEach((_, index) => {
+        const dot = document.createElement('div');
+        dot.className = 'nav-dot' + (index === 0 ? ' active' : '');
+        dot.addEventListener('click', () => {
+          currentIndex = index;
+          showMedia(currentIndex);
+          updateDots();
+        });
+        mediaNav.appendChild(dot);
+      });
+
+      function showMedia(index) {
+        const item = media[index];
+        if (item.type === 'video') {
+          const video = document.createElement('video');
+          video.className = 'main-media';
+          video.src = withBase(item.src);
+          video.controls = true;
+          video.autoplay = true;
+          video.muted = true;
+          mainMedia.parentNode.replaceChild(video, mainMedia);
+        } else {
+          if (mainMedia.tagName === 'VIDEO') {
+            const img = document.createElement('img');
+            img.className = 'main-media';
+            img.alt = 'Restaurant Media';
+            mainMedia.parentNode.replaceChild(img, mainMedia);
+          }
+          document.querySelector('.main-media').src = withBase(item.src);
+        }
+      }
+
+      function updateDots() {
+        mediaNav.querySelectorAll('.nav-dot').forEach((dot, index) => {
+          dot.classList.toggle('active', index === currentIndex);
+        });
+      }
+
+      // Auto-advance media every 8 seconds
+      setInterval(() => {
+        currentIndex = (currentIndex + 1) % media.length;
+        showMedia(currentIndex);
+        updateDots();
+      }, 8000);
+
+      imageSection.appendChild(mainMedia);
+      if (media.length > 1) {
+        imageSection.appendChild(mediaNav);
+      }
+
+      return imageSection;
+    }
+
+    // ===== RENDER RESTAURANT DETAILS =====
+    function renderRestDetails(restaurant) {
+      const container = document.getElementById('contentContainer');
+      container.innerHTML = '';
+
+      // Update header
+      const name = restaurant.name_en || restaurant.name_th || 'Restaurant';
+      document.getElementById('restTitle').textContent = name;
+
+      const category = restaurant.category_en || restaurant.category_th || '';
+      const location = restaurant.location_en || restaurant.location_th || '';
+      document.getElementById('restSubtitle').textContent = [category, location].filter(Boolean).join(' • ');
+
+      // Media gallery
+      const mediaGallery = createMediaGallery(restaurant.images, restaurant.videos);
+      container.appendChild(mediaGallery);
+
+      // Service badges
+      const serviceSection = document.createElement('div');
+      serviceSection.className = 'service-section';
+      const services = serviceBadges(restaurant.service_type);
+      services.forEach(service => {
+        const badge = document.createElement('div');
+        badge.className = `service-badge ${service.class}`;
+        badge.textContent = service.text;
+        serviceSection.appendChild(badge);
+      });
+      container.appendChild(serviceSection);
+
+      // Details grid
+      const detailsGrid = document.createElement('div');
+      detailsGrid.className = 'details-grid';
+
+      // Restaurant info
+      const infoCard = document.createElement('div');
+      infoCard.className = 'detail-card';
+      infoCard.innerHTML = `
+        <div class="detail-label">Restaurant Information</div>
+        <div class="detail-value">
+          <strong>Category:</strong> ${escapeHtml(category)}<br/>
+          <strong>Location:</strong> ${escapeHtml(location)}<br/>
+          <strong>Address:</strong> ${escapeHtml(restaurant.address_en || restaurant.address_th || 'N/A')}
+        </div>
+      `;
+      detailsGrid.appendChild(infoCard);
+
+      // Description
+      if (restaurant.description_en || restaurant.description_th) {
+        const descCard = document.createElement('div');
+        descCard.className = 'detail-card';
+        descCard.innerHTML = `
+          <div class="detail-label">About</div>
+          <div class="detail-value">${escapeHtml(restaurant.description_en || restaurant.description_th)}</div>
+        `;
+        detailsGrid.appendChild(descCard);
+      }
+
+      container.appendChild(detailsGrid);
+
+      // Contact section
+      if (restaurant.contact) {
+        const contactSection = document.createElement('div');
+        contactSection.className = 'contact-section';
+
+        const contactInfo = [];
+        if (restaurant.contact.phone) contactInfo.push(`📞 ${restaurant.contact.phone}`);
+        if (restaurant.contact.line) contactInfo.push(`💬 Line: ${restaurant.contact.line}`);
+
+        contactSection.innerHTML = `
+          <div class="contact-title">Contact Information</div>
+          <div class="contact-info">${contactInfo.join('<br/>')}</div>
+        `;
+        container.appendChild(contactSection);
+      }
+
+      // Promotions
+      if (restaurant.promotions && Array.isArray(restaurant.promotions) && restaurant.promotions.length > 0) {
+        const promoSection = document.createElement('div');
+        promoSection.className = 'promo-section';
+        promoSection.innerHTML = '<div class="promo-title">🎉 Current Promotions</div>';
+
+        restaurant.promotions.forEach(promo => {
+          const promoItem = document.createElement('div');
+          promoItem.className = 'promo-item';
+          const title = promo.title_en || promo.title_th || 'Special Offer';
+          const desc = promo.description_en || promo.description_th || '';
+          const period = [promo.start_date, promo.end_date].filter(Boolean).join(' - ');
+
+          promoItem.innerHTML = `
+            <div class="promo-name">${escapeHtml(title)}</div>
+            <div class="promo-desc">${escapeHtml(desc)}${period ? `<br/><small>📅 ${period}</small>` : ''}</div>
+          `;
+          promoSection.appendChild(promoItem);
+        });
+
+        container.appendChild(promoSection);
+      }
+    }
+
+    // ===== LOAD RESTAURANT DATA =====
+    async function loadRestaurantData() {
+      try {
+        const response = await fetch(withBase('project/ann/data/rest.json'));
+        const data = await response.json();
+        const restaurants = Array.isArray(data) ? data : (data.restaurants || []);
+        const restaurant = restaurants.find(r => r.id === restId);
+
+        if (!restaurant) {
+          document.getElementById('contentContainer').innerHTML = '<div class="loading">Restaurant not found</div>';
+          return;
+        }
+
+        renderRestDetails(restaurant);
+
+      } catch (error) {
+        console.error('Error loading restaurant data:', error);
+        document.getElementById('contentContainer').innerHTML = '<div class="loading">Error loading restaurant details</div>';
+      }
+    }
+
+    // ===== BACK BUTTON =====
+    document.getElementById('backBtn').addEventListener('click', () => {
+      const url = new URL('/category.html', location.origin);
+      url.searchParams.set('type', 'dining');
+      if (projectId) url.searchParams.set('project_id', projectId);
+      location.href = url.toString();
+    });
+
+    // ===== AUTO RETURN =====
+    let timeout = setTimeout(() => {
+      const url = new URL('./menu.html', location.origin);
+      if (projectId) url.searchParams.set('project_id', projectId);
+      location.href = url.toString();
+    }, 60000);
+
+    // Reset timer on user interaction
+    ['click', 'touchstart', 'mousemove'].forEach(event => {
+      document.addEventListener(event, () => {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => {
+          const url = new URL('./menu.html', location.origin);
+          if (projectId) url.searchParams.set('project_id', projectId);
+          location.href = url.toString();
+        }, 60000);
+      });
+    });
+
+    // ===== INITIALIZE =====
+    loadRestaurantData();
+  </script>
+</body>
+</html>

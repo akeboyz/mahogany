@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Project Detail v2.0 - Improved Asset Handling</title>
+  <script src="assets.js"></script>
+  <style>
+    /* ===== Admin Theme - Modern Dark Gradient ===== */
+    :root {
+      --maxw: 1200px;
+      --ui-font: system-ui, -apple-system, "Segoe UI", Tahoma, Arial, sans-serif;
+    }
+
+    *{box-sizing:border-box}
+
+    body {
+      font-family: var(--ui-font);
+      margin: 0;
+      background: linear-gradient(135deg, rgb(15 23 42) 0%, rgb(88 28 135) 50%, rgb(15 23 42) 100%);
+      color: white;
+      min-height: 100vh;
+    }
+
+    /* Background Effects */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(ellipse at top right, rgba(147, 51, 234, 0.2) 0%, transparent 50%);
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    a{color: rgb(96 165 250); text-decoration:none; transition: color 0.2s}
+    a:hover{color: rgb(147 51 234); text-decoration:underline}
+
+    header{
+      max-width: var(--maxw);
+      margin: 24px auto 0;
+      padding: 0 24px;
+      position: relative;
+      z-index: 10;
+    }
+    header .crumbs{font-size:14px; color:rgba(255, 255, 255, 0.8); margin-bottom: 16px}
+
+    main{padding:0 24px 40px; max-width:var(--maxw); margin:0 auto}
+
+    /* Glass Card Effect */
+    .glass-card {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 16px;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    }
+
+    .hero{
+      display:grid;
+      grid-template-columns: 72px 1fr;
+      gap:20px;
+      align-items:center;
+      margin-bottom:32px;
+      padding: 20px;
+    }
+    .hero.glass-card {
+      margin-top: 16px;
+    }
+
+    .logo{
+      width:64px;
+      height:64px;
+      border-radius:12px;
+      object-fit:cover;
+      border:2px solid rgba(147, 51, 234, 0.3);
+      background: linear-gradient(135deg, rgb(147 51 234), rgb(96 165 250));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+    }
+
+    .title{
+      margin:0;
+      font-size:2.5rem;
+      font-weight:900;
+      background: linear-gradient(to right, rgb(96 165 250), rgb(147 51 234));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .sub{
+      margin:8px 0 0;
+      color:rgba(255, 255, 255, 0.8);
+      font-size:1.1rem;
+      font-weight: 300;
+    }
+
+    .tags{display:flex; gap:8px; flex-wrap:wrap; margin-top:12px}
+    .tag{
+      background: rgba(147, 51, 234, 0.2);
+      border:1px solid rgba(147, 51, 234, 0.4);
+      border-radius:999px;
+      padding:6px 12px;
+      font-size:12px;
+      color: rgb(196 181 253);
+      font-weight: 500;
+    }
+
+    .section{margin-top:24px}
+    .card{
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 16px;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      padding: 20px;
+    }
+
+    .section h2{
+      margin:0 0 16px;
+      font-size:1.5rem;
+      font-weight: 700;
+      color: white;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .grid-4{display:grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap:16px}
+
+    .stat{
+      background: rgba(255, 255, 255, 0.05);
+      border:1px solid rgba(255, 255, 255, 0.1);
+      border-radius:12px;
+      padding:16px;
+      text-align:center;
+      transition: transform 0.3s ease;
+    }
+    .stat:hover {
+      transform: scale(1.05);
+    }
+
+    .stat .num{
+      font-size:2rem;
+      font-weight:900;
+      color: white;
+      margin-bottom: 4px;
+    }
+    .stat .lbl{
+      font-size:0.9rem;
+      color:rgba(255, 255, 255, 0.6);
+    }
+
+    .list{display:grid; gap:12px}
+    .row{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      padding:12px 16px;
+      background: rgba(255, 255, 255, 0.05);
+      border:1px solid rgba(255, 255, 255, 0.1);
+      border-radius:12px;
+      transition: background 0.2s ease;
+    }
+    .row:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .row .left{display:flex; gap:12px; align-items:center; min-width:0}
+    .row .name{font-weight:600; color:white; font-size: 1rem}
+    .row .meta{color:rgba(255, 255, 255, 0.6); font-size:0.9rem}
+
+    .actions{display:flex; gap:12px; margin-top:16px; flex-wrap:wrap}
+    .btn{
+      appearance:none;
+      border:1px solid rgba(147, 51, 234, 0.4);
+      background: rgba(147, 51, 234, 0.1);
+      color: rgb(196 181 253);
+      padding:10px 16px;
+      border-radius:12px;
+      text-decoration:none;
+      font-size:0.9rem;
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+    .btn:hover {
+      background: rgba(147, 51, 234, 0.2);
+      border-color: rgba(147, 51, 234, 0.6);
+      transform: translateY(-1px);
+    }
+
+    .btn.primary{
+      border-color: rgb(147 51 234);
+      background: rgb(147 51 234);
+      color: white;
+      font-weight: 700;
+    }
+    .btn.primary:hover {
+      background: rgb(126 34 206);
+      border-color: rgb(126 34 206);
+    }
+
+    .kvs{display:grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap:12px; margin-top:12px}
+    .kv{
+      background: rgba(255, 255, 255, 0.05);
+      border:1px solid rgba(255, 255, 255, 0.1);
+      border-radius:12px;
+      padding:12px;
+      font-size:0.9rem;
+    }
+    .kv .k{
+      color:rgba(255, 255, 255, 0.6);
+      font-size:0.8rem;
+      display:block;
+      margin-bottom:6px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-weight: 600;
+    }
+    .kv span:not(.k) {
+      color: white;
+      font-weight: 500;
+    }
+
+    .empty, .error{
+      color:rgba(255, 255, 255, 0.6);
+      padding:24px;
+      text-align:center;
+      border:1px dashed rgba(255, 255, 255, 0.2);
+      border-radius:12px;
+      margin-top:16px;
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    @media (max-width: 900px){
+      .grid-4{grid-template-columns: repeat(2, minmax(0,1fr))}
+      .kvs{grid-template-columns: 1fr}
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="crumbs"><a href="index.html">← กลับหน้า Overview</a></div>
+    <div></div>
+  </header>
+
+  <main>
+    <!-- HERO -->
+    <section class="hero" id="hero">
+      <img id="logo" class="logo" alt="" />
+      <div>
+        <h1 id="title" class="title"></h1>
+        <p id="sub" class="sub"></p>
+        <div id="tags" class="tags"></div>
+      </div>
+    </section>
+
+    <!-- STATS -->
+    <section class="section">
+      <h2>สรุปภาพรวม</h2>
+      <div class="grid-4">
+        <div class="stat"><div class="num" id="c_units">0</div><div class="lbl">Units</div></div>
+        <div class="stat"><div class="num" id="c_foodies">0</div><div class="lbl">Foodies</div></div>
+        <div class="stat"><div class="num" id="c_markets">0</div><div class="lbl">Marketplace</div></div>
+        <div class="stat"><div class="num" id="c_ann">0</div><div class="lbl">Announcements</div></div>
+      </div>
+      <div class="actions">
+        <a id="btn_units" class="btn" href="#">ดู Units ทั้งหมด</a>
+        <a id="btn_foodies" class="btn" href="#">ดู Foodies ทั้งหมด</a>
+        <a id="btn_markets" class="btn" href="#">ดู Marketplace ทั้งหมด</a>
+        <a id="btn_ann" class="btn" href="#">ดูประกาศทั้งหมด</a>
+        <a id="btn_signage" class="btn" href="#">เปิด Signage</a>
+        <!-- ปุ่มใหม่: ไป ann/display.html -->
+        <a id="btn_display" class="btn primary" href="#">เปิด Display</a>
+      </div>
+    </section>
+
+    <!-- DETAILS -->
+    <section class="section">
+      <h2>รายละเอียดโครงการ</h2>
+      <div class="card">
+        <div class="kvs">
+          <div class="kv"><span class="k">Project ID</span><span id="kv_pid">-</span></div>
+          <div class="kv"><span class="k">Developer</span><span id="kv_dev">-</span></div>
+          <div class="kv"><span class="k">ที่อยู่</span><span id="kv_addr">-</span></div>
+          <div class="kv"><span class="k">แล้วเสร็จ</span><span id="kv_done">-</span></div>
+          <div class="kv"><span class="k">ประเภท</span><span id="kv_type">-</span></div>
+          <div class="kv"><span class="k">แผนที่</span><span id="kv_map">-</span></div>
+        </div>
+        <div class="tags" id="facilities" style="margin-top:12px"></div>
+      </div>
+    </section>
+
+    <!-- PM -->
+    <section class="section">
+      <h2>ผู้ดูแลโครงการ (PM)</h2>
+      <div class="card" id="pm_card">
+        <div class="list" id="pm_list"></div>
+      </div>
+    </section>
+
+    <!-- UNITS -->
+    <section class="section">
+      <h2>Units</h2>
+      <div class="card">
+        <div class="list" id="unit_list"></div>
+        <div class="actions"><a id="more_units" class="btn" href="#">ดูทั้งหมด</a></div>
+      </div>
+    </section>
+
+    <!-- FOODIES -->
+    <section class="section">
+      <h2>Foodies</h2>
+      <div class="card">
+        <div class="list" id="food_list"></div>
+        <div class="actions"><a id="more_food" class="btn" href="#">ดูทั้งหมด</a></div>
+      </div>
+    </section>
+
+    <!-- MARKETPLACE -->
+    <section class="section">
+      <h2>Marketplace</h2>
+      <div class="card">
+        <div class="list" id="market_list"></div>
+        <div class="actions"><a id="more_market" class="btn" href="#">ดูทั้งหมด</a></div>
+      </div>
+    </section>
+
+    <!-- ANNOUNCEMENTS -->
+    <section class="section">
+      <h2>ประกาศ (Announcements)</h2>
+      <div class="card">
+        <div class="list" id="ann_list"></div>
+        <div class="actions"><a id="more_ann" class="btn" href="#">ดูทั้งหมด</a></div>
+      </div>
+    </section>
+
+    <!-- CONTRACT & COMMERCIAL -->
+    <section class="section">
+      <h2>💰 สัญญาและการเงิน</h2>
+      <div class="card">
+        <div class="kvs">
+          <div class="kv"><span class="k">สถานะสัญญา</span><span id="contract_status">Active</span></div>
+          <div class="kv"><span class="k">ระยะเวลา</span><span id="contract_duration">12 months</span></div>
+          <div class="kv"><span class="k">มูลค่าสัญญา</span><span id="contract_value">$125,000 USD</span></div>
+          <div class="kv"><span class="k">สถานะ Invoice</span><span id="invoice_status">Pending Q4</span></div>
+          <div class="kv" style="grid-column: 1/-1">
+            <span class="k">เวลาคงเหลือในสัญญา</span>
+            <div style="margin-top:8px; width:100%; height:8px; background:rgba(255, 255, 255, 0.2); border-radius:4px; overflow:hidden">
+              <div style="width:67%; height:100%; background:rgba(147, 51, 234, 0.8); transition:width 0.3s"></div>
+            </div>
+            <span style="font-size:11px; color:rgba(255, 255, 255, 0.6)">8 เดือน 7 วัน</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- DEVICES & HARDWARE -->
+    <section class="section">
+      <h2>🖥️ อุปกรณ์และ Hardware</h2>
+      <div class="card">
+        <div class="kvs">
+          <div class="kv"><span class="k">Device Status</span><span id="device_status">3 Online</span></div>
+          <div class="kv"><span class="k">Device Types</span><span id="device_types">Samsung Display (2), LG Display (1)</span></div>
+          <div class="kv"><span class="k">Installation Date</span><span id="install_date">August 15, 2024</span></div>
+          <div class="kv"><span class="k">Warranty Status</span><span id="warranty_status">Valid until Aug 2025</span></div>
+          <div class="kv"><span class="k">Current State</span><span id="device_state">All devices operational</span></div>
+          <div class="kv"><span class="k">Last Heartbeat</span><span id="last_heartbeat">2 minutes ago</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- APP & SOFTWARE -->
+    <section class="section">
+      <h2>📱 App และ Software</h2>
+      <div class="card">
+        <div class="kvs">
+          <div class="kv"><span class="k">App Status</span><span id="app_status">Running</span></div>
+          <div class="kv"><span class="k">Version</span><span id="app_version">v2.1.3</span></div>
+          <div class="kv"><span class="k">Last Updated</span><span id="app_updated">September 15, 2024</span></div>
+          <div class="kv"><span class="k">Platform</span><span id="app_platform">HTML5/JavaScript PWA</span></div>
+          <div class="kv"><span class="k">Auto-Update</span><span id="auto_update">Enabled</span></div>
+          <div class="kv"><span class="k">Enabled Features</span><span id="app_features">Menu Display, Touch Navigation, Analytics</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTENT & MEDIA -->
+    <section class="section">
+      <h2>🎬 เนื้อหาและ Media</h2>
+      <div class="card">
+        <div class="grid-4">
+          <div class="stat"><div class="num" id="total_assets">147</div><div class="lbl">Total Assets</div></div>
+          <div class="stat"><div class="num" id="video_count">12</div><div class="lbl">Videos</div></div>
+          <div class="stat"><div class="num" id="image_count">89</div><div class="lbl">Images</div></div>
+          <div class="stat"><div class="num" id="restaurant_count">25</div><div class="lbl">Restaurants</div></div>
+        </div>
+        <div class="kvs" style="margin-top:12px">
+          <div class="kv"><span class="k">Last Update</span><span id="content_updated">September 22, 2024 14:30</span></div>
+          <div class="kv"><span class="k">Upcoming Campaigns</span><span id="upcoming_campaigns">Holiday Special (Dec 1)</span></div>
+          <div class="kv" style="grid-column: 1/-1">
+            <span class="k">Storage Used</span>
+            <div style="margin-top:8px">2.3 GB / 5.0 GB</div>
+            <div style="margin-top:4px; width:100%; height:6px; background:rgba(255, 255, 255, 0.2); border-radius:3px; overflow:hidden">
+              <div style="width:46%; height:100%; background:rgba(147, 51, 234, 0.8); transition:width 0.3s"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- MONITORING & ANALYTICS -->
+    <section class="section">
+      <h2>📊 การติดตามและ Analytics</h2>
+      <div class="card">
+        <div class="grid-4">
+          <div class="stat"><div class="num" id="screen_uptime">98.7%</div><div class="lbl">Screen Uptime</div></div>
+          <div class="stat"><div class="num" id="daily_interactions">342</div><div class="lbl">Daily Interactions</div></div>
+          <div class="stat"><div class="num" id="error_rate">0.3%</div><div class="lbl">Error Rate</div></div>
+          <div class="stat"><div class="num" id="peak_hours">12-14</div><div class="lbl">Peak Hours</div></div>
+        </div>
+        <div class="kvs" style="margin-top:12px">
+          <div class="kv"><span class="k">Popular Content</span><span id="popular_content">Restaurant Menu (45%), Property Deals (28%)</span></div>
+          <div class="kv"><span class="k">User Engagement</span><span id="user_engagement">High during lunch & dinner</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SIGNAGE -->
+    <section class="section">
+      <h2>🖥️ Signage</h2>
+      <div class="card">
+        <div class="list">
+          <div class="row">
+            <div class="left">
+              <div class="name">Signage Link</div>
+              <div class="meta">ลิงก์สำหรับเปิด signage ของโครงการนี้</div>
+            </div>
+            <div class="right">
+              <a id="signage_link" href="#" target="_blank" rel="noopener">เปิด Signage →</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- INTERNAL NOTES -->
+    <section class="section">
+      <h2>📝 หมายเหตุภายใน</h2>
+      <div class="card">
+        <div class="kvs">
+          <div class="kv"><span class="k">Project Manager</span><span id="pm_name">Sarah Wilson (sarah@company.com)</span></div>
+          <div class="kv"><span class="k">Priority</span><span id="project_priority">High</span></div>
+          <div class="kv"><span class="k">Next Action</span><span id="next_action">Q4 Contract Renewal</span></div>
+        </div>
+        <div style="margin-top:12px">
+          <div style="background: rgba(255, 255, 255, 0.1); border-left:3px solid rgba(147, 51, 234, 0.8); padding:10px 12px; margin-bottom:8px; border-radius:0 6px 6px 0">
+            <div style="font-size:11px; color:rgba(255, 255, 255, 0.6); margin-bottom:4px">September 22, 2024</div>
+            <div style="font-size:13px; line-height:1.4; color: white;">Client requested additional restaurant category filters. Feature deployed successfully.</div>
+          </div>
+          <div style="background: rgba(255, 255, 255, 0.1); border-left:3px solid rgba(147, 51, 234, 0.8); padding:10px 12px; margin-bottom:8px; border-radius:0 6px 6px 0">
+            <div style="font-size:11px; color:rgba(255, 255, 255, 0.6); margin-bottom:4px">September 15, 2024</div>
+            <div style="font-size:13px; line-height:1.4; color: white;">Updated app to v2.1.3 with improved touch responsiveness and bug fixes.</div>
+          </div>
+          <div style="background: rgba(255, 255, 255, 0.1); border-left:3px solid rgba(147, 51, 234, 0.8); padding:10px 12px; border-radius:0 6px 6px 0">
+            <div style="font-size:11px; color:rgba(255, 255, 255, 0.6); margin-bottom:4px">September 1, 2024</div>
+            <div style="font-size:13px; line-height:1.4; color: white;">Monthly performance review completed. All KPIs exceeded expectations.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div id="error" class="error" style="display:none">โหลดข้อมูลไม่สำเร็จ</div>
+  </main>
+
+  <script>
+    /* ---------- CONFIG ---------- */
+    const DATA_PATHS = {
+      projects: 'ann/data/project.json',
+      pms:      'ann/data/pm.json',
+      units:    'ann/data/unit.json',
+      foodies:  'ann/data/foodie.json',
+      markets:  'ann/data/market.json',
+      announces:'ann/data/announce.json'
+    };
+
+    // ใช้ local signage paths
+
+    /* ---------- HELPERS ---------- */
+    const $ = sel => document.querySelector(sel);
+    const el = (tag, props={}) => Object.assign(document.createElement(tag), props);
+    async function loadJSON(path){
+      const res = await fetch(path,{cache:'no-store'});
+      if(!res.ok) throw new Error(`HTTP ${res.status} @ ${path}`);
+      return res.json();
+    }
+    function getParam(key){ return new URLSearchParams(location.search).get(key); }
+    function groupBy(arr, key){
+      const m=new Map(); (arr||[]).forEach(i=>{
+        const k=i?.[key]; if(!k) return;
+        if(!m.has(k)) m.set(k,[]);
+        m.get(k).push(i);
+      });
+      return m;
+    }
+    const pickText = (o, ...keys) =>
+      keys.map(k=>o?.[k]).find(v=>typeof v==='string' && v.trim().length) || '';
+
+    // Using new unified asset resolver from assets.js
+    // No need for custom path resolution anymore!
+
+    /* ---------- NORMALIZE ---------- */
+    function normalizeAll({projects, pms, units, foodies, markets, announces}, pid){
+      const projList = Array.isArray(projects?.projects) ? projects.projects : [];
+      const project = projList.find(p => p.project_id === pid);
+      const pmList = Array.isArray(pms?.property_management_companies) ? pms.property_management_companies : [];
+      const pmById = new Map(pmList.map(pm => [pm.pm_id, pm]));
+
+      const unitsByProject   = groupBy(Array.isArray(units?.units) ? units.units : [], 'project_id');
+      const foodByProject    = groupBy(Array.isArray(foodies?.foodies) ? foodies.foodies : [], 'project_id');
+      const marketByProject  = groupBy(Array.isArray(markets?.markets) ? markets.markets : [], 'project_id');
+      const annArr = Array.isArray(announces) ? announces : (
+        Array.isArray(announces?.announcements) ? announces.announcements :
+        Array.isArray(announces?.announce) ? announces.announce : []
+      );
+      const annByProject = groupBy(annArr, 'project_id');
+
+      const pm = project?.pm_id ? pmById.get(project.pm_id) : null;
+
+      return {
+        project,
+        pm,
+        units:  unitsByProject.get(pid) || [],
+        food:   foodByProject.get(pid)  || [],
+        market: marketByProject.get(pid)|| [],
+        ann:    annByProject.get(pid)   || []
+      };
+    }
+
+    /* ---------- RENDER ---------- */
+    (async function init(){
+      try{
+        const pid = getParam('project_id');
+        if(!pid){ throw new Error('missing project_id'); }
+
+        const [projects, pms, units, foodies, markets, announces] = await Promise.all([
+          loadJSON(DATA_PATHS.projects),
+          loadJSON(DATA_PATHS.pms),
+          safeLoad(DATA_PATHS.units),
+          safeLoad(DATA_PATHS.foodies),
+          safeLoad(DATA_PATHS.markets),
+          loadJSON(DATA_PATHS.announces)
+        ]);
+
+        const data = normalizeAll({projects,pms,units,foodies,markets,announces}, pid);
+        if(!data.project){ $('#error').style.display=''; return; }
+
+        paintHero(data);
+        paintStats(data, pid);
+        paintDetail(data);
+        paintPM(data.pm);
+        paintList('#unit_list', data.units, 'unit', pid);
+        paintList('#food_list', data.food, 'foodie', pid);
+        paintList('#market_list', data.market, 'marketplace', pid);
+        paintAnn(data.ann, pid);
+        paintSignage(pid);
+
+      }catch(e){
+        console.error(e);
+        $('#error').style.display='';
+      }
+    })();
+
+    async function safeLoad(path){ try { return await loadJSON(path); } catch(e){ return {}; } }
+
+    function paintHero({project, pm}){
+      const logo = $('#logo');
+      if (project.project_logo){
+        logo.src = asset(project.project_logo, 'logo');
+      } else {
+        logo.style.display='none';
+      }
+      $('#title').textContent = project.project_name || project.project_id;
+      const pmName = pm ? (pm.name_th || pm.name_en || pm.pm_id) : 'ไม่ระบุ PM';
+      $('#sub').innerHTML = `${project.project_address || ''} · PM: ${pm ? `<a href="pm.html?pm_id=${encodeURIComponent(pm.pm_id)}">${pmName}</a>` : pmName}`;
+      const tags = $('#tags'); tags.innerHTML='';
+      if (project.project_status) tags.append(tag(`สถานะ: ${project.project_status}`));
+      if (project.project_type) tags.append(tag(`ประเภท: ${project.project_type}`));
+      if (project.total_units) tags.append(tag(`ยูนิตทั้งหมด: ${project.total_units}`));
+    }
+
+    function paintStats({units, food, market, ann}, pid){
+      $('#c_units').textContent = units.length;
+      $('#c_foodies').textContent = food.length;
+      $('#c_markets').textContent = market.length;
+      $('#c_ann').textContent = ann.length;
+
+      $('#btn_units').href = `unit.html?project_id=${encodeURIComponent(pid)}`;
+      $('#btn_foodies').href = `foodie.html?project_id=${encodeURIComponent(pid)}`;
+      $('#btn_markets').href = `marketplace.html?project_id=${encodeURIComponent(pid)}`;
+      $('#btn_ann').href = `ann/index.html?project_id=${encodeURIComponent(pid)}`;
+
+      $('#more_units').href = `unit.html?project_id=${encodeURIComponent(pid)}`;
+      $('#more_food').href = `foodie.html?project_id=${encodeURIComponent(pid)}`;
+      $('#more_market').href = `marketplace.html?project_id=${encodeURIComponent(pid)}`;
+      $('#more_ann').href = `ann/index.html?project_id=${encodeURIComponent(pid)}`;
+
+      // ปุ่ม Signage (ใช้ ann/index.html)
+      $('#btn_signage').href = `ann/index.html?project_id=${encodeURIComponent(pid)}`;
+
+      // ปุ่มใหม่: Display ภายในโปรเจกต์นี้
+      $('#btn_display').href = `ann/display.html?project_id=${encodeURIComponent(pid)}`;
+    }
+
+    function paintDetail({project}){
+      $('#kv_pid').textContent  = project.project_id || '-';
+      $('#kv_dev').textContent  = project.developer_name || '-';
+      $('#kv_addr').textContent = project.project_address || '-';
+      $('#kv_done').textContent = project.completion_period || '-';
+      $('#kv_type').textContent = project.project_type || '-';
+
+      const mapWrap = $('#kv_map'); mapWrap.innerHTML='';
+      if (project.map_url){
+        mapWrap.appendChild(el('a', {href:project.map_url, textContent:'เปิดแผนที่'}));
+      } else if (project.map_embed_url){
+        mapWrap.textContent = 'มีลิงก์ฝังแผนที่ (embed)';
+      } else {
+        mapWrap.textContent = '-';
+      }
+
+      const fac = $('#facilities'); fac.innerHTML = '';
+      (project.facility_list || []).forEach(f => fac.append(tag(f)));
+    }
+
+    function paintPM(pm){
+      const list = $('#pm_list'); list.innerHTML = '';
+      if(!pm){
+        list.append(empty('ยังไม่มีข้อมูล PM'));
+        return;
+      }
+      const row = el('div', {className:'row'});
+      const left = el('div', {className:'left'});
+      left.append(el('div', {className:'name', textContent: pm.name_th || pm.name_en || pm.pm_id}));
+      const right = el('div', {className:'right'});
+      right.append(el('a', {href:`pm.html?pm_id=${encodeURIComponent(pm.pm_id)}`, textContent:'เปิดหน้า PM →'}));
+      row.append(left, right);
+      list.append(row);
+    }
+
+    function paintList(selector, arr, type, pid){
+      const list = $(selector); list.innerHTML='';
+      if (!arr.length){
+        list.append(empty('ยังไม่มีข้อมูล'));
+        return;
+      }
+      arr.slice(0, 8).forEach(item=>{
+        const row = el('div', {className:'row'});
+        const left = el('div', {className:'left'});
+        const name = pickText(item, 'name_th','name_en','name','title_th','title_en','unit_name','shop_name') || item.id || '-';
+        left.append(el('div', {className:'name', textContent: name}));
+        const metaStr = item.floor ? `ชั้น ${item.floor}` : (item.area_th || item.area_en || '');
+        if(metaStr) left.append(el('div', {className:'meta', textContent: metaStr}));
+        const right = el('div', {className:'right'});
+        right.append(el('a', {href: `${type}.html?project_id=${encodeURIComponent(pid)}`, textContent:'เปิดรายการ →'}));
+        row.append(left, right);
+        list.append(row);
+      });
+    }
+
+    function paintAnn(listData, pid){
+      const list = $('#ann_list'); list.innerHTML='';
+      if (!listData.length){
+        list.append(empty('ยังไม่มีประกาศ'));
+        return;
+      }
+      listData
+        .slice()
+        .sort((a,b)=> parseDate(b.date) - parseDate(a.date))
+        .slice(0, 8)
+        .forEach(a=>{
+          const row = el('div', {className:'row'});
+          const left = el('div', {className:'left'});
+          const title = pickText(a, 'title_th','title_en') || pickText(a, 'type_th','type_en') || 'ประกาศ';
+          const area = pickText(a, 'area_th','area_en');
+          left.append(el('div', {className:'name', textContent: title}));
+          if(a.date || area){
+            left.append(el('div', {className:'meta', textContent: [a.date, area].filter(Boolean).join(' · ')}));
+          }
+          const right = el('div', {className:'right'});
+          right.append(el('a', {href: `ann/index.html?project_id=${encodeURIComponent(pid)}`, textContent:'เปิดประกาศทั้งหมด →'}));
+          row.append(left, right);
+          list.append(row);
+        });
+    }
+
+    function paintSignage(pid){
+      const url = `ann/index.html?project_id=${encodeURIComponent(pid)}`;
+      const btn = document.getElementById('btn_signage');
+      if (btn) btn.href = url;
+
+      const a = document.getElementById('signage_link');
+      if (a){
+        a.href = url;
+        a.target = '_blank';
+        a.rel = 'noopener';
+        a.textContent = 'เปิด Signage →';
+      }
+    }
+
+    function tag(text){ return el('span', {className:'tag', textContent:text}); }
+    function empty(text){ return el('div', {className:'empty', textContent:text}); }
+
+    function parseDate(s){
+      if(!s) return 0;
+      const m = String(s).match(/^(\d{1,2})\/(\d{1,2})\/(\d{2,4})/);
+      if(!m) return 0;
+      let [_, d, mo, y] = m;
+      d = +d; mo = +mo; y = +y;
+      if (y < 100) y += 2000;
+      return new Date(y, mo-1, d).getTime();
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,35 @@
+[
+  {
+    "announcement_id": "ann001",
+    "title_th": "สำนักงานนิติบุคคลหยุดทำการ",
+    "title_en": "Day off for Juristic Office",
+    "date": "15/8/25",
+    "image": "./images/announcements/announce001.jpg",
+    "priority": "high",
+    "status": "active",
+    "created_date": "2025-08-10",
+    "display_duration": 8000
+  },
+  {
+    "announcement_id": "ann007",
+    "title_th": "แจ้งเปลี่ยนแปลงจุดรับส่งชั่วคราวสำหรับไรเดอร์",
+    "title_en": "Temporary pick-up area for riders",
+    "date": "28/8/25",
+    "image": "./images/announcements/announce002.jpg",
+    "priority": "medium",
+    "status": "active",
+    "created_date": "2025-08-22",
+    "display_duration": 6000
+  },
+  {
+    "announcement_id": "ann010",
+    "title_th": "แจ้งปรับปรุงซ่อมแซมพื้นที่ส่วนกลาง",
+    "title_en": "Common Area Closure for Repair",
+    "date": "05/9/25",
+    "image": "./images/announcements/announce003.jpg",
+    "priority": "low",
+    "status": "active",
+    "created_date": "2025-08-30",
+    "display_duration": 5000
+  }
+]

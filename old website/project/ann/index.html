@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <title>Announcements Overview</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root { --maxw: 980px; --ui-font: system-ui, -apple-system, "Segoe UI", Tahoma, Arial, sans-serif; }
+    body { font-family: var(--ui-font); margin: 0; background: #f7f9fc; color:#1b1f24; }
+    header { max-width: var(--maxw); margin: 24px auto 0; padding: 0 16px; }
+    h1 { margin: 0 0 6px; font-size: 1.6rem; }
+    .back-link { display:inline-block; margin: 0 0 10px; color:#0b57d0; text-decoration:none; }
+    .back-link:hover { text-decoration: underline; }
+    .sub { color:#586069; margin-bottom: 16px; }
+
+    .toolbar { max-width: var(--maxw); margin: 8px auto; padding: 8px 16px; display: grid; gap: 8px; grid-template-columns: 1fr 1fr 1fr auto; align-items: center; }
+    .toolbar select, .toolbar input, .toolbar button { padding: 8px 10px; border: 1px solid #d0d7de; border-radius: 8px; background: #fff; font: inherit; }
+    .toolbar button { cursor: pointer; }
+    .toolbar .lang { min-width: 84px; }
+
+    .stats { max-width: var(--maxw); margin: 8px auto; padding: 0 16px 8px; display: grid; gap: 8px; grid-template-columns: repeat(3, 1fr); }
+    .stat { background:#fff; border:1px solid #e6eef6; border-radius:12px; padding:12px; box-shadow: 0 2px 16px #00000008;}
+    .stat .k { font-size: 0.9rem; color:#51606f; }
+    .stat .v { font-size: 1.3rem; font-weight: 700; color:#0b57d0; }
+
+    .table-wrap { max-width: var(--maxw); margin: 8px auto 24px; padding: 0 16px; }
+    table { width: 100%; border-collapse: collapse; background:#fff; border:1px solid #e6eef6; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 16px #00000008; }
+    thead th { background: #f1f6ff; color:#0b57d0; text-align: left; font-weight: 600; padding: 12px; font-size: 0.95rem; user-select: none; }
+    tbody td { padding: 10px 12px; border-top:1px solid #f0f3f7; vertical-align: top; }
+    tbody tr:hover { background:#fafcff; }
+    .mono { font-family: inherit; font-size: .9em; color:#444; }
+    code, pre, kbd, samp { font-family: inherit; }
+
+    .status { max-width: var(--maxw); margin: 8px auto 0; padding: 0 16px; color:#6a737d; }
+    .hidden { display: none !important; }
+
+    /* Menu overlay button */
+    .menu-overlay {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: rgba(11, 87, 208, 0.9);
+      color: white;
+      padding: 16px 20px;
+      border-radius: 12px;
+      font-size: 18px;
+      font-weight: 600;
+      cursor: pointer;
+      z-index: 1000;
+      border: none;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    }
+    .menu-overlay:hover {
+      background: rgba(11, 87, 208, 1);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(0,0,0,0.4);
+    }
+
+    th.sortable { cursor: pointer; position: relative; padding-right: 26px; }
+    th.sortable::after { content: "⇅"; position: absolute; right: 8px; top: 50%; transform: translateY(-50%); font-size: 0.9em; color: #6b7da1; opacity: .6; }
+    th.sortable[data-sortdir="asc"]::after  { content: "↑"; opacity: 1; }
+    th.sortable[data-sortdir="desc"]::after { content: "↓"; opacity: 1; }
+
+    .table-wrap a.link { color:#0b57d0; text-decoration: underline; }
+    .table-wrap a.link:visited { color:#0b57d0; }
+    .table-wrap a.link:hover { text-decoration: underline; }
+
+    @media (max-width: 760px) {
+      .toolbar { grid-template-columns: 1fr 1fr; }
+      .stats { grid-template-columns: 1fr; }
+      thead { display: none; }
+      table, tbody, tr, td { display: block; width: 100%; }
+      tbody tr { border-top:1px solid #eef2f7; }
+      tbody td { border: none; padding: 8px 12px; }
+      tbody td::before { content: attr(data-col) ": "; font-weight: 600; color:#6b7280; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>ภาพรวมประกาศ (Announcements Overview)</h1>
+    <a href="../index.html" class="back-link">← กลับไปหน้าโครงการ/back to project overview</a>
+    <div class="sub">
+      ใช้ <code>data/announce.json</code> + join <code>project.json</code>, <code>pm.json</code> •
+      คอลัมน์ Project = ชื่อโครงการ • คอลัมน์ PM = บริษัทบริหาร • Period รองรับรูปแบบ <code>dd/mm/yy, hh.mm-hh.mm</code>
+    </div>
+  </header>
+
+  <div class="toolbar">
+    <select id="projectFilter"><option value="">ทุกโครงการ (All projects)</option></select>
+    <select id="pmFilter"><option value="">ทุก PM (All PMs)</option></select>
+    <input id="searchBox" type="search" placeholder="ค้นหาโครงการ/PM/หัวข้อ/รายละเอียด..." />
+    <button id="langBtn" class="lang">TH</button>
+  </div>
+
+  <div class="stats">
+    <div class="stat"><div class="k">จำนวนประกาศทั้งหมด</div><div class="v" id="statTotal">0</div></div>
+    <div class="stat"><div class="k">จำนวนโครงการที่มีประกาศ</div><div class="v" id="statProjects">0</div></div>
+    <div class="stat"><div class="k">จำนวน PM ทั้งหมด</div><div class="v" id="statPMs">0</div></div>
+  </div>
+
+  <div class="table-wrap">
+    <div id="status" class="status" aria-live="polite">Loading…</div>
+    <table id="annTable" class="hidden">
+      <thead>
+        <tr>
+          <th class="sortable" data-key="id"      style="width: 120px;">Announcement #</th>
+          <th class="sortable" data-key="project" style="width: 220px;">Project (ชื่อโครงการ)</th>
+          <th class="sortable" data-key="pm"      style="width: 220px;">PM (บริษัทบริหาร)</th>
+          <th class="sortable" data-key="title">Title</th>
+          <th class="sortable" data-key="date"    style="width: 150px;">Date</th>
+          <th class="sortable" data-key="area">Area</th>
+          <th class="sortable" data-key="period"  style="width: 180px;">Period</th>
+        </tr>
+      </thead>
+      <tbody id="annBody"></tbody>
+    </table>
+  </div>
+
+  <!-- Menu overlay button -->
+  <button id="menuOverlay" class="menu-overlay">🍽️ Main Menu</button>
+
+  <script>
+    (() => {
+      const state = { lang: "th", all: [], filtered: [], sortKey: "date", sortDir: "desc" };
+      const maps  = { project: {}, pm: {} };
+
+      const $ = s => document.querySelector(s);
+      const els = {
+        status: $("#status"), table: $("#annTable"), body: $("#annBody"), thead: $("#annTable thead"),
+        projectFilter: $("#projectFilter"), pmFilter: $("#pmFilter"), search: $("#searchBox"),
+        langBtn: $("#langBtn"), statTotal: $("#statTotal"), statProjects: $("#statProjects"), statPMs: $("#statPMs")
+      };
+
+      const MONTH_TH = ["ม.ค.","ก.พ.","มี.ค.","เม.ย.","พ.ค.","มิ.ย.","ก.ค.","ส.ค.","ก.ย.","ต.ค.","พ.ย.","ธ.ค."];
+      const MONTH_EN = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+      const pad2 = n => String(n).padStart(2,"0");
+
+      function parsePeriod(periodStr) {
+        if (!periodStr) return { start:null, end:null };
+        const [dpartRaw, tpartRaw] = String(periodStr).split(",").map(s=>s.trim());
+        const dm = dpartRaw?.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{2}|\d{4})$/);
+        if (!dm) return { start:null, end:null };
+        let [_, d, m, y] = dm; d=+d; m=+m-1; y=+y; if (y<100) y = 2000+y;
+
+        const tpart = (tpartRaw||"").replace(/\./g,":");
+        const tm = tpart.match(/^(\d{1,2}):(\d{2})\s*-\s*(\d{1,2}):(\d{2})$/);
+        if (!tm) return { start:null, end:null };
+        const [__, sh, sm, eh, em] = tm.map(Number);
+        return { start:new Date(y,m,d,sh,sm), end:new Date(y,m,d,eh,em) };
+      }
+
+      function formatPeriod(periodStr, lang) {
+        const {start, end} = parsePeriod(periodStr);
+        if (!start || !end) return periodStr||"";
+        const mon = (lang==="th")? MONTH_TH[start.getMonth()] : MONTH_EN[start.getMonth()];
+        let y = start.getFullYear(); if (lang==="th") y += 543;
+        const time = `${pad2(start.getHours())}:${pad2(start.getMinutes())}-${pad2(end.getHours())}:${pad2(end.getMinutes())}`;
+        return `${start.getDate()} ${mon} ${y}, ${time}`;
+      }
+
+      // ใช้กับคอลัมน์ Date (รูปแบบ dd/mm/yy หรือ dd/mm/yyyy)
+      function parseDate(s){
+        if(!s) return null;
+        const m = String(s).match(/^(\d{1,2})\/(\d{1,2})\/(\d{2,4})/);
+        if(!m) return null;
+        let [_, d, mo, y] = m;
+        d = +d; mo = +mo; y = +y;
+        if (y < 100) y += 2000;
+        return new Date(y, mo-1, d);
+      }
+
+      function setStatus(t){ els.status.textContent = t||""; }
+
+      function normalizeId(list){
+        const counters={};
+        list.forEach(a=>{
+          if (a.announcement_id){ a._id=String(a.announcement_id).replace(/^announce#?/i,""); return; }
+          const m=String(a.project_id||"").match(/(\d+)/);
+          const pcode="P"+(m? m[1].padStart(3,"0"):"000");
+          counters[pcode]=(counters[pcode]||0)+1;
+          a._id=`${pcode}-${String(counters[pcode]).padStart(3,"0")}`;
+        });
+      }
+
+      function rebuildFilters(){
+        const projects = Object.values(maps.project).sort((a,b)=>a.project_name.localeCompare(b.project_name));
+        const prevP = els.projectFilter.value;
+        els.projectFilter.innerHTML = `<option value="">ทุกโครงการ (All projects)</option>` +
+          projects.map(p=>`<option value="${p.project_id}">${p.project_name}</option>`).join("");
+        if (prevP==="" || projects.some(p=>p.project_id===prevP)) els.projectFilter.value = prevP;
+
+        const pms = Object.values(maps.pm).sort((a,b)=>(a.name_en||"").localeCompare(b.name_en||""));
+        const prevPM = els.pmFilter.value;
+        els.pmFilter.innerHTML = `<option value="">ทุก PM (All PMs)</option>` +
+          pms.map(pm=>`<option value="${pm.pm_id}">${state.lang==="th"? pm.name_th: pm.name_en}</option>`).join("");
+        if (prevPM==="" || pms.some(pm=>pm.pm_id===prevPM)) els.pmFilter.value = prevPM;
+      }
+
+      function computeStats(){
+        els.statTotal.textContent   = String(state.filtered.length);
+        els.statProjects.textContent= String(new Set(state.filtered.map(a=>a._project_id).filter(Boolean)).size);
+        els.statPMs.textContent     = String(new Set(state.filtered.map(a=>a._pm_id).filter(Boolean)).size);
+      }
+
+      function applyFilters(){
+        const pid = els.projectFilter.value.trim();
+        const pmid= els.pmFilter.value.trim();
+        const q   = els.search.value.trim().toLowerCase();
+
+        state.filtered = state.all.filter(a=>{
+          if (pid  && a._project_id!==pid) return false;
+          if (pmid && a._pm_id!==pmid)     return false;
+
+          if (q){
+            const hay = [
+              a._id, a._project_name, a._pm_name_th, a._pm_name_en,
+              a.title_th, a.title_en, a.detail_th, a.detail_en,
+              a.area_th, a.area_en, a.reason_th, a.reason_en, a.advice_th, a.advice_en,
+              a.period, formatPeriod(a.period,"th"), formatPeriod(a.period,"en")
+            ].map(x=>(x||"").toLowerCase()).join(" ");
+            if (hay.indexOf(q) === -1) return false;
+          }
+          return true;
+        });
+
+        sortNow();
+      }
+
+      function sortNow(){
+        const key = state.sortKey, dir = state.sortDir==="asc"?1:-1;
+        state.filtered.sort((a,b)=>{
+          let va,vb;
+          switch(key){
+            case "id":      va=a._id; vb=b._id; break;
+            case "project": va=a._project_name||""; vb=b._project_name||""; break;
+            case "pm":      va=(state.lang==="th"?a._pm_name_th:a._pm_name_en)||""; vb=(state.lang==="th"?b._pm_name_th:b._pm_name_en)||""; break;
+            case "title":   va=(state.lang==="th"?a.title_th:a.title_en)||""; vb=(state.lang==="th"?b.title_th:b.title_en)||""; break;
+            case "date": {
+              const ad = parseDate(a.date)?.getTime()||0;
+              const bd = parseDate(b.date)?.getTime()||0;
+              return (ad-bd)*dir;
+            }
+            case "area":    va=(state.lang==="th"?a.area_th:a.area_en)||""; vb=(state.lang==="th"?b.area_th:b.area_en)||""; break;
+            case "period": {
+              const as = parsePeriod(a.period).start?.getTime()||0;
+              const bs = parsePeriod(b.period).start?.getTime()||0;
+              return (as-bs)*dir;
+            }
+            default:        va=""; vb="";
+          }
+          return String(va).localeCompare(String(vb),undefined,{numeric:true})*dir;
+        });
+      }
+
+      function renderTable(){
+        els.thead.querySelectorAll("th.sortable").forEach(th=>{
+          const k=th.getAttribute("data-key"); th.removeAttribute("data-sortdir");
+          if (k===state.sortKey) th.setAttribute("data-sortdir",state.sortDir);
+        });
+
+        const frag=document.createDocumentFragment();
+        state.filtered.forEach(a=>{
+          const tr=document.createElement("tr");
+
+          // Announcement # → announce.html
+          const tdId=document.createElement("td"); tdId.className="mono"; tdId.setAttribute("data-col","Announcement #");
+          const linkId=document.createElement("a"); linkId.className="link";
+          linkId.href=`announce.html?id=${encodeURIComponent(a._id)}`;
+          linkId.textContent=a._id;
+          tdId.appendChild(linkId);
+
+          // Project → announce.html
+          const tdProject=document.createElement("td"); tdProject.setAttribute("data-col","Project");
+          const linkProject=document.createElement("a"); linkProject.className="link";
+          linkProject.href=`announce.html?project_id=${encodeURIComponent(a._project_id)}`;
+          linkProject.textContent=a._project_name||a._project_id||"";
+          tdProject.appendChild(linkProject);
+
+          const tdPM=document.createElement("td"); tdPM.textContent=state.lang==="th"? a._pm_name_th : a._pm_name_en; tdPM.setAttribute("data-col","PM");
+
+          const tdTitle=document.createElement("td"); tdTitle.setAttribute("data-col","Title");
+          tdTitle.textContent=(state.lang==="th"?a.title_th:a.title_en)||a._id;
+
+          const tdDate=document.createElement("td"); tdDate.textContent = a.date || ""; tdDate.setAttribute("data-col","Date");
+          const tdArea=document.createElement("td"); tdArea.textContent=state.lang==="th"?a.area_th:a.area_en; tdArea.setAttribute("data-col","Area");
+          const tdPeriod=document.createElement("td"); tdPeriod.textContent=formatPeriod(a.period,state.lang); tdPeriod.setAttribute("data-col","Period");
+
+          tr.append(tdId,tdProject,tdPM,tdTitle,tdDate,tdArea,tdPeriod);
+          frag.appendChild(tr);
+        });
+
+        els.body.innerHTML=""; els.body.append(frag);
+        computeStats();
+        if (state.filtered.length===0){ setStatus("ไม่พบรายการที่ตรงกับตัวกรอง"); els.table.classList.add("hidden"); }
+        else { setStatus(""); els.table.classList.remove("hidden"); }
+      }
+
+      function rerender(){ rebuildFilters(); applyFilters(); renderTable(); }
+
+      function bindEvents(){
+        els.langBtn.addEventListener("click",()=>{ state.lang=state.lang==="th"?"en":"th"; els.langBtn.textContent=state.lang.toUpperCase(); rerender(); });
+        [els.projectFilter,els.pmFilter].forEach(el=>el.addEventListener("change",rerender));
+        els.search.addEventListener("input",()=>{ clearTimeout(els.search._t); els.search._t=setTimeout(rerender,150); });
+        els.thead.addEventListener("click",(e)=>{ const th=e.target.closest("th.sortable"); if(!th) return; const key=th.getAttribute("data-key");
+          if(state.sortKey===key){ state.sortDir=state.sortDir==="asc"?"desc":"asc"; } else { state.sortKey=key; state.sortDir=(key==="date"||"period")?"desc":"asc"; }
+          sortNow(); renderTable();
+        });
+
+        // Menu overlay button
+        document.getElementById("menuOverlay").addEventListener("click", () => {
+          const params = new URLSearchParams(location.search);
+          const projectId = params.get("project_id");
+          const menuUrl = new URL('./menu.html', location.origin);
+          if (projectId) menuUrl.searchParams.set('project_id', projectId);
+          window.location.href = menuUrl.toString();
+        });
+      }
+
+      async function load(){
+        setStatus("Loading…");
+        try{
+          // relative path จากโฟลเดอร์ ann/
+          const [annRes, prjRes, pmRes] = await Promise.all([
+            fetch("./data/announce.json",{cache:"no-cache"}),
+            fetch("./data/project.json",{cache:"no-cache"}),
+            fetch("./data/pm.json",{cache:"no-cache"})
+          ]);
+          if(!annRes.ok) throw new Error("announce.json HTTP "+annRes.status);
+          if(!prjRes.ok) throw new Error("project.json HTTP "+prjRes.status);
+          if(!pmRes.ok)  throw new Error("pm.json HTTP "+pmRes.status);
+
+          const [annArr, prjObj, pmObj] = await Promise.all([annRes.json(), prjRes.json(), pmRes.json()]);
+          const projects = prjObj?.projects || [];
+          const pmList   = pmObj?.property_management_companies || pmObj?.pm_companies || [];
+
+          maps.project = Object.fromEntries(projects.map(p=>[p.project_id,p]));
+          maps.pm      = Object.fromEntries(pmList.map(pm=>[pm.pm_id,pm]));
+
+          state.all = (Array.isArray(annArr)?annArr:[]).map(a=>{
+            const prj = maps.project[a.project_id];
+            const pm  = prj?.pm_id ? maps.pm[prj.pm_id] : undefined;
+            return {
+              ...a,
+              _project_id: prj?.project_id || a.project_id || "",
+              _project_name: prj?.project_name || a.project_id || "",
+              _pm_id: prj?.pm_id || "",
+              _pm_name_th: pm?.name_th || "",
+              _pm_name_en: pm?.name_en || ""
+            };
+          });
+          normalizeId(state.all);
+
+          // เติม option ลง dropdown ก่อน แล้วค่อย preselect จาก URL
+          rebuildFilters();
+
+          const params = new URLSearchParams(location.search);
+          const prePid = params.get("project_id");
+          if (prePid) {
+            els.projectFilter.value = prePid; // ตั้งแม้ project จะไม่อยู่ใน maps ก็ยังฟิลเตอร์ได้
+          }
+
+          applyFilters();
+          renderTable();
+
+          els.langBtn.textContent = state.lang.toUpperCase();
+          bindEvents();
+          setStatus("");
+
+        }catch(err){
+          console.error(err);
+          setStatus("โหลดข้อมูลไม่สำเร็จ กรุณาตรวจสอบเส้นทางไฟล์และการตั้งค่าโฮสต์");
+        }
+      }
+
+      document.addEventListener("DOMContentLoaded", load);
+    })();
+  </script>
+</body>
+</html>

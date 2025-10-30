@@ -1,0 +1,35 @@
+[
+  {
+    "announcement_id": "ann001",
+    "title_th": "น้อมสำนึกในพระมหากรุณาธิคุณฯ",
+    "title_en": "In Remembrance of Her Majesty Queen Sirikit",
+    "date": "15/8/25",
+    "image": "./images/announcements/announce001.jpg",
+    "priority": "high",
+    "status": "active",
+    "created_date": "2025-08-10",
+    "display_duration": 8000
+  },
+  {
+    "announcement_id": "ann007",
+    "title_th": "ขอความร่วมมือคัดแยกขยะ",
+    "title_en": "Your Cooperation in Separating Waste",
+    "date": "28/8/25",
+    "image": "./images/announcements/announce002.jpg",
+    "priority": "medium",
+    "status": "active",
+    "created_date": "2025-08-22",
+    "display_duration": 6000
+  },
+  {
+    "announcement_id": "ann010",
+    "title_th": "ขอความร่วมมือคัดแยกขยะ",
+    "title_en": "Your Cooperation in Separating Waste",
+    "date": "05/9/25",
+    "image": "./images/announcements/announce003.jpg",
+    "priority": "low",
+    "status": "active",
+    "created_date": "2025-08-30",
+    "display_duration": 4000
+  }
+]

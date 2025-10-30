@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Unit Signage - Redirecting</title>
+</head>
+<body>
+  <script>
+    // Redirect unit-signage.html to product.html with correct parameters
+    const params = new URLSearchParams(window.location.search);
+    const unitId = params.get('id');
+    const projectId = params.get('project_id');
+
+    if (unitId && projectId) {
+      // Redirect to unified product.html
+      window.location.replace(`./product.html?type=unit&id=${unitId}&project_id=${projectId}`);
+    } else {
+      // Fallback to menu if parameters missing
+      window.location.replace(`./menu.html?project_id=${projectId || 'prj001'}`);
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,230 @@
+{
+  "units": [
+    {
+      "unit_id": "unit001",
+      "project_id": "prj001",
+      "name_th": "ยูนิต A108 - โปรโมชั่นพิเศษ!",
+      "name_en": "Unit A108 - Special Deal!",
+      "unit": {
+        "unit_number": "A108",
+        "room_type": "4 Bedroom",
+        "room_size": 90,
+        "floor": 12,
+        "building": "A",
+        "view": "Garden View",
+        "listing_type": "Sell",
+        "room_decor": "Partially Furnished",
+        "num_parking": 0
+      },
+      "condition": {
+        "selling_price": 12500000,
+        "original_price": 15000000,
+        "discount_percentage": 17,
+        "rental_price": null,
+        "available_date": "01-Jan-2026",
+        "deposit": 150000,
+        "inclusive_of": [50% of transfer fee, commision]
+      },
+      "images": [
+        "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=800&h=600&fit=crop",
+        "https://images.unsplash.com/photo-1560449752-6ef5bc04a019?w=800&h=600&fit=crop",
+        "https://images.unsplash.com/photo-1560448075-cbc16bb4af8e?w=800&h=600&fit=crop",
+        "https://images.unsplash.com/photo-1560449752-6ef5bc04a019?w=800&h=600&fit=crop&q=80&auto=format&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=800&h=600&fit=crop"
+      ],
+      "image": "medias/unit001-01.MP4",
+      "promotion": {
+        "title_th": "ลดราคาพิเศษ 500,000 บาท!",
+        "title_en": "Special Discount 500,000 THB!",
+        "valid_until": "31-Dec-2025"
+      }
+    },
+    {
+      "unit_id": "unit002",
+      "project_id": "prj001",
+      "name_th": "ยูนิต A257 - ห้องสวย ราคาดี",
+      "name_en": "Unit A257 - Beautiful Room, Great Price",
+      "unit": {
+        "unit_number": "A257",
+        "room_type": "3 Bedroom",
+        "room_size": 28,
+        "floor": 19,
+        "building": "A",
+        "view": "Pool View",
+        "listing_type": "Rent",
+        "room_decor": "Fully Furnished",
+        "num_parking": 1
+      },
+      "condition": {
+        "selling_price": null,
+        "rental_price": 45000,
+        "original_rental": 50000,
+        "discount_percentage": 10,
+        "available_date": "01-Jan-2025",
+        "deposit": 30000,
+        "inclusive_of": []
+      },
+      "images": [
+        "https://images.unsplash.com/photo-1560448075-cbc16bb4af8e?w=800&h=600&fit=crop",
+        "https://images.unsplash.com/photo-1571055107559-3e67626fa8be?w=800&h=600&fit=crop",
+        "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=800&h=600&fit=crop",
+        "https://images.unsplash.com/photo-1560449752-6ef5bc04a019?w=800&h=600&fit=crop",
+        "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=800&h=600&fit=crop"
+      ],
+      "image": "medias/shop001-01.MP4",
+      "promotion": {
+        "title_th": "เช่าดีล! ลดค่าเช่า 5,000 บาท/เดือน",
+        "title_en": "Rental Deal! 5,000 THB/month discount",
+        "valid_until": "28-Feb-2025"
+      }
+    },
+    {
+      "unit_id": "unit003",
+      "project_id": "prj002",
+      "name_th": "ยูนิต B305 - วิวสวยมาก!",
+      "name_en": "Unit B305 - Amazing View!",
+      "unit": {
+        "unit_number": "B305",
+        "room_type": "2 Bedroom",
+        "room_size": 65,
+        "floor": 30,
+        "building": "B",
+        "view": "City View",
+        "listing_type": "Sell",
+        "room_decor": "Fully Furnished",
+        "num_parking": 1
+      },
+      "condition": {
+        "selling_price": 3200000,
+        "original_price": 3800000,
+        "discount_percentage": 15,
+        "rental_price": null,
+        "available_date": "15-Jan-2025",
+        "deposit": 50000,
+        "inclusive_of": ["Internet", "Cable TV"]
+      },
+      "images": [
+        "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=800&h=600&fit=crop",
+        "https://images.unsplash.com/photo-1560448075-cbc16bb4af8e?w=800&h=600&fit=crop",
+        "https://images.unsplash.com/photo-1571055107559-3e67626fa8be?w=800&h=600&fit=crop"
+      ],
+      "image": "medias/shop001-02.MP4",
+      "promotion": {
+        "title_th": "ลดราคา 600,000 บาท พร้อมเฟอร์ฯ",
+        "title_en": "600K discount with furniture included",
+        "valid_until": "31-Mar-2025"
+      }
+    },
+    {
+      "unit_id": "unit004",
+      "project_id": "prj002",
+      "name_th": "ยูนิต C150 - โอกาสทอง!",
+      "name_en": "Unit C150 - Golden Opportunity!",
+      "unit": {
+        "unit_number": "C150",
+        "room_type": "1 Bedroom",
+        "room_size": 35,
+        "floor": 15,
+        "building": "C",
+        "view": "Garden View",
+        "listing_type": "Rent",
+        "room_decor": "Partially Furnished",
+        "num_parking": 0
+      },
+      "condition": {
+        "selling_price": null,
+        "rental_price": 20000,
+        "original_rental": 25000,
+        "discount_percentage": 20,
+        "available_date": "01-Feb-2025",
+        "deposit": 20000,
+        "inclusive_of": ["Water", "Internet"]
+      },
+      "images": [
+        "https://images.unsplash.com/photo-1560449752-6ef5bc04a019?w=800&h=600&fit=crop",
+        "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=800&h=600&fit=crop"
+      ],
+      "image": "medias/shop002-01.MP4",
+      "promotion": {
+        "title_th": "เช่า 3 เดือนแรก ลด 20%",
+        "title_en": "20% off first 3 months rent",
+        "valid_until": "30-Apr-2025"
+      }
+    },
+    {
+      "unit_id": "unit005",
+      "project_id": "prj003",
+      "name_th": "ยูนิต D201 - ห้องใหม่ ราคาปังจริง!",
+      "name_en": "Unit D201 - Brand New, Great Deal!",
+      "unit": {
+        "unit_number": "D201",
+        "room_type": "3 Bedroom",
+        "room_size": 80,
+        "floor": 20,
+        "building": "D",
+        "view": "River View",
+        "listing_type": "Sell",
+        "room_decor": "Fully Furnished",
+        "num_parking": 2
+      },
+      "condition": {
+        "selling_price": 5500000,
+        "original_price": 6200000,
+        "discount_percentage": 11,
+        "rental_price": null,
+        "available_date": "01-Mar-2025",
+        "deposit": 100000,
+        "inclusive_of": ["All furniture", "Appliances"]
+      },
+      "images": [
+        "https://images.unsplash.com/photo-1560448075-cbc16bb4af8e?w=800&h=600&fit=crop",
+        "https://images.unsplash.com/photo-1571055107559-3e67626fa8be?w=800&h=600&fit=crop",
+        "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=800&h=600&fit=crop",
+        "https://images.unsplash.com/photo-1560449752-6ef5bc04a019?w=800&h=600&fit=crop"
+      ],
+      "image": "medias/shop002-02.MP4",
+      "promotion": {
+        "title_th": "ลดราคา 700,000 + ฟรีเฟอร์ฯ!",
+        "title_en": "700K discount + Free furniture!",
+        "valid_until": "31-May-2025"
+      }
+    },
+    {
+      "unit_id": "unit006",
+      "project_id": "prj004",
+      "name_th": "ยูนิต E101 - ชั้นล่าง สะดวก!",
+      "name_en": "Unit E101 - Ground Floor, Convenient!",
+      "unit": {
+        "unit_number": "E101",
+        "room_type": "2 Bedroom",
+        "room_size": 55,
+        "floor": 1,
+        "building": "E",
+        "view": "Garden View",
+        "listing_type": "Rent",
+        "room_decor": "Partially Furnished",
+        "num_parking": 1
+      },
+      "condition": {
+        "selling_price": null,
+        "rental_price": 28000,
+        "original_rental": 35000,
+        "discount_percentage": 20,
+        "available_date": "15-Feb-2025",
+        "deposit": 28000,
+        "inclusive_of": ["Internet", "Water"]
+      },
+      "images": [
+        "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=800&h=600&fit=crop",
+        "https://images.unsplash.com/photo-1560448075-cbc16bb4af8e?w=800&h=600&fit=crop",
+        "https://images.unsplash.com/photo-1571055107559-3e67626fa8be?w=800&h=600&fit=crop"
+      ],
+      "image": "medias/rest001-01.MP4",
+      "promotion": {
+        "title_th": "ห้องชั้นล่าง ลดค่าเช่า 7,000 บาท",
+        "title_en": "Ground floor unit, 7K rent discount",
+        "valid_until": "31-Jul-2025"
+      }
+    }
+  ]
+}

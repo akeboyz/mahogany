@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Digital Signage - Index</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- ✅ วิดีโอเต็มจอ -->
+  <video id="video-player" playsinline></video>
+
+  <!-- ✅ ไอคอน mute / unmute -->
+  <div class="mute-overlay" id="muteButton">🔇</div>
+
+  <!-- ✅ โซนสำหรับคลิกไปหน้าเมนู -->
+  <div class="menu-zone"></div>
+
+  <script src="js/logic.js"></script>
+
+  <!-- ✅ ตรวจสอบเวอร์ชันล่าสุดทุก 1 นาที หากไม่ตรง → โหลดใหม่ -->
+  <script>
+    window.currentVersion = '';
+
+    setInterval(() => {
+      fetch('/version.txt', { cache: 'no-store' })
+        .then(res => res.text())
+        .then(serverVersion => {
+          if (window.currentVersion && window.currentVersion !== serverVersion.trim()) {
+            console.log('🔁 New version detected → Reloading index.html...');
+            location.reload();
+          }
+          window.currentVersion = serverVersion.trim();
+        });
+    }, 60000);
+  </script>
+</body>
+</html>

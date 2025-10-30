@@ -1,0 +1,11 @@
+{
+  "name": "qr-code-generator",
+  "version": "1.0.0",
+  "description": "Pre-generate QR codes for offline Yodeck deployment",
+  "main": "generate-qr-codes.js",
+  "scripts": {
+    "generate-qr": "node generate-qr-codes.js"
+  },
+  "dependencies": {},
+  "keywords": ["qr-code", "yodeck", "offline", "signage"]
+}

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Main Menu</title>
+  <link rel="stylesheet" href="css/menu.css" />
+</head>
+<body>
+  <div class="video-grid">
+    <!-- ✅ วิดีโอบนสุดแบบเต็มแถว -->
+    <video class="video-top" src="menu-vdo/project.mp4" autoplay muted loop playsinline></video>
+
+    <!-- ✅ 6 วิดีโอด้านล่างแบบ 2 คอลัมน์ 3 แถว -->
+    <video src="menu-vdo/delivery.mp4" autoplay muted loop playsinline onclick="navigate('category.html?type=delivery')"></video>
+    <video src="menu-vdo/deal.mp4" autoplay muted loop playsinline onclick="navigate('category.html?type=deal')"></video>
+    <video src="menu-vdo/dining.mp4" autoplay muted loop playsinline onclick="navigate('category.html?type=dining')"></video>
+    <video src="menu-vdo/daily.mp4" autoplay muted loop playsinline onclick="navigate('category.html?type=daily')"></video>
+    <video src="menu-vdo/juristic.mp4" autoplay muted loop playsinline onclick="navigate('category.html?type=juristic')"></video>
+    <video src="menu-vdo/ondemand.mp4" autoplay muted loop playsinline onclick="navigate('category.html?type=ondemand')"></video>
+  </div>
+
+  <script>
+    // ✅ รองรับการเปิดอัตโนมัติบน iOS/macOS
+    const isIOS = /iPad|iPhone|Macintosh/.test(navigator.userAgent);
+    const allVideos = document.querySelectorAll('video');
+    allVideos.forEach(v => {
+      if (isIOS) v.muted = true;
+      v.setAttribute('muted', '');
+    });
+
+    // ✅ ไปยังหน้า category ตาม type
+    function navigate(url) {
+      location.href = url;
+    }
+
+    // ✅ ✅ เพิ่มฟีเจอร์ Auto Return หากไม่มีการแตะจอเกิน 1 นาที
+    let timeout;
+    function resetInactivityTimer() {
+      clearTimeout(timeout);
+      timeout = setTimeout(() => {
+        window.location.href = 'index.html';
+      }, 60000); // 1 นาที = 60,000 มิลลิวินาที
+    }
+
+    // ✅ ตรวจจับการแตะหรือคลิกเพื่อรีเซ็ตเวลา
+    window.addEventListener('click', resetInactivityTimer);
+    window.addEventListener('touchstart', resetInactivityTimer);
+    window.addEventListener('mousemove', resetInactivityTimer);
+
+    // ✅ เริ่มจับเวลาเมื่อโหลดหน้า
+    resetInactivityTimer();
+  </script>
+
+  <!-- ✅ ตรวจสอบเวอร์ชันล่าสุดทุก 1 นาที หากไม่ตรง → โหลดใหม่ -->
+  <script>
+    window.currentVersion = '';
+
+    setInterval(() => {
+      fetch('/version.txt', { cache: 'no-store' })
+        .then(res => res.text())
+        .then(serverVersion => {
+          if (window.currentVersion && window.currentVersion !== serverVersion.trim()) {
+            console.log('🔁 New version detected → Reloading...');
+            location.reload();
+          }
+          window.currentVersion = serverVersion.trim();
+        });
+    }, 60000);
+  </script>
+</body>
+</html>

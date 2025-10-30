@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Projects Overview</title>
+  <style>
+    /* ===== Admin Theme - Modern Dark Gradient ===== */
+    :root { 
+      --maxw: 1200px; 
+      --ui-font: system-ui, -apple-system, "Segoe UI", Tahoma, Arial, sans-serif; 
+    }
+    
+    body { 
+      font-family: var(--ui-font); 
+      margin: 0; 
+      background: linear-gradient(135deg, rgb(15 23 42) 0%, rgb(88 28 135) 50%, rgb(15 23 42) 100%);
+      color: white;
+      min-height: 100vh;
+    }
+    
+    /* Background Effects */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(ellipse at top right, rgba(147, 51, 234, 0.2) 0%, transparent 50%);
+      pointer-events: none;
+      z-index: -1;
+    }
+    
+    header { 
+      max-width: var(--maxw); 
+      margin: 24px auto 0; 
+      padding: 0 24px; 
+      position: relative;
+      z-index: 10;
+    }
+    
+    h1 { 
+      margin: 0 0 12px; 
+      font-size: 3rem; 
+      font-weight: 900;
+      background: linear-gradient(to right, rgb(96 165 250), rgb(147 51 234));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .sub { 
+      color: rgba(255, 255, 255, 0.8); 
+      margin-bottom: 24px; 
+      font-size: 1.1rem;
+      font-weight: 300;
+    }
+
+    /* Glass Card Effect */
+    .glass-card {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 16px;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Toolbar with Glass Effect */
+    .toolbar { 
+      max-width: var(--maxw); 
+      margin: 16px auto; 
+      padding: 20px 24px; 
+      display: grid; 
+      gap: 16px;
+      grid-template-columns: 1fr 300px; 
+      align-items: center;
+    }
+    
+    .toolbar input[type="search"], .toolbar select {
+      padding: 12px 16px; 
+      border: 1px solid rgba(255, 255, 255, 0.2); 
+      border-radius: 12px; 
+      background: rgba(255, 255, 255, 0.1); 
+      color: white;
+      font: inherit;
+      backdrop-filter: blur(10px);
+      transition: all 0.3s ease;
+    }
+    
+    .toolbar input[type="search"]:focus, .toolbar select:focus {
+      outline: none;
+      border-color: rgb(147 51 234);
+      box-shadow: 0 0 0 3px rgba(147, 51, 234, 0.3);
+    }
+    
+    .toolbar input[type="search"]::placeholder {
+      color: rgba(255, 255, 255, 0.5);
+    }
+    
+    .toolbar select option {
+      background: rgb(30 41 59);
+      color: white;
+    }
+
+    /* Stats Cards */
+    .stats { 
+      max-width: var(--maxw); 
+      margin: 16px auto; 
+      padding: 0 24px 16px; 
+      display: grid; 
+      gap: 16px; 
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); 
+    }
+    
+    .stat {
+      padding: 20px;
+      text-align: center;
+      transition: transform 0.3s ease;
+    }
+    
+    .stat:hover {
+      transform: scale(1.05);
+    }
+    
+    .stat .k { 
+      font-size: 0.9rem; 
+      color: rgba(255, 255, 255, 0.6); 
+      margin-bottom: 8px;
+    }
+    
+    .stat .v { 
+      font-size: 2rem; 
+      font-weight: 700; 
+      color: white; 
+    }
+
+    /* Table with Glass Effect */
+    .table-wrap { 
+      max-width: var(--maxw); 
+      margin: 16px auto 40px; 
+      padding: 0 24px; 
+    }
+    
+    table { 
+      width: 100%; 
+      border-collapse: collapse; 
+      border-radius: 16px;
+      overflow: hidden; 
+    }
+    
+    thead th { 
+      background: rgba(255, 255, 255, 0.15); 
+      color: white; 
+      text-align: left; 
+      font-weight: 600; 
+      padding: 16px; 
+      font-size: 0.95rem; 
+      user-select: none;
+      backdrop-filter: blur(10px);
+    }
+    
+    tbody td { 
+      padding: 16px; 
+      border-top: 1px solid rgba(255, 255, 255, 0.1); 
+      vertical-align: middle;
+      background: rgba(255, 255, 255, 0.05);
+    }
+    
+    tbody tr:hover { 
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    /* Links with Admin Theme Colors */
+    .table-wrap a.link { 
+      color: rgb(96 165 250); 
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.3s ease;
+    }
+    
+    .table-wrap a.link:visited { 
+      color: rgb(96 165 250); 
+    }
+    
+    .table-wrap a.link:hover { 
+      color: rgb(147 51 234);
+      text-decoration: underline;
+    }
+
+    /* Numbers styling */
+    .num a.link, .num .nolink { 
+      font-weight: 700; 
+    }
+    
+    .nolink { 
+      color: rgba(255, 255, 255, 0.6); 
+      text-decoration: none; 
+    }
+
+    /* Logo styling */
+    .logo-cell { 
+      width: 60px;
+    }
+    
+    .logo { 
+      width: 40px; 
+      height: 40px; 
+      border-radius: 8px; 
+      object-fit: cover; 
+      background: rgba(255, 255, 255, 0.1); 
+      border: 1px solid rgba(255, 255, 255, 0.2); 
+    }
+
+    /* Status messages */
+    .status, .empty, .error { 
+      max-width: var(--maxw); 
+      margin: 16px auto 0; 
+      padding: 0 24px; 
+      color: rgba(255, 255, 255, 0.7); 
+    }
+    
+    .empty, .error { 
+      padding: 24px; 
+      border: 1px dashed rgba(255, 255, 255, 0.3); 
+      border-radius: 16px; 
+      background: rgba(255, 255, 255, 0.05);
+      text-align: center;
+    }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+      .toolbar { 
+        grid-template-columns: 1fr; 
+        padding: 16px;
+      }
+      
+      header {
+        padding: 0 16px;
+      }
+      
+      h1 {
+        font-size: 2rem;
+      }
+      
+      .table-wrap {
+        padding: 0 16px;
+      }
+      
+      thead { 
+        display: none; 
+      }
+      
+      table, tbody, tr, td { 
+        display: block; 
+        width: 100%; 
+      }
+      
+      tbody tr { 
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        margin-bottom: 16px;
+        border-radius: 12px;
+        overflow: hidden;
+      }
+      
+      tbody td { 
+        border: none; 
+        padding: 12px 16px; 
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      
+      tbody td::before { 
+        content: attr(data-col) ": "; 
+        font-weight: 600; 
+        color: rgba(255, 255, 255, 0.8);
+        flex: 1;
+      }
+      
+      .logo-cell { 
+        display: none; 
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>ภาพรวมโครงการ (Projects Overview)</h1>
+    <div class="sub">ภาพรวมโครงการพัฒนาอสังหาริมทรัพย์ทั้งหมด พร้อมข้อมูลรายละเอียดและการเชื่อมโยงแต่ละส่วน</div>
+  </header>
+
+  <!-- Toolbar -->
+  <div class="toolbar glass-card">
+    <input id="search" type="search" placeholder="ค้นหาโครงการ..." aria-label="ค้นหาโครงการ" />
+    <select id="sort" aria-label="จัดเรียง">
+      <option value="name">Sort: ชื่อ (A→Z)</option>
+      <option value="units">Sort: จำนวนยูนิต</option>
+      <option value="foodies">Sort: จำนวน Foodies</option>
+      <option value="markets">Sort: จำนวน Marketplace</option>
+      <option value="announces">Sort: จำนวน Announcements</option>
+    </select>
+  </div>
+
+  <!-- ตาราง -->
+  <div class="table-wrap">
+    <div id="status" class="status" aria-live="polite"></div>
+    <div class="glass-card">
+      <table aria-label="Projects table">
+        <thead>
+          <tr>
+            <th>Logo</th>
+            <th>Project ID</th>
+            <th>Project name</th>
+            <th>PM</th>
+            <th>No. of listed units</th>
+            <th>No. of foodies</th>
+            <th>No. of marketplace</th>
+            <th>No. of announcement</th>
+          </tr>
+        </thead>
+        <tbody id="result"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div id="empty" class="empty" style="display:none">ยังไม่มีโครงการในระบบ</div>
+  <div id="error" class="error" style="display:none">โหลดข้อมูลไม่สำเร็จ บางส่วนอาจไม่แสดง</div>
+
+  <script>
+    /* ---------- DATA CONFIG ---------- */
+    const DATA_PATHS = {
+      projects: 'ann/data/project.json',
+      pms:      'ann/data/pm.json',
+      units:    'ann/data/unit.json',
+      foodies:  'ann/data/foodie.json',
+      markets:  'ann/data/market.json',
+      announces:'ann/data/announce.json'
+    };
+
+    /* ---------- HELPERS ---------- */
+    const $ = sel => document.querySelector(sel);
+    const el = (tag, props={}) => Object.assign(document.createElement(tag), props);
+    async function loadJSON(path){ const res = await fetch(path,{cache:'no-store'}); if(!res.ok) throw new Error(`HTTP ${res.status} @ ${path}`); return res.json(); }
+    function groupBy(arr, key){ const map=new Map(); (arr||[]).forEach(i=>{const k=i?.[key]; if(!k) return; if(!map.has(k)) map.set(k,[]); map.get(k).push(i);}); return map; }
+
+    /* ---------- NORMALIZE ---------- */
+    function normalizeMaps({projects, pms, units, foodies, markets, announces}){
+      const projList = Array.isArray(projects?.projects) ? projects.projects : [];
+      const pmList = Array.isArray(pms?.property_management_companies) ? pms.property_management_companies : [];
+      const pmById = new Map(pmList.map(pm => [pm.pm_id, pm]));
+      const unitsByProject   = groupBy(Array.isArray(units?.units) ? units.units : [], 'project_id');
+      const foodByProject    = groupBy(Array.isArray(foodies?.foodies) ? foodies.foodies : [], 'project_id');
+      const marketByProject  = groupBy(Array.isArray(markets?.markets) ? markets.markets : [], 'project_id');
+      const annArr = Array.isArray(announces) ? announces : (
+        Array.isArray(announces?.announcements) ? announces.announcements :
+        Array.isArray(announces?.announce) ? announces.announce : []
+      );
+      const annByProject = groupBy(annArr, 'project_id');
+
+      return projList.map(p => {
+        const projId = p.project_id;
+        const pm = p.pm_id ? pmById.get(p.pm_id) : null;
+        const u = unitsByProject.get(projId) || [];
+        const f = foodByProject.get(projId) || [];
+        const m = marketByProject.get(projId) || [];
+        const a = annByProject.get(projId) || [];
+        return { project:p, pm, counts:{ units:u.length, foodies:f.length, markets:m.length, announces:a.length } };
+      });
+    }
+
+    /* ---------- TABLE ROW ---------- */
+    function projectRow({project, pm, counts}){
+      const tr = el('tr');
+
+      // Logo
+      const tdLogo = el('td', {className:'logo-cell', 'data-col':'Logo'});
+      if (project.project_logo){
+        const img = el('img', {className:'logo', alt:''});
+        // Fix path to point to ann/medias directory
+        img.src = 'ann/' + project.project_logo;
+        tdLogo.appendChild(img);
+      } else {
+        tdLogo.appendChild(el('span', {className:'nolink', textContent:''}));
+      }
+
+      // Project ID (no link)
+      const tdId = el('td', {className:'pid nolink', textContent: project.project_id, 'data-col':'Project ID'});
+
+      // Project name → projects.html (relative) — ใช้คลาส link ให้โทนเหมือน ann
+      const tdName = el('td', {className:'pname', 'data-col':'Project name'});
+      const nameLink = el('a', {
+        className:'link',
+        href:`projects.html?project_id=${encodeURIComponent(project.project_id)}`,
+        textContent: project.project_name || project.project_id
+      });
+      tdName.appendChild(nameLink);
+
+      // PM (ลิงก์ถ้ามี ไม่งั้นแสดงดำ)
+      const tdPM = el('td', {className:'pm', 'data-col':'PM'});
+      if (pm){
+        const pmName = pm.name_th || pm.name_en || pm.pm_id;
+        const a = el('a', {className:'link', href:`pm.html?pm_id=${encodeURIComponent(pm.pm_id)}`, textContent: pmName});
+        tdPM.appendChild(a);
+      }else{
+        tdPM.appendChild(el('span', {className:'nolink', textContent:'ไม่ระบุ'}));
+      }
+
+      // ตัวเลข (ลิงก์ = น้ำเงิน, ไม่มีลิงก์ = ดำ)
+      const tdUnits = countCell(counts.units,     `unit.html?project_id=${encodeURIComponent(project.project_id)}`,     'No. of listed units');
+      const tdFood  = countCell(counts.foodies,   `foodie.html?project_id=${encodeURIComponent(project.project_id)}`,   'No. of foodies');
+      const tdMkt   = countCell(counts.markets,   `marketplace.html?project_id=${encodeURIComponent(project.project_id)}`,'No. of marketplace');
+      const tdAnn   = countCell(counts.announces, `ann/index.html?project_id=${encodeURIComponent(project.project_id)}`,'No. of announcement');
+
+      tr.append(tdLogo, tdId, tdName, tdPM, tdUnits, tdFood, tdMkt, tdAnn);
+      return tr;
+    }
+
+    function countCell(num, href, label){
+      const td = el('td', {className:'num', 'data-col':label});
+      if (Number(num) > 0 && href){
+        td.appendChild(el('a', {className:'link', href, textContent:String(num)}));
+      }else{
+        td.appendChild(el('span', {className:'nolink', textContent:String(num)}));
+      }
+      return td;
+    }
+
+    /* ---------- APP ---------- */
+    (async function init(){
+      try{
+        const [projects, pms, units, foodies, markets, announces] = await Promise.all([
+          loadJSON(DATA_PATHS.projects), loadJSON(DATA_PATHS.pms),
+          safeLoad(DATA_PATHS.units), safeLoad(DATA_PATHS.foodies),
+          safeLoad(DATA_PATHS.markets), loadJSON(DATA_PATHS.announces)
+        ]);
+        let data = normalizeMaps({projects, pms, units, foodies, markets, announces});
+        render(data);
+
+        $('#search').addEventListener('input', () => render(filterAndSort(data)));
+        $('#sort').addEventListener('change', () => render(filterAndSort(data)));
+
+        function filterAndSort(list){
+          const q = ($('#search').value || '').trim().toLowerCase();
+          const mode = $('#sort').value;
+          let out = list.filter(item=>{
+            const name = (item.project.project_name || '').toLowerCase();
+            const pid = (item.project.project_id || '').toLowerCase();
+            return !q || name.includes(q) || pid.includes(q);
+          });
+          out.sort((a,b)=>{
+            if(mode==='name'){
+              const an = (a.project.project_name || '').toLowerCase();
+              const bn = (b.project.project_name || '').toLowerCase();
+              return an.localeCompare(bn);
+            }
+            if(mode==='units')     return b.counts.units     - a.counts.units;
+            if(mode==='foodies')   return b.counts.foodies   - a.counts.foodies;
+            if(mode==='markets')   return b.counts.markets   - a.counts.markets;
+            if(mode==='announces') return b.counts.announces - a.counts.announces;
+            return 0;
+          });
+          return out;
+        }
+      }catch(err){
+        console.error(err);
+        $('#error').style.display='';
+      }
+    })();
+
+    async function safeLoad(path){ try { return await loadJSON(path); } catch(e){ return {}; } }
+
+    function render(items){
+      const tbody = $('#result'); tbody.innerHTML = '';
+      if(!items || !items.length){ $('#empty').style.display = ''; return; }
+      $('#empty').style.display = 'none';
+      items.forEach(it => tbody.appendChild(projectRow(it)));
+    }
+  </script>
+</body>
+</html>

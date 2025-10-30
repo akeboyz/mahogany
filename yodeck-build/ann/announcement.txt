@@ -1,0 +1,80 @@
+ฟีเจอร์หลักของ Announcement Player อยู่ในไฟล์ announcement4.html
+	•	#โครงร่างจอ/ซีน
+	•	ขนาดดีไซน์คงที่ 1080×1920 พร้อมสคริปต์ปรับสเกลให้พอดีกับ viewport (fitSignageV16).
+	•	มี 4 ซีนวนลูป:
+	1.	TH Intro, 2) TH Detail, 3) EN Intro, 4) EN Detail
+	•	เวลาแต่ละซีน: Intro 5s, Detail 9s (รวม 2 ภาษา = 28s/หนึ่งรอบประกาศ)
+	•	แถบล่าง (bottom-bar) แสดง gesture icon และข้อความแนะนำ (ซ่อนไว้ขณะแสดงซีน)
+	•	#ข้อมูล/ดาต้าอินพุต
+	•	โหลด JSON 3 ไฟล์จาก /ann/data/:
+	•	announce.json (รายการประกาศ)
+	•	project.json (รายการโครงการ; ใช้พื้นหลัง/โลโก้/pm_id)
+	•	pm.json (ออปชัน ใช้ดึงโลโก้บริษัทบริหารทรัพย์ ถ้า project ไม่มีให้มา)
+	•	รองรับ 2 โหมดผ่าน URL query:
+	•	?id=<announcement_id>: แสดงประกาศเดียว
+	•	?project_id=<id>: วนประกาศเฉพาะโครงการนั้น (วนครบ TH/EN แล้วเปลี่ยนประกาศถัดไปอัตโนมัติ)
+	•	มีสถานะโหลด/ข้อความแนะนำเมื่อไฟล์ไม่พบ หรือโครงสร้าง JSON ไม่ถูกต้อง
+	•	#การเรนเดอร์เนื้อหา
+	•	พื้นหลังเฟรมเอาจาก project.background_color (fallback #0e3a5b)
+	•	โลโก้โครงการ: แสดงบนทุกซีน (intro/detail ทั้ง TH/EN) จาก project.project_logo
+	•	โลโก้ PM: ในหน้า Detail (TH/EN) จาก project.property_management_logo หรือ fallback ด้วย pm.json โดย pm_id
+	•	เนื้อหา Intro ต่อภาษา:
+	•	TH: kicker “ประกาศ”, title จาก ann.title_th || main_th/detail_th, date จาก ann.date_th || ann.date
+	•	EN: kicker “ANNOUNCEMENT”, title จาก ann.title_en || main_en/detail_en, date จาก ann.date_en || ann.date
+	•	เนื้อหา Detail ต่อภาษา:
+	•	TH labels: พื้นที่กระทบ / ช่วงเวลา / สาเหตุ / คำแนะนำ
+	•	EN labels: Area / Period / Reasons / Advice
+	•	ฟอร์แมตช่วงเวลา (ann.period) แปลงเป็น TH/EN อัตโนมัติ:
+	•	อินพุตคาดรูปแบบ DD/MM/YYYY, HH:MM-HH:MM (รับปี 2 หลักได้; TH บวก พ.ศ. 543)
+	•	Badge แสดงรหัสประกาศ _idPublic (derive อัตโนมัติถ้าไม่มี announcement_id)
+	•	สร้าง _idDerived ตาม project_id → P###-### และใช้เป็น _idPublic ถ้าไม่มีค่า
+	•	#ลูป/ควบคุม
+	•	วนซีนอัตโนมัติด้วย setTimeout
+	•	โหมดวนประกาศรายโครงการ: สลับประกาศทุก (5+9)×2 ms
+	•	อัปเดตข้อความ gesture (“สัมผัสจอเพื่อดูเมนูหลัก” / “Touch screen to see main menu”) ตามภาษาของซีน
+	•	#เสียง BGM
+	•	แท็ก <audio id="bgm" preload="auto" playsinline>
+	•	โค้ดเล่นเพลงแบบ simple loop:
+	•	เพลย์ลิสต์ /ann/music/bg-music001..005.mp3
+	•	ตั้ง audio.src แล้ว play() ทันที; ถ้าโดนบล็อก autoplay ติด pointerdown เพื่อปลดล็อกครั้งเดียว
+	•	เปลี่ยนแทร็กเมื่อ ended หรือ error (เล่นต่อไปเรื่อย ๆ)
+	•	volume = 0.6, loop = false (ลูปด้วยการสับแทร็กเอง)
+	•	#พาธไฟล์ (สำคัญ)
+	•	ใช้ absolute path เริ่มด้วย /ann/... สำหรับไอคอน/เพลง/ดาต้า → เหมาะเมื่อเว็บรันที่โดเมน root
+	•	__DATA_BASE__ = new URL('/ann/data/', __SCRIPT_BASE__) → ทำให้ fetch ไปที่ /ann/data/*.json
+	•	#สถานะ/ความผิดพลาด
+	•	แสดงกล่อง “Loading…” ระหว่างดึงข้อมูล
+	•	แจ้งเตือนกรณีไม่พบประกาศที่ระบุ id หรือ project_id ไม่มีรายการ
+	•	แสดงข้อความ error ของ HTTP/โครงสร้าง JSON
+
+⸻
+
+ฟิลด์ข้อมูลที่โค้ดคาดหวัง (สรุปสคีมาโดยย่อ)
+	•	announce.json (array ของประกาศ):
+	•	คีย์สำคัญที่ถูกใช้:
+announcement_id?, project_id, title_th?, title_en?,
+main_th?/detail_th?, main_en?/detail_en?,
+date_th?, date_en?, date?,
+area_th?, area_en?, period?,
+reason_th?, reason_en?,
+advice_th?, advice_en?.
+	•	project.json:
+	•	โครง: { projects: [ { project_id, background_color?, project_logo?, pm_id?, property_management_logo? } ] }
+	•	pm.json (ออปชัน):
+	•	โครงที่รองรับทั้ง 2 แบบ:
+	•	{ property_management_companies: [ { pm_id, property_management_logo?/logo? } ] }
+	•	หรือ { [pm_id]: { property_management_logo?/logo? } }
+
+⸻
+
+Prompt Seed (เอาไปสั่งงาน/เขียนต่อได้ทันที)
+	•	“สร้างหน้าป้ายประกาศแนว kiosk/vertical ขนาด 1080×1920 ที่:
+	1.	วน 4 ซีน: TH Intro → TH Detail → EN Intro → EN Detail, เวลา Intro=5s, Detail=9s
+	2.	โหลดประกาศจาก /ann/data/announce.json, project.json, pm.json โดยเลือกด้วย ?id=... หรือ ?project_id=...
+	3.	ตั้งพื้นหลังจาก project.background_color, แสดง project_logo บนทุกซีน และแสดง PM logo ในหน้า Detail (จาก project.property_management_logo หรือหาใน pm.json จาก pm_id)
+	4.	แสดงข้อมูลประกาศแบบ 2 ภาษา (TH/EN) ตามฟิลด์ใน announce.json พร้อม format period เป็น TH (พ.ศ.)/EN อัตโนมัติ
+	5.	แสดงรหัสประกาศ _idPublic (ดึงจาก announcement_id หรือ derive เป็น P###-###)
+	6.	มี bottom bar แสดง gesture icon + ข้อความเปลี่ยนตามภาษา (“สัมผัสจอเพื่อดูเมนูหลัก” / “Touch screen to see main menu”)
+	7.	เล่น BGM แบบเพลย์ลิสต์จาก /ann/music/bg-music001..005.mp3, autoplay ถ้าได้; ถ้าโดนบล็อกให้ปลดล็อกด้วยการแตะครั้งแรก
+	8.	ใช้ absolute path /ann/... สำหรับ asset ทั้งหมด
+	9.	มีสถานะ Loading/ข้อความ error ที่ชัดเจน เมื่อไฟล์ไม่พบหรือข้อมูลผิดรูปแบบ”

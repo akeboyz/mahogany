@@ -1,0 +1,42 @@
+[
+  {
+    "name": "Super Deal Pizza",
+    "image": "images/deal01.jpg"
+  },
+  {
+    "name": "Hot Deal Noodles",
+    "image": "images/deal02.jpg"
+  },
+  {
+    "name": "Sushi Place",
+    "image": "images/sushi.jpg"
+  },
+  {
+    "name": "Noodle Corner",
+    "image": "images/noodle.jpg"
+  },
+  {
+    "name": "BBQ House",
+    "image": "images/bbq.jpg"
+  },
+  {
+    "name": "Thai Street Food",
+    "image": "images/thai.jpg"
+  },
+  {
+    "name": "Burger Hub",
+    "image": "images/burger.jpg"
+  },
+  {
+    "name": "Cafe Amazon",
+    "image": "images/cafe.jpg"
+  },
+  {
+    "name": "Ramen Master",
+    "image": "images/ramen.jpg"
+  },
+  {
+    "name": "Salad Bar",
+    "image": "images/salad.jpg"
+  }
+]

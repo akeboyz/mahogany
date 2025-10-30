@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Category</title>
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    html, body {
+      width:100vw; height:100vh; background:black; overflow:hidden;
+      font-family:sans-serif; display:flex; flex-direction:column; align-items:center;
+    }
+    .page-wrapper{
+      aspect-ratio:9 / 16; width:100%; height:100vh; max-width:56.25vh;
+      display:flex; flex-direction:column; background:white;
+    }
+    .banner-container{
+      position:relative; width:100%; aspect-ratio:9 / 5; overflow:hidden;
+      background: linear-gradient(45deg, #007bff, #0056b3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 2rem;
+      font-weight: bold;
+    }
+    .banner-container video{ width:100%; height:100%; object-fit:cover; display:block; background:black; }
+    .back-to-menu{
+      position:absolute; bottom:10px; right:10px; background:rgba(0,0,0,.8); color:#fff;
+      padding:8px 12px; border-radius:8px; font-size:12px; z-index:10; user-select:none;
+      line-height:1.2; cursor: pointer;
+    }
+    .shop-grid{
+      flex:1; display:grid; grid-template-columns:repeat(4,1fr); grid-auto-rows:minmax(120px, 1fr);
+      gap:6px; padding:10px; overflow-y:auto; width:100%; background:white;
+    }
+    .shop-card{
+      background:#333; border-radius:8px; overflow:hidden; display:flex; flex-direction:column;
+      align-items:center; text-align:center; color:white; font-size:12px;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    .shop-card:hover {
+      transform: scale(1.05);
+    }
+    .shop-card img{ width:100%; height:70%; object-fit:cover; display:block; }
+    .shop-card .shop-name{ padding:8px; flex:1; display:flex; align-items:center; }
+    .loading {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      font-size: 1rem;
+      color: #666;
+    }
+  </style>
+</head>
+<body>
+  <div class="page-wrapper">
+    <div class="banner-container">
+      <video id="bannerVideo" autoplay muted playsinline preload="metadata" style="display: none;">
+        <source id="bannerSrc" src="" type="video/mp4" />
+      </video>
+      <div id="bannerText">DELIVERY</div>
+      <div id="backBtn" class="back-to-menu">↩️ back to<br>main menu</div>
+    </div>
+    <div class="shop-grid" id="shopGrid">
+      <div class="loading">Loading items...</div>
+    </div>
+  </div>
+
+<script>
+  console.log('=== SIMPLE CATEGORY PAGE STARTED ===');
+
+  // Get parameters
+  const qs = new URLSearchParams(location.search);
+  const type = qs.get('type') || 'dining';
+  const projectId = qs.get('project_id') || 'prj001';
+
+  console.log('Parameters:', { type, projectId });
+
+  // Update banner text
+  const bannerText = document.getElementById('bannerText');
+  const titles = {
+    'delivery': 'DELIVERY',
+    'dining': 'DINING',
+    'daily': 'DAILY SERVICES',
+    'ondemand': 'ON-DEMAND',
+    'deal': 'PROPERTY DEALS'
+  };
+  bannerText.textContent = titles[type] || type.toUpperCase();
+
+  // Back button
+  document.getElementById('backBtn').onclick = function() {
+    console.log('Back button clicked');
+    window.location.href = `./menu.html?project_id=${projectId}`;
+  };
+
+  // Load banner video
+  const video = document.getElementById('bannerVideo');
+  const videoSrc = document.getElementById('bannerSrc');
+  videoSrc.src = `./medias/${type}.mp4`;
+
+  video.onloadeddata = function() {
+    console.log('Video loaded successfully');
+    video.style.display = 'block';
+    bannerText.style.display = 'none';
+  };
+
+  video.onerror = function() {
+    console.log('Video failed to load, keeping text banner');
+  };
+
+  video.load();
+
+  // Load items
+  async function loadItems() {
+    const grid = document.getElementById('shopGrid');
+
+    try {
+      console.log('Loading items for type:', type);
+
+      let items = [];
+
+      if (type === 'delivery' || type === 'dining') {
+        const response = await fetch('./data/rest.json');
+        const restaurants = await response.json();
+        console.log('Loaded restaurants:', restaurants.length);
+
+        if (type === 'delivery') {
+          items = restaurants.filter(item =>
+            item.type === 'both' &&
+            item.projects && item.projects.includes(projectId) &&
+            item.status === 'active'
+          );
+        } else {
+          items = restaurants.filter(item =>
+            (item.type === 'dine' || item.type === 'both') &&
+            item.projects && item.projects.includes(projectId) &&
+            item.status === 'active'
+          );
+        }
+      }
+      else if (type === 'daily' || type === 'ondemand') {
+        const response = await fetch('./data/shop.json');
+        const shops = await response.json();
+        console.log('Loaded shops:', shops.length);
+
+        if (type === 'daily') {
+          items = shops.filter(item =>
+            item.type === 'non-service' &&
+            item.projects && item.projects.includes(projectId) &&
+            item.status === 'active'
+          );
+        } else {
+          items = shops.filter(item =>
+            item.type === 'service' &&
+            item.projects && item.projects.includes(projectId) &&
+            item.status === 'active'
+          );
+        }
+      }
+      else if (type === 'deal') {
+        const response = await fetch('./data/unit.json');
+        const data = await response.json();
+        console.log('Loaded units:', data.units.length);
+
+        items = data.units.filter(item =>
+          item.project_id === projectId &&
+          (item.condition?.selling_price || item.condition?.rental_price)
+        );
+
+        // Transform unit data
+        items.forEach(unit => {
+          unit.name_th = `${unit.unit?.room_type || 'Unit'} ${unit.unit?.unit_number || ''}`;
+          unit.name_en = unit.name_th;
+          unit.id = unit.unit_id;
+        });
+      }
+
+      console.log('Filtered items:', items.length);
+      console.log('Sample item:', items[0]);
+
+      // Clear grid
+      grid.innerHTML = '';
+
+      if (items.length === 0) {
+        grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: #666;">No items found for this category and project</div>';
+        return;
+      }
+
+      // Render items
+      items.forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'shop-card';
+
+        const name = item.name_th || item.name_en || item.id || 'Unknown';
+        let imageSrc = './medias/placeholder.jpg';
+
+        if (item.images && item.images.length > 0) {
+          imageSrc = './' + item.images[0];
+        } else if (item.logo) {
+          imageSrc = './' + item.logo;
+        }
+
+        div.innerHTML = `
+          <img src="${imageSrc}" alt="${name}" onerror="this.src='./medias/placeholder.jpg'">
+          <div class="shop-name">${name}</div>
+        `;
+
+        // Add click handler
+        div.onclick = function() {
+          console.log('Item clicked:', item.id);
+
+          if (type === 'daily' || type === 'ondemand') {
+            window.location.href = `./product.html?type=shop&id=${item.id}&project_id=${projectId}`;
+          } else if (type === 'delivery' || type === 'dining') {
+            window.location.href = `./product.html?type=restaurant&id=${item.id}&project_id=${projectId}`;
+          } else if (type === 'deal') {
+            window.location.href = `./product.html?type=unit&id=${item.id}&project_id=${projectId}`;
+          }
+        };
+
+        grid.appendChild(div);
+      });
+
+    } catch (error) {
+      console.error('Error loading items:', error);
+      grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: red;">Error loading items: ' + error.message + '</div>';
+    }
+  }
+
+  // Load items immediately
+  loadItems();
+
+  console.log('=== SCRIPT LOADED SUCCESSFULLY ===');
+</script>
+</body>
+</html>

@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Property Management - Project Overview</title>
+  <style>
+    /* ===== Admin Theme - Modern Dark Gradient ===== */
+    :root { 
+      --maxw: 1200px; 
+      --ui-font: system-ui, -apple-system, "Segoe UI", Tahoma, Arial, sans-serif; 
+    }
+    
+    body { 
+      font-family: var(--ui-font); 
+      margin: 0; 
+      background: linear-gradient(135deg, rgb(15 23 42) 0%, rgb(88 28 135) 50%, rgb(15 23 42) 100%);
+      color: white;
+      min-height: 100vh;
+    }
+    
+    /* Background Effects */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(ellipse at top right, rgba(147, 51, 234, 0.2) 0%, transparent 50%);
+      pointer-events: none;
+      z-index: -1;
+    }
+    
+    header { 
+      max-width: var(--maxw); 
+      margin: 24px auto 0; 
+      padding: 0 24px; 
+      position: relative;
+      z-index: 10;
+    }
+    
+    h1 { 
+      margin: 0 0 12px; 
+      font-size: 3rem; 
+      font-weight: 900;
+      background: linear-gradient(to right, rgb(96 165 250), rgb(147 51 234));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .sub { 
+      color: rgba(255, 255, 255, 0.8); 
+      margin-bottom: 24px; 
+      font-size: 1.1rem;
+      font-weight: 300;
+    }
+    
+    .card { 
+      background: rgba(255, 255, 255, 0.1); 
+      border: 1px solid rgba(255, 255, 255, 0.2); 
+      border-radius: 16px; 
+      padding: 20px; 
+      margin: 16px auto; 
+      max-width: var(--maxw);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    }
+    
+    .back-link { 
+      color: rgb(96 165 250); 
+      text-decoration: none; 
+      margin-bottom: 24px; 
+      display: inline-block; 
+      font-weight: 500;
+      transition: color 0.3s ease;
+    }
+    
+    .back-link:hover { 
+      text-decoration: underline;
+      color: rgb(147 51 234);
+    }
+    
+    .logo { 
+      width: 64px; 
+      height: 64px; 
+      object-fit: cover; 
+      border-radius: 8px; 
+      float: right; 
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="index.html" class="back-link">← Back to Projects Overview</a>
+    <h1>Property Management Company</h1>
+    <div class="sub">Property management company details</div>
+  </header>
+
+  <div class="card">
+    <h2>PM Company Details</h2>
+    <p>URL Parameter: <strong id="pm-id">-</strong></p>
+    <div id="pm-details">Loading PM details...</div>
+  </div>
+
+  <script>
+    // Get pm_id from URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const pmId = urlParams.get('pm_id');
+    document.getElementById('pm-id').textContent = pmId || 'Not specified';
+
+    // Load PM data
+    fetch('ann/data/pm.json')
+      .then(r => r.json())
+      .then(data => {
+        const pms = data.property_management_companies || [];
+        const pm = pms.find(p => p.pm_id === pmId);
+        
+        const container = document.getElementById('pm-details');
+        if (!pm) {
+          container.innerHTML = '<p>Property management company not found.</p>';
+          return;
+        }
+
+        container.innerHTML = `
+          <div style="border: 1px solid #ddd; padding: 20px; border-radius: 8px;">
+            ${pm.logo ? `<img src="ann/${pm.logo}" alt="${pm.name_en}" class="logo">` : ''}
+            <h3>${pm.name_en}</h3>
+            <h4>${pm.name_th}</h4>
+            <p><strong>PM ID:</strong> ${pm.pm_id}</p>
+            ${pm.email ? `<p><strong>Email:</strong> ${pm.email}</p>` : ''}
+            ${pm.website ? `<p><strong>Website:</strong> <a href="${pm.website}" target="_blank">${pm.website}</a></p>` : ''}
+            ${pm.address ? `<p><strong>Address:</strong> ${pm.address}</p>` : ''}
+          </div>
+        `;
+      })
+      .catch(err => {
+        document.getElementById('pm-details').innerHTML = '<p>Error loading PM data.</p>';
+        console.error(err);
+      });
+  </script>
+</body>
+</html>

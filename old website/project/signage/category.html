@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Category</title>
+  <link rel="stylesheet" href="css/category.css" />
+</head>
+<body>
+  <div class="page-wrapper"> <!-- ✅ ใช้ class ตรงกับ CSS -->
+
+    <!-- ✅ วิดีโอแบนเนอร์ -->
+    <div class="banner-container">
+      <video id="bannerVideo" autoplay muted loop playsinline>
+        <source src="" type="video/mp4" />
+      </video>
+
+      <!-- ✅ ปุ่มกลับเมนูแบบใหม่ -->
+      <div class="back-to-menu" onclick="location.href='menu.html'">
+        <div class="icon">↩️ back to</div>
+        <div class="label">main menu</div>
+      </div>
+    </div> <!-- ✅ ปิด banner-container ให้ถูก -->
+
+    <!-- ✅ Grid ร้านค้า -->
+    <div class="shop-grid" id="shopGrid"></div>
+
+  </div>
+
+  <script>
+    // ✅ ดึง type จาก URL
+    const params = new URLSearchParams(window.location.search);
+    const type = params.get('type') || 'dining';
+
+    // ✅ อัปเดต banner ให้ตรงกับ type
+    const bannerVideo = document.getElementById('bannerVideo');
+    bannerVideo.querySelector('source').src = `menu-vdo/${type}.mp4`;
+    bannerVideo.load();
+
+    // ✅ โหลดร้านค้าจาก JSON
+    fetch(`data/${type}.json`)
+      .then(res => res.json())
+      .then(data => {
+        const grid = document.getElementById('shopGrid');
+        grid.innerHTML = "";
+
+        let count = 0;
+
+        // ✅ แสดงร้านค้าจาก JSON
+        data.forEach(shop => {
+          const div = document.createElement('div');
+          div.className = 'shop-card';
+          div.innerHTML = `
+            <img src="${shop.image}" alt="${shop.name}" />
+            <div class="shop-name">${shop.name}</div>
+          `;
+          grid.appendChild(div);
+          count++;
+        });
+
+        // ✅ เติมช่องว่างให้ครบ 12 ช่องเสมอ
+        for (let i = count; i < 12; i++) {
+          const div = document.createElement('div');
+          div.className = 'shop-card empty';
+          grid.appendChild(div);
+        }
+      })
+      .catch(err => {
+        console.error('Error loading shop data:', err);
+      });
+
+    // ✅ ✅ เพิ่มฟีเจอร์ Auto Return หากไม่มีการแตะจอเกิน 1 นาที
+    let timeout;
+    function resetInactivityTimer() {
+      clearTimeout(timeout);
+      timeout = setTimeout(() => {
+        window.location.href = 'index.html';
+      }, 60000); // 1 นาที = 60,000 มิลลิวินาที
+    }
+
+    // ✅ ตรวจจับการแตะหรือคลิกเพื่อรีเซ็ตเวลา
+    window.addEventListener('click', resetInactivityTimer);
+    window.addEventListener('touchstart', resetInactivityTimer);
+    window.addEventListener('mousemove', resetInactivityTimer);
+
+    // ✅ เริ่มจับเวลาเมื่อโหลดหน้า
+    resetInactivityTimer();
+  </script>
+
+  <!-- ✅ ตรวจสอบเวอร์ชันล่าสุดทุก 1 นาที หากไม่ตรง → โหลดใหม่ -->
+  <script>
+    window.currentVersion = '';
+
+    setInterval(() => {
+      fetch('/version.txt', { cache: 'no-store' })
+        .then(res => res.text())
+        .then(serverVersion => {
+          if (window.currentVersion && window.currentVersion !== serverVersion.trim()) {
+            console.log('🔁 New version detected → Reloading...');
+            location.reload();
+          }
+          window.currentVersion = serverVersion.trim();
+        });
+    }, 60000);
+  </script>
+</body>
+</html>

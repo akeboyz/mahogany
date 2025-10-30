@@ -1,0 +1,72 @@
+[
+  {
+    "id": "menu001",
+    "name_th": "Almond Croissant",
+    "name_en": "Almond Croissant",
+    "description_th": "Traditionally French Butter Croissant filled and topped with Almond Cream & Sliced Almonds",
+    "description_en": "Traditionally French Butter Croissant filled and topped with Almond Cream & Sliced Almonds",
+    "price": 95,
+    "category_th": "Pastry",
+    "category_en": "Pastry",
+    "image": "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=200&h=150&fit=crop",
+    "available": true,
+    "spicy_level": 0,
+    "tags": ["signature", "vegetarian"]
+  },
+  {
+    "id": "menu002",
+    "name_th": "Pain au Chocolat",
+    "name_en": "Pain au Chocolat",
+    "description_th": "Crispy on the outside, fluffy on the inside, stuffed with Belgium Chocolate",
+    "description_en": "Crispy on the outside, fluffy on the inside, stuffed with Belgium Chocolate",
+    "price": 90,
+    "category_th": "Pastry",
+    "category_en": "Pastry",
+    "image": "https://images.unsplash.com/photo-1588166524941-3bf61a9c41db?w=200&h=150&fit=crop",
+    "available": true,
+    "spicy_level": 0,
+    "tags": ["vegetarian", "popular"]
+  },
+  {
+    "id": "menu003",
+    "name_th": "Chocolate - Almond Croissant",
+    "name_en": "Chocolate - Almond Croissant",
+    "description_th": "Traditionally French Chocolate Croissant filled with Almond Cream & Topped with Sliced Almonds",
+    "description_en": "Traditionally French Chocolate Croissant filled with Almond Cream & Topped with Sliced Almonds",
+    "price": 110,
+    "category_th": "Pastry",
+    "category_en": "Pastry",
+    "image": "https://images.unsplash.com/photo-1617093727343-374698b1b08d?w=200&h=150&fit=crop",
+    "available": true,
+    "spicy_level": 0,
+    "tags": ["classic", "traidition"]
+  },
+  {
+    "id": "menu004",
+    "name_th": "Danish",
+    "name_en": "Danish",
+    "description_th": "Danish pastry willed with pastry cream, almond cream, orange zest & raisins",
+    "description_en": "Danish pastry willed with pastry cream, almond cream, orange zest & raisins",
+    "price": 100,
+    "category_th": "Pastry",
+    "category_en": "Pastrys",
+    "image": "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=200&h=150&fit=crop",
+    "available": true,
+    "spicy_level": 0,
+    "tags": ["vegetarian", "classic"]
+  },
+  {
+    "id": "menu005",
+    "name_th": "Lemon Tart",
+    "name_en": "Lemon Tart",
+    "description_th": "Layers of Crusty Sweet dough, Lemon Cream, Italian Meringue & lime Zest.",
+    "description_en": "Layers of Crusty Sweet dough, Lemon Cream, Italian Meringue & lime Zest.",
+    "price": 180,
+    "category_th": "Pastry",
+    "category_en": "Pastrys",
+    "image": "https://images.unsplash.com/photo-1581006852262-e4307cf6283a?w=200&h=150&fit=crop",
+    "available": true,
+    "spicy_level": 0,
+    "tags": ["vegetarian", "tasty"]
+  }
+]

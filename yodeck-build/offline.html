@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Offline - Digital Signage</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background-color: #111827;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      text-align: center;
+    }
+    
+    .offline-container {
+      max-width: 400px;
+      padding: 2rem;
+    }
+    
+    .icon {
+      font-size: 4rem;
+      margin-bottom: 1rem;
+    }
+    
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+      font-weight: 600;
+    }
+    
+    p {
+      color: #9CA3AF;
+      margin-bottom: 2rem;
+      line-height: 1.5;
+    }
+    
+    .retry-btn {
+      background-color: #3B82F6;
+      color: white;
+      border: none;
+      padding: 0.75rem 2rem;
+      border-radius: 0.5rem;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+    
+    .retry-btn:hover {
+      background-color: #2563EB;
+    }
+    
+    .status {
+      margin-top: 1rem;
+      font-size: 0.875rem;
+      color: #6B7280;
+    }
+  </style>
+</head>
+<body>
+  <div class="offline-container">
+    <div class="icon">📡</div>
+    <h1>You're Offline</h1>
+    <p>
+      The digital signage system is currently offline. 
+      Please check your internet connection and try again.
+    </p>
+    <button class="retry-btn" onclick="retry()">Try Again</button>
+    <div class="status" id="status"></div>
+  </div>
+
+  <script>
+    function retry() {
+      const status = document.getElementById('status');
+      status.textContent = 'Checking connection...';
+      
+      // Try to fetch the main page
+      fetch('/', { cache: 'no-store' })
+        .then(response => {
+          if (response.ok) {
+            window.location.href = '/';
+          } else {
+            status.textContent = 'Still offline. Please try again later.';
+          }
+        })
+        .catch(() => {
+          status.textContent = 'Still offline. Please try again later.';
+        });
+    }
+
+    // Auto-retry when back online
+    window.addEventListener('online', () => {
+      retry();
+    });
+
+    // Show online/offline status
+    function updateStatus() {
+      const status = document.getElementById('status');
+      if (navigator.onLine) {
+        status.textContent = 'Connection restored! Click "Try Again" to continue.';
+      } else {
+        status.textContent = 'No internet connection detected.';
+      }
+    }
+
+    window.addEventListener('online', updateStatus);
+    window.addEventListener('offline', updateStatus);
+    updateStatus();
+  </script>
+</body>
+</html>

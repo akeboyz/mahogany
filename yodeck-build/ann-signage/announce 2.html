@@ -1,0 +1,1008 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="utf-8" />
+  <title>Announcement Player</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <style>
+/**************************************
+ * v16-merge: de-duplicate font rules
+ * 1) ROOT VARIABLES (ABSOLUTE ONLY)
+ **************************************/
+:root {
+  --row-top: 280px;
+  --row-bottom: 120px;
+
+  --logo-h: 500px;      /* ใช้จริงผ่าน var ใน .top-logo img */
+  --pm-logo-h: 240px;
+  --gap-mid: 70px;
+
+  --headline-fs: 80px;  /* รวมค่า font-size ของ .kicker/.title มาไว้ที่เดียว */
+  --date-fs: 62px;
+  --label-fs: 58px;
+  --footer-font: 36px;
+
+  --gesture-h: 220px;
+
+  --side-pad: 32px;
+  --bottom-bar-gap: 22px;
+  --bottom-safe: 100px; /* 80 + 20 */
+}
+
+/**********************************************
+ * 2) VIEWPORT / PAGE BASE (เต็มจอ + ขอบดำ)
+ **********************************************/
+html, body {
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  overflow: hidden; /* ป้องกันการเลื่อน */
+  background: #000; /*ขอบดำ*/
+}
+body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #000;
+  color: #fff;
+  font-family: system-ui, -apple-system, "Segoe UI", Tahoma, Arial, sans-serif;
+  overflow: hidden;
+}
+
+/*****************************************
+ * 3) FRAME (FIXED SIZE)
+ *****************************************/
+.frame {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 1080px;
+  height: 1920px;
+  transform: translate(-50%, -50%) scale(1); /* ค่าเริ่มต้น; JS จะอัปเดต */
+  transform-origin: center center;
+  will-change: transform;
+}
+
+/********************************************************
+ * 4) STAGE & STATUS
+ ********************************************************/
+.stage, .status {
+  position:absolute;
+  top:0; right:0; bottom:0; left:0;
+}
+.stage { display:block; }
+
+.status {
+  display:grid;
+  place-items:center;
+  text-align:center;
+  padding:24px;
+  width:560px;
+  margin:16px auto 0;
+  color:#666;
+  font-size:18px;
+}
+.status .box {
+  width:640px;
+  background:#00000033;
+  border:1px solid #ffffff22;
+  border-radius:12px;
+  padding:16px 18px;
+}
+
+/***********************************
+ * 5) SCENE SWITCHER
+ ***********************************/
+.scene {
+  position:absolute;
+  top:0; right:0; bottom:0; left:0;
+  display:none;
+}
+.scene.active { display:block; }
+
+/************************************************************
+ * 6) PER-SCENE OVERRIDES (คงที่)
+ ************************************************************/
+#scene-th-intro, #scene-en-intro {
+  --row-top: 280px;
+  --row-bottom: 120px;
+}
+#scene-th-detail, #scene-en-detail {
+  --row-top: 140px;
+  --row-bottom: 140px;
+}
+
+/*********************************************
+ * 7) CANVAS BASE (ABSOLUTE GRID)
+ *********************************************/
+.canvas {
+  position:absolute; top:0; right:0; bottom:0; left:0;
+  display:grid;
+  grid-template-rows: 280px 1460px 120px; /* แทน 1fr */
+  padding-left: 32px;
+  padding-right: 32px;
+  padding-bottom: 122px; /* 100 + 22 */
+}
+
+/*************************************
+ * 8) TOP LOGO (ABSOLUTE) — ใช้ var เดียว
+ *************************************/
+.top-logo {
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  padding:0;
+  margin:0;
+}
+.top-logo img {
+  display:block;
+  height: var(--logo-h); /* เดิมล็อก 180px → รวมมาใช้ตัวแปร */
+  width:auto;
+}
+
+/*************************************************************
+ * 9) MIDDLE BLOCK — ABSOLUTE
+ *************************************************************/
+.mid {
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap: var(--gap-mid);
+  text-align:center;
+}
+.kicker {
+  font-size: var(--headline-fs);  /* เดิม 58px */
+  line-height: 80px;              /* คงค่าที่ใช้อยู่ */
+  font-weight:700;
+  letter-spacing:1px;
+  color:#fff; opacity:.95;
+  margin:0; padding:0;
+}
+.title {
+  font-size: var(--headline-fs);  /* เดิม 58px */
+  line-height: 80px;
+  font-weight:700;
+  color:#fff;
+  margin:0; padding:0;
+}
+.date {
+  font-size: var(--date-fs);
+  line-height: 35px;              /* 28 * 1.25 */
+  color:#fff; opacity:.95;
+  text-align:center;
+  margin:0; padding:0;
+}
+
+/**************************************************
+ * 10) DETAIL GRID — ABSOLUTE ตั้งค่าสำหรับหน้า 2 Detail
+ **************************************************/
+.detail-grid {
+  display:grid;
+  grid-template-columns: 376px 604px; /* แทน 1fr 1.6fr */
+  column-gap: 40px;
+  row-gap: 48px; /*แก้ช่องว่าง*/
+  align-items:start;
+  text-align:left;
+}
+.label, .value { font-size: var(--label-fs); margin:0; padding:0; color:#fff; }
+.label { font-weight:400; color:#fff; opacity:.9; line-height:80px; }
+.value { font-weight:400; line-height:80px; }
+
+/************************************************************
+ * 11) BOTTOM BAR — ABSOLUTE
+ ************************************************************/
+.bottom-bar {
+  position: absolute;
+  left: 0; right: 0;
+  bottom: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 0 32px;
+  pointer-events: none;
+}
+#idBadge { margin-left: auto; }
+.gesture {
+  opacity: .9;
+  height: var(--gesture-h);
+  width: auto;
+  filter: brightness(0) invert(1);
+  animation: gestureBounce 1.2s infinite ease-in-out;
+}
+@keyframes gestureBounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+.gesture-text {
+  font-size: var(--footer-font);
+  color: white;
+  white-space: nowrap;
+  margin-left: 10px;
+  line-height: 16px;
+}
+.pm-logo {
+  height: var(--pm-logo-h);
+  width:auto;
+  max-height:none;
+  object-fit:contain;
+  filter: drop-shadow(0 1px 2px rgba(0,0,0,.25));
+}
+
+/****************************************************************
+ * 15) 5-ROW GRIDS — แยกกำหนด intro vs detail ให้ปรับอิสระ (v16)
+ ****************************************************************/
+/* โครงร่างหน้า INTRO */
+.intro5 {
+  display:grid;
+  grid-template-rows: 600px 300px 400px 398px 200px;
+  align-items:center;
+  text-align:center;
+}
+/* จัดตำแหน่ง r1..r5 ของ INTRO แยกเป็นรายแถว (v16) */
+.intro5 .r1 { display:flex; justify-content:center; align-items:center; }
+.intro5 .r2 { display:flex; justify-content:center; align-items:center; }
+.intro5 .r3 { display:flex; justify-content:center; align-items:center; }
+.intro5 .r4 { display:flex; justify-content:center; align-items:center; }
+.intro5 .r5 { display:flex; justify-content:flex-start; align-items:center; } /* footer */
+
+/* โครงร่างหน้า DETAIL */
+.detail5 {
+  display:grid;
+  grid-template-rows: 230px 40px 1198px 230px 200px;
+  align-items:center;
+  text-align:center;
+}
+/* จัดตำแหน่ง r1..r5 ของ DETAIL แยกเป็นรายแถว (v16) */
+.detail5 .r1 { display:flex; justify-content:center; align-items:center; }   /* โลโก้โครงการ */
+.detail5 .r2 { display:flex; justify-content:center; align-items:center; }   /* เฮดดิ้ง/เว้นว่าง */
+.detail5 .r3 { display:flex; justify-content:center; align-items:center; }   /* ตารางรายละเอียด */
+.detail5 .r4 { display:flex; justify-content:center; align-items:center; }   /* PM logo (ย้ายมา r4 แล้ว) */
+.detail5 .r5 { display:flex; justify-content:flex-start; align-items:center; } /* footer */
+
+/* footer text sizing */
+.intro-footer {
+  display:flex; align-items:center; justify-content:flex-start;
+  gap:10px;
+  min-height: 86px;
+}
+.intro-footer .page-no,
+.intro-footer .ann-id { margin-left:12px; font-size:var(--footer-font); opacity:.95; }
+.intro-footer .ann-id { margin-left:auto; }
+
+/* =========================================================
+ * 16) KILL AUTO-SCALING ON MOBILE
+ * =========================================================*/
+img { max-width: none; }
+html { -webkit-text-size-adjust:none; text-size-adjust:none; }
+* { box-sizing: border-box; }
+
+/* =========================================================
+ * v16 — DEBUG GRID (สีแดง) เพื่อให้ “เห็นกรอบแต่ละแถว/ช่อง” ชัดเจน
+ * =========================================================*/
+.intro5 .r1,
+.intro5 .r2,
+.intro5 .r3,
+.intro5 .r4,
+.intro5 .r5 {
+  outline: transparent;
+  background: transparent;
+}
+.detail5 .r1,
+.detail5 .r2,
+.detail5 .r3,
+.detail5 .r4,
+.detail5 .r5 {
+  outline: transparent;
+  background: transparent;
+}
+.detail-grid {
+  outline: transparent;
+  background: transparent;
+}
+.detail-grid > * {
+  border: transparent;
+  background: transparent;
+}
+.canvas {
+  outline: transparent;
+}
+
+/* ============================
+ * [ADD] CTA overlays (fixed px) + blink
+ * ============================*/
+.cta-head, .cta-main {
+  position: absolute;
+  z-index: 50;
+  font-size: 40px; /* คงที่ทุกดีไวซ์ */
+  font-weight: 700;
+  letter-spacing: .5px;
+  text-shadow: 0 2px 6px rgba(0,0,0,.45);
+  user-select: none;
+  pointer-events: none; /* ไม่บังการทัชซีน */
+}
+.cta-head { top: 24px; left: 24px; }
+.cta-main { right: 24px; bottom: 24px; pointer-events: auto; cursor: pointer; }
+.blink { animation: blink 1.2s ease-in-out infinite; }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:.35} }
+
+/* ============================
+ * [ADD] Promo video layer
+ * ============================*/
+#promo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: none;       /* เริ่มต้นซ่อน */
+  z-index: 10;         /* ใต้ CTA, เหนือ scenes */
+}
+  </style>
+</head>
+<body>
+
+  <div id="frame" class="frame">
+    <div id="status" class="status" aria-live="polite">
+      <div class="box">
+        <div style="font-weight:700; margin-bottom:6px;">Loading…</div>
+        <div class="tip">หากหน้านี้ค้างนาน ตรวจสอบว่า <code>/ann/data/announce.json</code> และ <code>/ann/data/project.json</code> อยู่ถูกที่หรือไม่</div>
+      </div>
+    </div>
+
+    <div class="stage" id="stage">
+      <!-- [ADD] CTA overlays -->
+      <div id="ctaHead" class="cta-head blink">touch for more details</div>
+      <div id="ctaMain" class="cta-main blink">↩️ to main menu</div>
+
+      <!-- [ADD] Promo video -->
+      <video id="promo" muted playsinline preload="metadata"></video>
+
+      <!-- TH INTRO -->
+      <section id="scene-th-intro" class="scene active">
+        <div class="canvas intro5 fade-in">
+          <div class="r1 top-logo"><img id="logo-project" alt="Project Logo" loading="lazy"></div>
+          <div class="r2"><div class="kicker">ประกาศ</div></div>
+          <div class="r3"><h1 class="title" id="title-th"></h1></div>
+          <div class="r4"><div class="date" id="date-th"></div></div>
+          <div class="r5 intro-footer">
+            <img src="/ann/touchscreen.svg" class="gesture" alt="Touch Gesture" />
+            <div class="gesture-text" id="gestureTextTh"></div>
+            <div class="page-no" id="pageNo-th"></div>
+            <div class="ann-id" id="idBadge-th"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TH DETAIL -->
+      <section id="scene-th-detail" class="scene">
+        <div class="canvas detail5 fade-in">
+          <div class="r1 top-logo"><img id="logo-project2" alt="Project Logo" loading="lazy"></div>
+          <div class="r2"></div>
+          <div class="r3 mid stretch">
+            <div class="detail-grid">
+              <div class="label">พื้นที่กระทบ</div><div class="value" id="area-th"></div>
+              <div class="label">ช่วงเวลา</div><div class="value" id="period-th"></div>
+              <div class="label">สาเหตุ</div><div class="value" id="reason-th"></div>
+              <div class="label">คำแนะนำ</div><div class="value" id="advice-th"></div>
+            </div>
+          </div>
+          <div class="r4"><div class="pm-brand"><img id="logo-pm-th" class="pm-logo" alt="PM Logo" loading="lazy" /></div></div>
+          <div class="r5 intro-footer">
+            <img src="/ann/touchscreen.svg" class="gesture" alt="Touch Gesture" />
+            <div class="gesture-text" id="gestureTextTh2"></div>
+            <div class="page-no" id="pageNo-th2"></div>
+            <div class="ann-id" id="idBadge-th2"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- EN INTRO -->
+      <section id="scene-en-intro" class="scene">
+        <div class="canvas intro5 fade-in">
+          <div class="r1 top-logo"><img id="logo-project-en" alt="Project Logo" loading="lazy"></div>
+          <div class="r2"><div class="kicker">ANNOUNCEMENT</div></div>
+          <div class="r3"><h1 class="title" id="title-en"></h1></div>
+          <div class="r4"><div class="date" id="date-en"></div></div>
+          <div class="r5 intro-footer">
+            <img src="/ann/touchscreen.svg" class="gesture" alt="Touch Gesture" />
+            <div class="gesture-text" id="gestureTextEn"></div>
+            <div class="page-no" id="pageNo-en"></div>
+            <div class="ann-id" id="idBadge-en"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- EN DETAIL -->
+      <section id="scene-en-detail" class="scene">
+        <div class="canvas detail5 fade-in">
+          <div class="r1 top-logo"><img id="logo-project-en2" alt="Project Logo" loading="lazy"></div>
+          <div class="r2"></div>
+          <div class="r3 mid stretch">
+            <div class="detail-grid">
+              <div class="label">Area</div><div class="value" id="area-en"></div>
+              <div class="label">Period</div><div class="value" id="period-en"></div>
+              <div class="label">Reasons</div><div class="value" id="reason-en"></div>
+              <div class="label">Advice</div><div class="value" id="advice-en"></div>
+            </div>
+          </div>
+          <div class="r4"><div class="pm-brand"><img id="logo-pm-en" class="pm-logo" alt="PM Logo" loading="lazy" /></div></div>
+          <div class="r5 intro-footer">
+            <img src="/ann/touchscreen.svg" class="gesture" alt="Touch Gesture" />
+            <div class="gesture-text" id="gestureTextEn2"></div>
+            <div class="page-no" id="pageNo-en2"></div>
+            <div class="ann-id" id="idBadge-en2"></div>
+          </div>
+        </div>
+      </section>
+
+      <div class="bottom-bar">
+        <img src="/ann/touchscreen.svg" class="gesture" alt="Touch Gesture" />
+        <div class="gesture-text" id="gestureText"></div>
+        <div id="idBadge"></div>
+      </div>
+    </div><!-- /.stage -->
+  </div><!-- /.frame -->
+
+  <!-- 🔊 เครื่องเล่นเพลงพื้นหลัง -->
+  <audio id="bgm" preload="auto" playsinline></audio>
+
+  <script>
+/* ===============================
+// ถูกตั้งค่าโดย signage.html ตอนฝังประกาศ (ดูด DOM เข้ามา) */
+const IS_SIGNAGE_HOST = !!window.__SIGNAGE_HOST__;
+
+// ===============================
+// BASE path ของ data
+// ===============================
+const __SCRIPT_BASE__ = (() => {
+  if (document.currentScript && document.currentScript.src) {
+    return new URL('.', document.currentScript.src);
+  }
+  const tag = Array.from(document.getElementsByTagName('script'))
+    .find(s => /announce\.js(\?|$)/.test(s.src || ''));
+  if (tag && tag.src) return new URL('.', tag.src);
+  return new URL('./', location.href);
+})();
+const __DATA_BASE__ = new URL('/ann/data/', __SCRIPT_BASE__);
+
+/* ==========================================================
+ * 🔊 BGM (เวอร์ชันเดิมที่คุณใช้งานอยู่)
+ * ========================================================== */
+(function bgmLoopSimple(){
+  const audio  = document.getElementById('bgm');
+  const tracks = [1,2,3,4,5].map(n => `/ann/music/bg-music${String(n).padStart(3,'0')}.mp3`);
+  let i = 0;
+
+  audio.volume = 0.6;
+  audio.loop = false;
+
+  function playCurrent(){
+    audio.src = tracks[i];
+    const p = audio.play();
+    if (p && p.catch) {
+      const unlock = () => {
+        audio.play().catch(()=>{});
+        window.removeEventListener('pointerdown', unlock);
+      };
+      window.addEventListener('pointerdown', unlock, { once:true });
+    }
+  }
+
+  audio.addEventListener('ended', () => { 
+    i = (i+1) % tracks.length; 
+    playCurrent(); 
+  });
+  audio.addEventListener('error', () => { 
+    i = (i+1) % tracks.length; 
+    playCurrent(); 
+  });
+
+  document.addEventListener('DOMContentLoaded', playCurrent);
+})();
+
+/* ===============================
+ * updateGestureText
+ * =============================== */
+function updateGestureText(lang) {
+  const text = lang === 'th'
+    ? 'สัมผัสจอเพื่อดูเมนูหลัก'
+    : 'Touch screen to see main menu';
+
+  const elBottom = document.getElementById('gestureText');   // bottom-bar
+  if (elBottom) elBottom.textContent = text;
+
+  const elTh  = document.getElementById('gestureTextTh');    // intro TH
+  if (elTh) elTh.textContent = text;
+
+  const elEn  = document.getElementById('gestureTextEn');    // intro EN
+  if (elEn) elEn.textContent = text;
+
+  const elTh2 = document.getElementById('gestureTextTh2');   // detail TH
+  if (elTh2) elTh2.textContent = text;
+
+  const elEn2 = document.getElementById('gestureTextEn2');   // detail EN
+  if (elEn2) elEn2.textContent = text;
+}
+
+/* ==========================================================
+ * fitSignageV16: scale 1080×1920 ให้พอดีหน้าจอ
+ * ========================================================== */
+(function fitSignageV16(){
+  const DESIGN_W = 1080;
+  const DESIGN_H = 1920;
+
+  function fit() {
+    const frame = document.getElementById('frame');
+    if (!frame) return;
+
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+    const scale = Math.min(vw / DESIGN_W, vh / DESIGN_H);
+
+    frame.style.position = 'absolute';
+    frame.style.top = '50%';
+    frame.style.left = '50%';
+    frame.style.transformOrigin = 'center';
+    frame.style.transform = `translate(-50%, -50%) scale(${scale})`;
+  }
+
+  window.addEventListener('DOMContentLoaded', fit);
+  window.addEventListener('pageshow', fit);          // กัน bfcache iOS
+  window.addEventListener('resize', fit);
+  window.addEventListener('orientationchange', fit);
+})();
+
+/* ==========================================================
+ * announce.js — 2 โหมด: ?id=... / ?project_id=...
+ * (คงของเดิมไว้ และ [ADD] hook สำหรับ video หลังจบรอบ)
+ * ========================================================== */
+(function commonHelpers(){
+  window.__$ = (sel) => document.querySelector(sel);
+
+  window.__setImgOrHide = function setImgOrHide(imgEl, src) {
+    if (!imgEl) return;
+    if (src) { imgEl.src = src; imgEl.style.display = ""; }
+    else { imgEl.removeAttribute("src"); imgEl.style.display = "none"; }
+  };
+
+  window.__getPmLogoByPmId = function getPmLogoByPmId(pmData, pm_id) {
+    if (!pmData || !pm_id) return "";
+    const list =
+      Array.isArray(pmData?.property_management_companies)
+        ? pmData.property_management_companies
+        : Array.isArray(pmData)
+          ? pmData
+          : null;
+
+    if (Array.isArray(list)) {
+      const hit = list.find(x => String(x.pm_id).trim() === String(pm_id).trim());
+      return hit?.property_management_logo || hit?.logo || "";
+    }
+    if (pmData && pmData[pm_id]) {
+      const v = pmData[pm_id];
+      return v.property_management_logo || v.logo || "";
+    }
+    return "";
+  };
+
+  // แปลง period เดียว → TH/EN
+  window.__formatPeriod = function formatPeriodLocalized(periodRaw, lang) {
+    if (!periodRaw) return "";
+    const parts = String(periodRaw).split(",");
+    if (parts.length < 2) return periodRaw;
+
+    const datePartRaw = parts[0].trim();
+    const timePartRaw = parts.slice(1).join(",").trim();
+
+    const dmy = datePartRaw.split("/").map(s => s.trim());
+    if (dmy.length !== 3) return periodRaw;
+
+    const d = Number(dmy[0]);
+    const m = Number(dmy[1]);
+    let y = Number(dmy[2]);
+    if (String(y).length <= 2) y = 2000 + y;
+
+    const timeNorm = timePartRaw.replace(/\s+/g, "").replace(/\./g, ":");
+    if (!/^\d{1,2}:\d{2}-\d{1,2}:\d{2}$/.test(timeNorm)) return periodRaw;
+
+    const monthsTH = ["ม.ค.","ก.พ.","มี.ค.","เม.ย.","พ.ค.","มิ.ย.","ก.ค.","ส.ค.","ก.ย.","ต.ค.","พ.ย.","ธ.ค."];
+    const monthsEN = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+    const mi = Math.max(1, Math.min(12, m)) - 1;
+
+    const yearTH = y + 543;
+
+    return (lang === "th")
+      ? `${d} ${monthsTH[mi]} ${yearTH}, ${timeNorm}`
+      : `${monthsEN[mi]} ${d}, ${y}, ${timeNorm}`;
+  };
+})();
+
+/* ==========================================================
+ * [ADD] Main CTA → /ann/menu.html (พก project_id ถ้ามี)
+ * ========================================================== */
+document.addEventListener('DOMContentLoaded', () => {
+  const ctaMain = document.getElementById('ctaMain');
+  if (!ctaMain) return;
+
+  // เผื่อสไตล์ถูก override ที่อื่น
+  ctaMain.style.pointerEvents = 'auto';
+  ctaMain.style.cursor = 'pointer';
+  ctaMain.setAttribute('role', 'button');
+  ctaMain.setAttribute('tabindex', '0');
+
+  const params = new URLSearchParams(location.search);
+  const pid = params.get('project_id') || '';
+
+  const menuUrl = new URL('/ann/menu.html', location.origin);
+  if (pid) menuUrl.searchParams.set('project_id', pid);
+
+  const goMenu = () => { window.location.href = menuUrl.toString(); };
+
+  ctaMain.addEventListener('click', goMenu);
+  ctaMain.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); goMenu(); }
+  });
+});
+
+(function PlayerModule(){
+  const frame = document.getElementById("frame");
+  if (!frame) return;
+
+  const $ = window.__$;
+  const getPmLogoByPmId = window.__getPmLogoByPmId;
+  const formatPeriod = window.__formatPeriod;
+
+  const statusBox = $("#status");
+  const stage = $("#stage");
+
+  const SCENE_IDS = ["scene-th-intro", "scene-th-detail", "scene-en-intro", "scene-en-detail"];
+  const els = {
+    scenes: SCENE_IDS.map(id => document.getElementById(id)),
+    // logos
+    logo1: $("#logo-project"),
+    logo2: $("#logo-project2"),
+    logo3: $("#logo-project-en"),
+    logo4: $("#logo-project-en2"),
+    // pm logos
+    pmTH: $("#logo-pm-th"),
+    pmEN: $("#logo-pm-en"),
+    idBadge: $("#idBadge"),
+    // TH
+    titleTH: $("#title-th"),
+    dateTH: $("#date-th"),
+    areaTH: $("#area-th"),
+    periodTH: $("#period-th"),
+    reasonTH: $("#reason-th"),
+    adviceTH: $("#advice-th"),
+    // EN
+    titleEN: $("#title-en"),
+    dateEN: $("#date-en"),
+    areaEN: $("#area-en"),
+    periodEN: $("#period-en"),
+    reasonEN: $("#reason-en"),
+    adviceEN: $("#advice-en"),
+    // [ADD] video
+    promo: $("#promo"),
+    // [ADD] ctas
+    ctaHead: $("#ctaHead"),
+    ctaMain: $("#ctaMain"),
+  };
+
+  // เวลาต่อซีน (เดิม)
+  const INTRO_MS  = 5000;  // หน้า 1 (intro)
+  const DETAIL_MS = 9000;  // หน้า 2 (detail)
+
+  function showStatus(msg) {
+    if (!statusBox) return;
+    statusBox.style.display = "";
+    const box = statusBox.querySelector(".box");
+    if (box) {
+      box.innerHTML = '<div style="font-weight:700; margin-bottom:6px;"></div><div class="tip"></div>';
+      box.children[0].textContent = msg;
+    }
+  }
+  function hideStatus() { if (statusBox) statusBox.style.display = "none"; }
+  function showStage() { if (stage) stage.style.display = ""; }
+
+  // แสดงซีน + ตั้งข้อความเพจ + เปลี่ยนภาษาที่ gesture
+  function showScene(i) {
+    els.scenes.forEach((s, idx) => s && s.classList.toggle("active", idx === i));
+
+    const bottomBar = document.querySelector('.bottom-bar');
+    if (bottomBar) bottomBar.style.display = "none";
+
+    const isTH = (i === 0 || i === 1);
+    updateGestureText(isTH ? 'th' : 'en');
+
+    const pageMap = [
+      { id: 'pageNo-th',  text: 'หน้า 1/2' },
+      { id: 'pageNo-th2', text: 'หน้า 2/2' },
+      { id: 'pageNo-en',  text: 'Page 1/2' },
+      { id: 'pageNo-en2', text: 'Page 2/2' }
+    ];
+    const target = pageMap[i];
+    if (target) {
+      const el = document.getElementById(target.id);
+      if (el) el.textContent = target.text;
+    }
+  }
+
+  // อ่านพารามิเตอร์
+  const params = new URLSearchParams(location.search);
+  const wantId = (params.get("id") || "").replace(/^announce#?/i,"");
+  const wantProjectId = params.get("project_id") || "";
+
+  function projCodeFromProjectId(project_id) {
+    const m = String(project_id || "").match(/(\d+)/);
+    const num = m ? m[1].padStart(3, "0") : "000";
+    return "P" + num;
+  }
+  function deriveIdsForAnns(anns) {
+    const counters = {};
+    anns.forEach(a => {
+      const pcode = projCodeFromProjectId(a.project_id);
+      counters[pcode] = (counters[pcode] || 0) + 1;
+      const run = String(counters[pcode]).padStart(3, "0");
+      a._idDerived = `${pcode}-${run}`;
+      const rawId = (a.announcement_id || "").replace(/^announce#?/i,"");
+      a._idPublic = rawId || a._idDerived;
+    });
+  }
+
+  // เรนเดอร์ประกาศลง 4 ซีน
+  let CURRENT_PROJECT_ID = null; // [ADD] จำ project ปัจจุบันเพื่อใช้หา playlist
+  function renderAnnouncementIntoScenes(ann, prj, pmData) {
+    CURRENT_PROJECT_ID = ann?.project_id || CURRENT_PROJECT_ID; // [ADD]
+
+    frame.style.background = prj?.background_color || "#0e3a5b";
+    [els.logo1, els.logo2, els.logo3, els.logo4].forEach(img => {
+      if (!img) return;
+      const src = prj?.project_logo || "";
+      if (src) { img.src = src; img.style.display = "block"; }
+      else { img.removeAttribute("src"); img.style.display = "none"; }
+    });
+
+    const pmLogo = (prj?.property_management_logo) || getPmLogoByPmId(pmData, prj?.pm_id) || "";
+    if (els.pmTH) { if (pmLogo) { els.pmTH.src = pmLogo; els.pmTH.style.display=""; } else { els.pmTH.removeAttribute("src"); els.pmTH.style.display="none"; } }
+    if (els.pmEN) { if (pmLogo) { els.pmEN.src = pmLogo; els.pmEN.style.display=""; } else { els.pmEN.removeAttribute("src"); els.pmEN.style.display="none"; } }
+
+    if (els.idBadge) els.idBadge.textContent = `${ann._idPublic || ""}`;
+
+    const _idText = els.idBadge?.textContent || '';
+    const _idTh  = document.getElementById('idBadge-th');  if (_idTh)  _idTh.textContent  = _idText;
+    const _idEn  = document.getElementById('idBadge-en');  if (_idEn)  _idEn.textContent  = _idText;
+    const _idTh2 = document.getElementById('idBadge-th2'); if (_idTh2) _idTh2.textContent = _idText;
+    const _idEn2 = document.getElementById('idBadge-en2'); if (_idEn2) _idEn2.textContent = _idText;
+
+    const mainTH = ann.main_th ?? ann.detail_th ?? "";
+    const mainEN = ann.main_en ?? ann.detail_en ?? "";
+
+    if (els.titleTH) els.titleTH.textContent = ann.title_th || mainTH || "";
+    if (els.dateTH)  els.dateTH.textContent  = ann.date_th || ann.date || "";
+    if (els.titleEN) els.titleEN.textContent = ann.title_en || mainEN || "";
+    if (els.dateEN)  els.dateEN.textContent  = ann.date_en || ann.date || "";
+
+    if (els.areaTH)   els.areaTH.textContent   = ann.area_th   || "";
+    if (els.periodTH) els.periodTH.textContent = formatPeriod(ann.period, "th");
+    if (els.reasonTH) els.reasonTH.textContent = ann.reason_th || "";
+    if (els.adviceTH) els.adviceTH.textContent = ann.advice_th || "";
+
+    if (els.areaEN)   els.areaEN.textContent   = ann.area_en   || "";
+    if (els.periodEN) els.periodEN.textContent = formatPeriod(ann.period, "en");
+    if (els.reasonEN) els.reasonEN.textContent = ann.reason_en || "";
+    if (els.adviceEN) els.adviceEN.textContent = ann.advice_en || "";
+  }
+
+  // วนซีน (TH intro → TH detail → EN intro → EN detail)
+  let sceneTimer = null;
+  function startSceneLoop() {
+    if (sceneTimer) clearTimeout(sceneTimer);
+    let i = 0;
+
+    const tick = () => {
+      showScene(i);
+      const isDetail = (i === 1 || i === 3);
+      const delay = isDetail ? DETAIL_MS : INTRO_MS;
+      sceneTimer = setTimeout(() => {
+        i = (i + 1) % SCENE_IDS.length;
+        tick();
+      }, delay);
+    };
+
+    tick();
+  }
+
+  // วนประกาศรายโครงการ
+  let projectTimer = null;
+  let ANNOUNCE_ROUND_TIMER = null; // [ADD] จับเวลาจบรอบ
+  function startProjectAnnouncementsLoop(list, projectMap, pmData) {
+    if (!list.length) { showStatus("โครงการนี้ยังไม่มีประกาศ"); return; }
+    if (projectTimer) clearInterval(projectTimer);
+    if (ANNOUNCE_ROUND_TIMER) { clearTimeout(ANNOUNCE_ROUND_TIMER); ANNOUNCE_ROUND_TIMER = null; }
+
+    let idx = 0;
+    const renderIdx = () => {
+      const ann = list[idx];
+      const prj = projectMap[ann.project_id] || {};
+      renderAnnouncementIntoScenes(ann, prj, pmData);
+      hideStatus();
+      showStage();
+      startSceneLoop(); // รีสตาร์ท loop ซีนทุกครั้งที่เปลี่ยนประกาศ
+    };
+
+    renderIdx();
+
+    const ANN_MS_TOTAL = (INTRO_MS + DETAIL_MS) * 2; // TH/EN อย่างละ 2 หน้า
+    projectTimer = setInterval(() => {
+      idx = (idx + 1) % list.length;
+      renderIdx();
+    }, ANN_MS_TOTAL);
+
+    // [ADD] หลัง "ครบหนึ่งรอบทุกประกาศ" → เข้าสู่โหมด VIDEO
+    ANNOUNCE_ROUND_TIMER = setTimeout(() => {
+      startVideoMode(CURRENT_PROJECT_ID);
+    }, ANN_MS_TOTAL * list.length);
+  }
+
+  // [ADD] วิดีโอเพลย์ลิสต์
+  let playlistByProject = {};
+  let videoIdx = 0;
+  let inVideoMode = false;
+
+  function startVideoMode(projectId) {
+    // ซ่อน scenes, โชว์ video (เสียงปิด ใช้ BGM ต่อ)
+    inVideoMode = true;
+    if (sceneTimer) { clearTimeout(sceneTimer); sceneTimer = null; }
+    if (projectTimer) { clearInterval(projectTimer); projectTimer = null; }
+    if (ANNOUNCE_ROUND_TIMER) { clearTimeout(ANNOUNCE_ROUND_TIMER); ANNOUNCE_ROUND_TIMER = null; }
+
+    els.scenes.forEach(s => s && (s.classList.remove('active'), s.style.display='none'));
+    if (els.promo) {
+      els.promo.muted = true;
+      els.promo.style.display = '';
+    }
+    startVideoPlaylist(projectId);
+  }
+
+  function stopVideoMode() {
+    inVideoMode = false;
+    if (els.promo) {
+      els.promo.pause();
+      els.promo.removeAttribute('src');
+      els.promo.load();
+      els.promo.style.display = 'none';
+    }
+    // กลับไปเริ่มที่ประกาศเดิมอีกครั้งถ้าต้องการ (คงโครงสร้างเดิม)
+    // หมายเหตุ: ตามโจทย์ไม่ได้กำหนดให้ต้องย้อนกลับอัตโนมัติถ้า loop:true
+  }
+
+  function getPlaylistFor(projectId) {
+    if (!projectId) return null;
+    return playlistByProject[String(projectId)] || null;
+  }
+
+  function startVideoPlaylist(projectId) {
+    const promo = els.promo;
+    const pl = getPlaylistFor(projectId);
+    if (!promo || !pl || !Array.isArray(pl.items) || pl.items.length === 0) {
+      // ไม่มี playlist → ไม่เข้าโหมดวิดีโอ
+      stopVideoMode();
+      return;
+    }
+
+    videoIdx = 0;
+
+    const playNext = () => {
+      if (!inVideoMode) return;
+      const item = pl.items[videoIdx];
+      if (!item) {
+        if (pl.loop) {
+          videoIdx = 0;
+        } else {
+          stopVideoMode();
+          return;
+        }
+      }
+      const curr = pl.items[videoIdx];
+      const mediaId = curr?.media_id;
+      const src = `/ann/media/${mediaId}.mp4`; // ตามที่ระบุ (ไม่มี medias.json ในสเปก explicit)
+
+      promo.muted = true;
+      promo.src = src;
+      promo.currentTime = 0;
+      const p = promo.play();
+      if (p && p.catch) { p.catch(()=>{}); }
+    };
+
+    promo.onended = () => {
+      videoIdx = (videoIdx + 1) % pl.items.length;
+      if (!pl.loop && videoIdx === 0) { stopVideoMode(); return; }
+      playNext();
+    };
+    promo.onerror = () => {
+      videoIdx = (videoIdx + 1) % pl.items.length;
+      if (!pl.loop && videoIdx === 0) { stopVideoMode(); return; }
+      playNext();
+    };
+
+    playNext();
+  }
+
+  async function loadData() {
+    try {
+      showStatus("Loading…");
+
+      // ใช้ BASE เดิม + [ADD] playlist.json
+      const annURL = new URL('announce.json', __DATA_BASE__);
+      const prjURL = new URL('project.json',  __DATA_BASE__);
+      const pmURL  = new URL('pm.json',       __DATA_BASE__);
+      const plURL  = new URL('playlist.json', __DATA_BASE__); // [ADD]
+
+      const [annRes, prjRes, pmRes, plRes] = await Promise.all([
+        fetch(annURL, { cache: "no-cache" }),
+        fetch(prjURL, { cache: "no-cache" }),
+        fetch(pmURL,  { cache: "no-cache" }).catch(() => null),
+        fetch(plURL,  { cache: "no-cache" }).catch(() => null), // [ADD]
+      ]);
+      if (!annRes.ok) throw new Error(`announce.json HTTP ${annRes.status} @ ${annURL}`);
+      if (!prjRes.ok) throw new Error(`project.json HTTP ${prjRes.status} @ ${prjURL}`);
+
+      const anns = await annRes.json();
+      const prjWrap = await prjRes.json();
+      const pmData = pmRes && pmRes.ok ? await pmRes.json() : null;
+
+      // [ADD] playlist
+      if (plRes && plRes.ok) {
+        const plJson = await plRes.json();
+        playlistByProject = (plJson && plJson.playlists) ? plJson.playlists : {};
+      } else {
+        playlistByProject = {};
+      }
+
+      const projects = prjWrap?.projects || [];
+      if (!Array.isArray(anns) || !Array.isArray(projects)) {
+        throw new Error("โครงสร้าง JSON ไม่ถูกต้อง");
+      }
+
+      deriveIdsForAnns(anns);
+      const projectMap = Object.fromEntries(projects.map(p => [p.project_id, p]));
+
+      // อ่านพารามิเตอร์ (อยู่ใน scope นี้)
+      const params = new URLSearchParams(location.search);
+      const wantId = (params.get("id") || "").replace(/^announce#?/i,"");
+      const wantProjectId = params.get("project_id") || "";
+
+      if (wantId) {
+        const hit = anns.find(a => a._idPublic === wantId);
+        if (!hit) { showStatus(`ไม่พบประกาศรหัส ${wantId} ใน announce.json`); return; }
+        renderAnnouncementIntoScenes(hit, projectMap[hit.project_id] || {}, pmData);
+        hideStatus(); showStage(); startSceneLoop();
+
+        // [ADD] โหมด id เดียว: หลังครบ 1 รอบ (4 ซีน) → เล่นวิดีโอ
+        const ONE_ROUND_MS = (INTRO_MS + DETAIL_MS) * 2;
+        setTimeout(() => startVideoMode(hit.project_id), ONE_ROUND_MS);
+
+        return;
+      }
+
+      if (wantProjectId) {
+        const list = anns.filter(a => String(a.project_id) === String(wantProjectId));
+        startProjectAnnouncementsLoop(list, projectMap, pmData);
+        return;
+      }
+
+      showStatus("โปรดระบุ ?id=... หรือ ?project_id=...");
+
+    } catch (err) {
+      console.error(err);
+      showStatus("โหลดข้อมูลไม่สำเร็จ: " + err.message);
+    }
+  }
+
+  document.addEventListener("DOMContentLoaded", loadData);
+})();
+  </script>
+</body>
+</html>

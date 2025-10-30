@@ -1,0 +1,22 @@
+{
+  "version": "2.0.0",
+  "description": "Improved media path structure for better deployment compatibility",
+  "asset_structure": {
+    "medias": "./assets/medias/",
+    "thumbs": "./assets/thumbs/",
+    "videos": "./assets/medias/",
+    "logos": "./assets/medias/"
+  },
+  "environments": {
+    "development": "http://localhost:3000/",
+    "netlify": "https://yoursite.netlify.app/",
+    "yodeck": "./",
+    "cdn": "https://cdn.yoursite.com/"
+  },
+  "features": {
+    "unified_path_resolver": true,
+    "environment_detection": true,
+    "centralized_assets": true,
+    "simplified_json": true
+  }
+}

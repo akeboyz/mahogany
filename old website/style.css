@@ -1,0 +1,395 @@
+/* ================== (1) Font ================== */
+body {
+  font-family: 'Nunito', sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+/* ================== (2) เพิ่มระยะห่างเนื้อหาให้ไม่ชน Header ================== */
+main {
+  margin-top: 10px;
+}
+
+/* ================== (3) Section สำหรับภาพระหว่าง Search กับ Popular Categories ================== */
+.mid-image-section {
+  position: relative;
+  min-height: 65vh;
+  width: 100vw;
+  background-image: url('center/images/search-bg.jpeg');
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+/* ================== (4) search-title ================== */
+.search-title {
+  position: absolute;
+  top: 30%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-size: 4vw;
+  font-weight: 600;
+  text-shadow: 0 0 8px rgba(0,0,0,0.7);
+  z-index: 10;
+  pointer-events: none;
+  transition: font-size 0.3s ease, top 0.3s ease;
+}
+
+/* media query แยกต่างหาก */
+@media (max-height: 500px) and (orientation: landscape) {
+  .search-title { display: none !important; }
+}
+
+/* ================== (5) Category Button Row ================== */
+.category-button-row {
+  position: static; /* ไม่ใช้ absolute */
+  transform: none;
+  display: flex;
+  gap: 0;
+  z-index: auto;
+  border-radius: 0px 0 0 0px;
+  background-color: transparent !important;
+  box-shadow: none !important;
+}
+
+/* ================== (6) ปุ่มหมวดหมู่ ================== */
+.category-btn {
+  background-color: white !important;
+  color: #001D56 !important;
+  border: 0px solid #ccc !important;
+  border-left: none !important;
+  padding: 10px 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  user-select: none;
+  white-space: nowrap;
+  transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+  border-radius: 0;
+  border-top-left-radius: 0px;
+  border-bottom-left-radius: 0px;
+  box-shadow: none !important;
+}
+.category-btn:first-child {
+  border-left: 0px solid #ccc !important;
+}
+.category-btn:hover {
+  background-color: #cce0ff;
+}
+.category-btn.active {
+  background-color: #0033cc !important;
+  color: white !important;
+  border-color: #0033cc !important;
+  box-shadow: 0 0 0px rgba(0,51,204,0.7) !important;
+}
+
+/* ================== (7) Search Container ================== */
+.search-container {
+  position: absolute;
+  top: 45%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80%;
+  max-width: 900px;
+  z-index: 10;
+
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 0;
+  background-color: transparent !important;
+  border-radius: 12px;
+  box-shadow: none !important;
+}
+
+/* ================== (8) Search Bar ================== */
+.search-bar {
+  display: flex;
+  flex-wrap: nowrap;
+  flex-grow: 1;
+  background-color: white;
+  border-radius: 12px;
+  overflow: visible;
+  width: 100%;
+}
+
+/* ================== (9) Box แต่ละช่อง ================== */
+.search-box {
+  display: flex;
+  align-items: center;
+  padding: 10px 15px;
+  border-right: 1px solid #eee;
+  min-width: 200px;
+  flex: 1 1 200px;
+  background-color: white;
+  border-radius: 0;
+}
+.search-box:last-child {
+  border-right: none;
+}
+
+/* ================== (10) Input Field ================== */
+.search-input {
+  border: none;
+  outline: none;
+  font-size: 16px;
+  width: 100%;
+  color: #001D56;
+  background-color: white;
+}
+
+/* ================== (11) Icon ในช่อง input ================== */
+.icon {
+  margin-right: 8px;
+  font-size: 18px;
+}
+
+/* ================== (12) Search Button ================== */
+.search-button {
+  padding: 10px 20px;
+  background-color: #FF6900;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 16px;
+  flex: 0 0 auto;
+  border-radius: 0 12px 12px 0;
+}
+/* Responsive: ซ่อน Where บนมือถือแนวตั้ง */
+@media (max-width: 500px) and (orientation: portrait) {
+  .search-box-where {
+    display: none !important;
+  }
+}
+
+/* ================== (13) Category Section at bottom ================== */
+.category-section {
+  margin: 0 20px 0 20px;
+  padding: 20px;
+  background-color: #f9f9ff;
+  border-top: 1px solid #ccc;
+}
+
+.category-section h2 {
+  text-align: center;
+  color: #001D56;
+  margin-bottom: 30px;
+}
+
+/* ================== (14) Category Grid/Box ================== */
+.category-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+}
+.category-box.unit-gallery-card {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  height: 350px;
+  width: 260px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  position: relative;
+  padding: 0;
+}
+.category-box h3 {
+  color: #001D56;
+  margin-bottom: 10px;
+  font-size: 18px;
+}
+.category-box ul {
+  list-style: none;
+  padding-left: 0;
+}
+.category-box ul li {
+  padding: 5px 0;
+  border-bottom: 1px dotted #ddd;
+  font-size: 14px;
+}
+
+/* ================== (15) Featured Section with Horizontal Scroll ================== */
+.featured-section {
+  margin: 60px 20px;
+  padding: 20px 0;
+  border-top: 1px solid #ccc;
+  background-color: #f9f9ff;
+}
+.featured-section h2 {
+  text-align: center;
+  color: #001D56;
+  margin-bottom: 40px;
+}
+.category-row {
+  margin-bottom: 40px;
+}
+.category-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0 10px 10px 10px;
+}
+.category-header h3 {
+  margin: 0;
+  color: #001D56;
+}
+.view-all {
+  font-size: 14px;
+  text-decoration: none;
+  color: #001D56;
+  font-weight: bold;
+}
+.scroll-container {
+  display: flex;
+  overflow-x: auto;
+  padding: 0 10px;
+  gap: 12px;
+  scroll-snap-type: x mandatory;
+}
+.item-card {
+  min-width: 180px;
+  flex-shrink: 0;
+  background-color: #ffffff;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+  padding: 16px;
+  scroll-snap-align: start;
+  box-shadow: 0 1px 5px rgba(0,0,0,0.1);
+  font-size: 14px;
+  color: #333;
+}
+
+/* ================== (16) Swipe Gallery (galleryWrapper) สูง 50% ================== */
+.image-slider {
+  position: relative;
+  width: 100%;
+  height: 50%;   
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f5f7fa;
+  overflow: hidden;
+}
+.unit-thumbnail {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* ================== (17) ปุ่ม swipe ================== */
+.swipe-btn {
+  position: absolute;
+  top: 50%;
+  z-index: 2;
+  transform: translateY(-50%);
+  background: rgba(255,255,255,0.9);
+  border: none;
+  font-size: 1.6rem;
+  border-radius: 50%;
+  width: 34px;
+  height: 34px;
+  cursor: pointer;
+  opacity: 0.65;
+  transition: opacity 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.swipe-btn.left {
+  left: 7px;
+}
+.swipe-btn.right {
+  right: 7px;
+}
+.swipe-btn:hover {
+  opacity: 1;
+}
+
+/* ================== (18) overlay ข้อมูลห้อง (room type + room size) ================== */
+.image-overlay {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  background: linear-gradient(to top, rgba(0,0,0,0.67) 92%, rgba(0,0,0,0));
+  color: #fff;
+  padding: 10px 16px 8px 16px;
+  font-size: 1rem;
+  font-weight: 600;
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+  z-index: 1;
+  text-shadow: 1px 1px 3px rgba(0,0,0,0.85);
+  pointer-events: none;
+}
+
+/* ================== (19) overlay มุมซ้ายบน Sell/Rent/Both ================== */
+.condition-overlay {
+  position: absolute;
+  top: 12px;
+  left: 0;
+  background: #ff6900;
+  color: #fff;
+  font-size: 0.97rem;
+  font-weight: 700;
+  padding: 5px 20px 5px 12px;
+  border-radius: 0 8px 8px 0;
+  z-index: 2;
+  letter-spacing: 1px;
+  box-shadow: 0 1px 8px rgba(0,0,0,0.14);
+  pointer-events: none;
+}
+
+/* ================== (20) ส่วนรายละเอียดใต้ภาพ ================== */
+.unit-detail {
+  padding: 16px 16px 6px 16px;
+  font-size: 1.09rem;
+  flex: 1 1 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+.unit-detail .project-name {
+  font-size: 1.15rem;
+  font-weight: bold;
+  color: #243b58;
+  margin-bottom: 3px;
+}
+.unit-detail div {
+  margin-bottom: 2px;
+}
+
+/* ================== (21) ลิงก์ดูรายละเอียด ================== */
+.view-link {
+  display: block;
+  margin: 0 0 16px 16px;
+  color: #001D56;
+  font-size: 1rem;
+  font-weight: 600;
+  text-decoration: underline;
+}
+
+/* ================== (22) Responsive: มือถือการ์ดเต็มจอ ================== */
+@media (max-width: 480px) {
+  .category-box.unit-gallery-card {
+    width: 98vw;
+    min-width: 0;
+    height: 350px;
+  }
+  .image-slider {
+    height: 48vw;
+    min-height: 140px;
+  }
+}

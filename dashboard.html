@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Signage Dashboard</title>
+    <link rel="stylesheet" href="dashboard-styles.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <header class="dashboard-header">
+            <div class="header-content">
+                <h1 class="dashboard-title">
+                    <span class="title-icon">🏢</span>
+                    Condo Digital Signage Dashboard
+                </h1>
+                <div class="dashboard-stats">
+                    <div class="stat-item">
+                        <span class="stat-number" id="totalProjects">0</span>
+                        <span class="stat-label">Condo Projects</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number" id="activeProjects">0</span>
+                        <span class="stat-label">Live Displays</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number" id="offlineProjects">0</span>
+                        <span class="stat-label">Maintenance</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <main class="dashboard-main">
+            <div class="controls-bar">
+                <div class="search-container">
+                    <input type="text" id="searchInput" placeholder="Search condo projects..." class="search-input">
+                    <span class="search-icon">🔍</span>
+                </div>
+
+                <div class="filter-container">
+                    <select id="statusFilter" class="filter-select">
+                        <option value="">All Status</option>
+                        <option value="active">Active</option>
+                        <option value="offline">Offline</option>
+                        <option value="maintenance">Maintenance</option>
+                    </select>
+                </div>
+
+                <button class="add-project-btn" id="addProjectBtn">
+                    <span>🏢 Add Condo Project</span>
+                </button>
+
+                <button class="refresh-btn" id="refreshBtn" title="Refresh All">
+                    <span>🔄</span>
+                </button>
+            </div>
+
+            <div class="projects-grid" id="projectsGrid">
+                <!-- Projects will be loaded here -->
+            </div>
+        </main>
+    </div>
+
+    <!-- Add Project Modal -->
+    <div class="modal-overlay" id="addProjectModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Add New Condo Project</h3>
+                <button class="modal-close" id="modalClose">×</button>
+            </div>
+            <div class="modal-body">
+                <form id="projectForm">
+                    <div class="form-group">
+                        <label for="projectName">Project Name</label>
+                        <input type="text" id="projectName" required placeholder="e.g., The Residences Lobby Display">
+                    </div>
+                    <div class="form-group">
+                        <label for="projectPath">Project Path</label>
+                        <input type="text" id="projectPath" required placeholder="e.g., /projects/the-residences/">
+                    </div>
+                    <div class="form-group">
+                        <label for="projectDescription">Description</label>
+                        <textarea id="projectDescription" placeholder="Brief description of the condo signage system"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="projectLocation">Location</label>
+                        <input type="text" id="projectLocation" placeholder="e.g., Bangkok, Thailand">
+                    </div>
+                    <div class="form-group">
+                        <label for="projectType">Display Type</label>
+                        <select id="projectType">
+                            <option value="lobby">Lobby Display</option>
+                            <option value="amenities">Amenities Center</option>
+                            <option value="elevator">Elevator Display</option>
+                            <option value="parking">Parking Area</option>
+                            <option value="sales-gallery">Sales Gallery</option>
+                            <option value="reception">Reception Counter</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-secondary" id="cancelBtn">Cancel</button>
+                <button type="submit" class="btn-primary" id="saveProjectBtn">Save Project</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Project Detail Modal -->
+    <div class="modal-overlay" id="projectDetailModal">
+        <div class="modal-content large">
+            <div class="modal-header">
+                <h3 id="detailProjectName">Project Details</h3>
+                <button class="modal-close" id="detailModalClose">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="project-detail-content">
+                    <div class="detail-section">
+                        <h4>Project Information</h4>
+                        <div class="detail-grid">
+                            <div class="detail-item">
+                                <span class="detail-label">Status:</span>
+                                <span class="detail-value" id="detailStatus">Active</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Type:</span>
+                                <span class="detail-value" id="detailType">Restaurant</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Location:</span>
+                                <span class="detail-value" id="detailLocation">Bangkok, Thailand</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Created:</span>
+                                <span class="detail-value" id="detailCreated">2024-01-15</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Last Updated:</span>
+                                <span class="detail-value" id="detailUpdated">2024-01-20</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="detail-section">
+                        <h4>Description</h4>
+                        <p id="detailDescription">Project description will appear here...</p>
+                    </div>
+
+                    <div class="detail-section">
+                        <h4>Quick Actions</h4>
+                        <div class="action-buttons">
+                            <button class="action-btn primary" id="viewProjectBtn">
+                                <span class="btn-icon">👁️</span>
+                                View Signage
+                            </button>
+                            <button class="action-btn secondary" id="editProjectBtn">
+                                <span class="btn-icon">✏️</span>
+                                Edit Project
+                            </button>
+                            <button class="action-btn secondary" id="cloneProjectBtn">
+                                <span class="btn-icon">📋</span>
+                                Clone Project
+                            </button>
+                            <button class="action-btn danger" id="deleteProjectBtn">
+                                <span class="btn-icon">🗑️</span>
+                                Delete Project
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="dashboard-script.js"></script>
+</body>
+</html>

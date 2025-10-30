@@ -1,0 +1,1919 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Product Details - Signage</title>
+
+  <style>
+    /* ================== Reset & Base ================== */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html, body {
+      width: 100vw;
+      height: 100vh;
+      background: black;
+      overflow: hidden;
+      font-family: 'Nunito', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* ================== Signage Container (9:16) ================== */
+    .page-wrapper {
+      aspect-ratio: 9 / 16;
+      width: 100%;
+      height: 100vh;
+      max-width: 56.25vh;
+      display: flex;
+      flex-direction: column;
+      background: white;
+      position: relative;
+    }
+
+    /* ================== Header Section ================== */
+    .product-header {
+      color: white;
+      padding: 12px 15px;
+      position: relative;
+      height: 80px;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+    }
+
+    .product-info {
+      flex: 1;
+      text-align: left;
+    }
+
+    .header-overlays {
+      position: absolute;
+      bottom: 8px;
+      right: 15px;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      justify-content: flex-end;
+      flex-shrink: 0;
+    }
+
+
+    /* Theme colors */
+    .theme-restaurant .product-header {
+      background: linear-gradient(135deg, #FF6900 0%, #e05d00 100%);
+    }
+    .theme-shop .product-header {
+      background: linear-gradient(135deg, #0033cc 0%, #001D56 100%);
+    }
+    .theme-unit .product-header {
+      background: linear-gradient(135deg, #001D56 0%, #0033cc 100%);
+    }
+
+    .product-title {
+      font-size: 1.68rem;
+      font-weight: 700;
+      line-height: 1.1;
+    }
+
+    .product-subtitle {
+      display: none;
+    }
+
+    /* Modern Transparent Overlays */
+    .overlay-btn {
+      position: absolute;
+      z-index: 80;
+      margin: 0;
+      padding: 3px 6px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      background: rgba(0, 0, 0, 0.15);
+      backdrop-filter: blur(8px);
+      box-shadow: none;
+      color: #fff;
+      font-weight: 600;
+      font-size: 10px;
+      letter-spacing: 0.1px;
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.3s ease;
+      white-space: nowrap;
+    }
+
+    .overlay-btn:hover {
+      background: rgba(0, 0, 0, 0.25);
+      border-color: rgba(255, 255, 255, 0.2);
+      transform: translateY(-2px);
+    }
+
+    /* Blinking animation */
+    .blink {
+      animation: blink 1.2s ease-in-out infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    /* Header overlay styling - inline with header content */
+    .header-overlay-btn {
+      position: relative;
+      margin: 0;
+      padding: 3px 7px;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 7px;
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(4px);
+      box-shadow: none;
+      color: #fff;
+      font-weight: 600;
+      font-size: 8px;
+      letter-spacing: 0.1px;
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.7);
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.3s ease;
+      white-space: nowrap;
+      min-width: 35px;
+      height: 20px;
+      justify-content: center;
+    }
+
+    .header-overlay-btn:hover {
+      background: rgba(255, 255, 255, 0.3);
+      border-color: rgba(255, 255, 255, 0.5);
+      transform: translateY(-1px);
+    }
+
+    /* Back button styling - now inline with other header buttons */
+    .back-btn {
+      position: relative;
+      padding: 3px 7px;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 7px;
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(4px);
+      color: #fff;
+      font-size: 8px;
+      font-weight: 600;
+      height: 20px;
+      min-width: 35px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.3s ease;
+      white-space: nowrap;
+    }
+
+    .back-btn:hover {
+      background: rgba(255, 255, 255, 0.3);
+      border-color: rgba(255, 255, 255, 0.5);
+      transform: translateY(-1px);
+    }
+
+    /* ================== Content Section ================== */
+    .content-section {
+      flex: 1;
+      padding: 10px;
+      overflow: hidden;
+      background: white;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .product-card {
+      background: white;
+      border-radius: 12px;
+      padding: 10px;
+      color: #333;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* ================== Top Section Layout ================== */
+    .top-section {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 8px;
+      height: 120px;
+    }
+
+    .product-info-section {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      border-radius: 8px;
+      overflow: hidden;
+      padding: 12px;
+    }
+
+    .product-info-section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg,
+        rgba(0, 0, 0, 0.7) 0%,
+        rgba(0, 0, 0, 0.4) 50%,
+        rgba(0, 0, 0, 0.6) 100%);
+      z-index: 1;
+    }
+
+    .product-header-info {
+      position: relative;
+      z-index: 2;
+      flex: 1;
+    }
+
+    .product-name {
+      font-size: 1.1rem;
+      color: white;
+      margin-bottom: 3px;
+      font-weight: 700;
+      line-height: 1.1;
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+    }
+
+    .theme-unit .product-name {
+      color: #001D56;
+      text-shadow: none;
+    }
+
+    .theme-unit .product-info-section::before {
+      display: none;
+    }
+
+    .theme-unit .product-info-section {
+      background: none !important;
+      padding: 0;
+    }
+
+    .theme-unit .product-header-info {
+      z-index: auto;
+    }
+
+    .product-category {
+      color: rgba(255, 255, 255, 0.9);
+      font-size: 0.7rem;
+      margin-bottom: 2px;
+      line-height: 1.1;
+      font-weight: 600;
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+    }
+
+    .theme-unit .product-category {
+      color: #666;
+      text-shadow: none;
+      margin-bottom: 5px;
+    }
+
+    .product-location {
+      color: rgba(255, 255, 255, 0.85);
+      font-size: 0.65rem;
+      margin-bottom: 3px;
+      font-weight: 500;
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+    }
+
+    .theme-unit .product-location {
+      color: #666;
+      text-shadow: none;
+    }
+
+    .product-about {
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 0.6rem;
+      line-height: 1.2;
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+    }
+
+    .theme-unit .product-about {
+      display: none;
+    }
+
+    .service-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 3px;
+      margin-top: 3px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .theme-unit .service-badges {
+      margin-bottom: 8px;
+    }
+
+    .service-badge, .status-badge {
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+      padding: 2px 6px;
+      border-radius: 8px;
+      font-size: 0.5rem;
+      font-weight: 600;
+      backdrop-filter: blur(4px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+    }
+
+    .theme-unit .status-badge {
+      background: #0033cc;
+      color: white;
+      padding: 3px 6px;
+      font-size: 0.6rem;
+      backdrop-filter: none;
+      border: none;
+      text-shadow: none;
+      width: fit-content;
+      display: inline-block;
+    }
+
+    .price-section {
+      margin-top: auto;
+      position: relative;
+      z-index: 2;
+    }
+
+    .theme-unit .price-section {
+      z-index: auto;
+    }
+
+    .price-main {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #FFD700;
+      line-height: 1.1;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.8);
+    }
+
+    .theme-unit .price-main {
+      color: #FF6900;
+      text-shadow: none;
+    }
+
+    .price-sub {
+      font-size: 0.5rem;
+      color: rgba(255, 255, 255, 0.8);
+      margin-top: 1px;
+      line-height: 1;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.8);
+    }
+
+    .theme-unit .price-sub {
+      color: #666;
+      font-size: 0.6rem;
+      text-shadow: none;
+    }
+
+    /* ================== Compact Image Gallery ================== */
+    .image-gallery {
+      flex: 0 0 120px;
+      width: 120px;
+      border-radius: 8px;
+      overflow: hidden;
+      position: relative;
+      background: #f5f5f5;
+      border: 1px solid #e0e0e0;
+    }
+
+    .main-image-container {
+      position: relative;
+      width: 100%;
+      height: 120px;
+      overflow: hidden;
+      background: #f0f0f0;
+    }
+
+    .main-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      cursor: pointer;
+    }
+
+    .image-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(0, 0, 0, 0.6);
+      color: white;
+      border: none;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 0.7rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .prev-btn { left: 4px; }
+    .next-btn { right: 4px; }
+
+    .image-counter {
+      position: absolute;
+      bottom: 4px;
+      right: 4px;
+      background: rgba(0, 0, 0, 0.7);
+      color: white;
+      padding: 2px 4px;
+      border-radius: 4px;
+      font-size: 0.5rem;
+      line-height: 1;
+    }
+
+    /* ================== Compact Details Grid ================== */
+    .details-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 6px;
+      margin: 8px 0;
+      flex: 1;
+    }
+
+    .detail-item {
+      display: flex;
+      flex-direction: column;
+      padding: 6px;
+      background: #f8f9fa;
+      border-radius: 6px;
+      min-height: 45px;
+      justify-content: center;
+    }
+
+    .detail-label {
+      font-size: 0.6rem;
+      color: #666;
+      margin-bottom: 2px;
+      font-weight: 600;
+      text-transform: uppercase;
+      line-height: 1;
+    }
+
+    .detail-value {
+      font-size: 0.7rem;
+      color: #333;
+      font-weight: 600;
+      line-height: 1.1;
+    }
+
+    /* ================== Contact Section ================== */
+    .contact-section {
+      border-radius: 8px;
+      padding: 8px;
+      margin-top: 6px;
+      flex-shrink: 0;
+    }
+
+    .theme-restaurant .contact-section {
+      background: rgba(255, 105, 0, 0.1);
+    }
+    .theme-shop .contact-section {
+      background: rgba(0, 51, 204, 0.1);
+    }
+    .theme-unit .contact-section {
+      background: rgba(0, 29, 86, 0.1);
+    }
+
+    .contact-title {
+      font-size: 0.7rem;
+      margin-bottom: 6px;
+      font-weight: 700;
+      text-align: center;
+      line-height: 1;
+    }
+
+    .theme-restaurant .contact-title {
+      color: #FF6900;
+    }
+    .theme-shop .contact-title {
+      color: #0033cc;
+    }
+    .theme-unit .contact-title {
+      color: #001D56;
+    }
+
+    .contact-buttons {
+      display: flex;
+      gap: 6px;
+    }
+
+    .contact-btn {
+      flex: 1;
+      color: white;
+      border: none;
+      padding: 8px 10px;
+      border-radius: 6px;
+      font-size: 0.6rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      line-height: 1;
+    }
+
+    .theme-restaurant .contact-btn {
+      background: #FF6900;
+    }
+    .theme-restaurant .contact-btn:hover {
+      background: #e05d00;
+    }
+    .theme-restaurant .contact-btn.secondary {
+      background: #001D56;
+    }
+    .theme-restaurant .contact-btn.secondary:hover {
+      background: #001a4d;
+    }
+
+    .theme-shop .contact-btn {
+      background: #0033cc;
+    }
+    .theme-shop .contact-btn:hover {
+      background: #001D56;
+    }
+    .theme-shop .contact-btn.secondary {
+      background: #FF6900;
+    }
+    .theme-shop .contact-btn.secondary:hover {
+      background: #e05d00;
+    }
+
+    .theme-unit .contact-btn {
+      background: #FF6900;
+    }
+    .theme-unit .contact-btn:hover {
+      background: #e05d00;
+    }
+    .theme-unit .contact-btn.secondary {
+      background: #001D56;
+    }
+    .theme-unit .contact-btn.secondary:hover {
+      background: #001a4d;
+    }
+
+    /* ================== Items Section ================== */
+    .items-section {
+      border-radius: 8px;
+      padding: 8px;
+      margin-top: 6px;
+      flex-shrink: 0;
+      border: 1px solid;
+      position: relative;
+    }
+
+    .theme-restaurant .items-section {
+      background: #fff9f5;
+      border-color: #ffe5d1;
+    }
+    .theme-shop .items-section {
+      background: #f5f8ff;
+      border-color: #d6e8ff;
+    }
+
+    .items-title {
+      font-size: 0.7rem;
+      margin-bottom: 6px;
+      font-weight: 700;
+      text-align: center;
+      line-height: 1;
+    }
+
+    .theme-restaurant .items-title {
+      color: #FF6900;
+    }
+    .theme-shop .items-title {
+      color: #0033cc;
+    }
+
+    .items-container {
+      position: relative;
+      overflow: hidden;
+      height: 80px;
+    }
+
+    .items-scroll {
+      display: flex;
+      gap: 6px;
+      transition: transform 0.3s ease;
+      height: 80px;
+      align-items: flex-start;
+      flex-wrap: nowrap;
+      align-content: flex-start;
+    }
+
+    .item {
+      background: white;
+      border-radius: 8px;
+      border: 1px solid #f0f0f0;
+      min-width: 100px;
+      height: 75px;
+      flex-shrink: 0;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+
+    .item:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    }
+
+    .item-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .theme-restaurant .item-image {
+      background: linear-gradient(135deg, #FF6900 0%, #e05d00 100%);
+    }
+    .theme-shop .item-image {
+      background: linear-gradient(135deg, #0033cc 0%, #001D56 100%);
+    }
+
+    .item-overlay {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(transparent, rgba(0,0,0,0.7));
+      color: white;
+      padding: 4px 6px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+    }
+
+    .item-name {
+      font-size: 0.55rem;
+      font-weight: 600;
+      line-height: 1.1;
+      text-align: left;
+      margin-bottom: 2px;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.8);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .item-price {
+      font-size: 0.5rem;
+      color: #FFD700;
+      font-weight: 700;
+      line-height: 1;
+      text-align: left;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.8);
+    }
+
+    .items-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      color: white;
+      border: none;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 0.6rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+      opacity: 0.8;
+    }
+
+    .theme-restaurant .items-nav {
+      background: rgba(255, 105, 0, 0.8);
+    }
+    .theme-restaurant .items-nav:hover {
+      opacity: 1;
+      background: rgba(255, 105, 0, 1);
+    }
+
+    .theme-shop .items-nav {
+      background: rgba(0, 51, 204, 0.8);
+    }
+    .theme-shop .items-nav:hover {
+      opacity: 1;
+      background: rgba(0, 51, 204, 1);
+    }
+
+    .items-nav.prev { left: 2px; }
+    .items-nav.next { right: 2px; }
+    .items-nav.disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
+
+    /* ================== Cart System ================== */
+    .cart-icon-container {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      z-index: 10;
+      cursor: pointer;
+    }
+
+    .cart-icon {
+      color: white;
+      border: none;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 0.6rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0.8;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+
+    .theme-restaurant .cart-icon {
+      background: rgba(255, 105, 0, 0.8);
+    }
+    .theme-restaurant .cart-icon:hover {
+      opacity: 1;
+      background: rgba(255, 105, 0, 1);
+    }
+
+    .theme-shop .cart-icon {
+      background: rgba(0, 51, 204, 0.8);
+    }
+    .theme-shop .cart-icon:hover {
+      opacity: 1;
+      background: rgba(0, 51, 204, 1);
+    }
+
+    .cart-count {
+      position: absolute;
+      top: -4px;
+      right: -4px;
+      background: #FF0000;
+      color: white;
+      border-radius: 50%;
+      width: 14px;
+      height: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 8px;
+      font-weight: bold;
+      border: 1px solid white;
+      min-width: 14px;
+    }
+
+    .quantity-controls {
+      position: absolute;
+      top: 4px;
+      right: 4px;
+      display: flex;
+      align-items: center;
+      gap: 2px;
+    }
+
+    .quantity-btn {
+      color: white;
+      border: none;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 9px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.2s;
+      line-height: 1;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+    }
+
+    .theme-restaurant .quantity-btn {
+      background: rgba(255, 105, 0, 0.9);
+    }
+    .theme-restaurant .quantity-btn:hover {
+      background: rgba(255, 105, 0, 1);
+    }
+
+    .theme-shop .quantity-btn {
+      background: rgba(0, 51, 204, 0.9);
+    }
+    .theme-shop .quantity-btn:hover {
+      background: rgba(0, 51, 204, 1);
+    }
+
+    .quantity-display {
+      color: white;
+      font-weight: bold;
+      font-size: 9px;
+      min-width: 10px;
+      text-align: center;
+      line-height: 1;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+      background: rgba(0, 0, 0, 0.6);
+      border-radius: 8px;
+      padding: 1px 3px;
+    }
+
+    /* ================== Modals ================== */
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal-backdrop {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(4px);
+    }
+
+    .modal-content {
+      position: relative;
+      background: white;
+      border-radius: 16px;
+      width: 90vw;
+      height: 90vw;
+      max-width: 500px;
+      max-height: 500px;
+      overflow: hidden;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      animation: modalSlideIn 0.3s ease-out;
+    }
+
+    @keyframes modalSlideIn {
+      from { opacity: 0; transform: scale(0.9); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 20px;
+      border-bottom: 1px solid #eee;
+      background: #f8f9fa;
+    }
+
+    .modal-header h3 {
+      margin: 0;
+      font-size: 16px;
+      font-weight: 600;
+      color: #333;
+    }
+
+    .modal-close {
+      background: none;
+      border: none;
+      font-size: 24px;
+      color: #666;
+      cursor: pointer;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+
+    .modal-close:hover {
+      background: rgba(0, 0, 0, 0.1);
+      color: #333;
+    }
+
+    .modal-body {
+      display: flex;
+      flex-direction: column;
+      height: calc(100% - 65px);
+    }
+
+    /* ================== Loading State ================== */
+    .loading {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      font-size: 1.2rem;
+      color: #666;
+    }
+
+    .error {
+      background: rgba(220, 53, 69, 0.1);
+      border: 1px solid rgba(220, 53, 69, 0.3);
+      color: #dc3545;
+      padding: 15px;
+      border-radius: 12px;
+      text-align: center;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="page-wrapper" id="pageWrapper">
+    <!-- Header Section -->
+    <div class="product-header" id="productHeader">
+      <div class="product-info">
+        <div class="product-title" id="productTitle">Product Details</div>
+      </div>
+      <div class="header-overlays">
+        <button class="header-overlay-btn back-btn blink" id="backBtn">back to <span id="backTarget">menu</span></button>
+        <button class="header-overlay-btn return-video-btn blink" id="returnVideoBtn" style="display:none;">Return to video</button>
+        <button class="header-overlay-btn menu-btn blink" id="menuBtn">☰ Menu</button>
+      </div>
+    </div>
+
+    <!-- Content Section -->
+    <div class="content-section">
+      <div id="loadingState" class="loading">Loading product details...</div>
+
+      <div id="errorState" class="error" style="display: none;">
+        <h3>Product Not Found</h3>
+        <p>The requested product could not be loaded.</p>
+      </div>
+
+      <div id="productContent" style="display: none;">
+        <!-- Product content will be loaded here -->
+      </div>
+    </div>
+
+    <!-- Countdown overlay -->
+    <div id="countdownOverlay" class="header-overlay-btn blink" style="
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      display: none;
+      z-index: 100;
+    ">
+      Menu in <span id="countdownSeconds">60</span>s
+    </div>
+  </div>
+
+  <!-- Map Modal -->
+  <div id="mapModal" class="modal" style="display: none;">
+    <div class="modal-backdrop" onclick="closeMapModal()"></div>
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="mapModalTitle">Location</h3>
+        <button class="modal-close" onclick="closeMapModal()">×</button>
+      </div>
+      <div class="modal-body">
+        <div id="mapContainer" style="flex: 1; position: relative;">
+          <iframe id="mapIframe" width="100%" height="100%" frameborder="0" allowfullscreen style="display: none;"></iframe>
+          <!-- Yodeck fallback: QR code and static info -->
+          <div id="mapFallback" style="display: none; text-align: center; padding: 40px;">
+            <div style="font-size: 18px; font-weight: bold; margin-bottom: 20px; color: #333;">Location Information</div>
+            <div id="fallbackQR" style="margin-bottom: 20px;">
+              <img id="fallbackQRImage" style="width: 120px; height: 120px; border: 2px solid #ddd; border-radius: 12px;" alt="QR Code">
+              <div style="font-size: 14px; color: #666; margin-top: 8px;">Scan to open in Maps</div>
+            </div>
+            <div id="fallbackAddress" style="font-size: 16px; color: #555; line-height: 1.4;"></div>
+          </div>
+        </div>
+        <div style="padding: 16px 20px; background: #f8f9fa; border-top: 1px solid #eee; flex-shrink: 0;">
+          <div style="display: flex; gap: 16px;">
+            <div style="flex: 1;">
+              <div id="mapAddress" style="margin-bottom: 12px; font-size: 13px; color: #555;"></div>
+              <div id="mapHours" style="margin-bottom: 12px; font-size: 13px; color: #555;"></div>
+              <div id="mapContact" style="font-size: 13px; color: #555;"></div>
+            </div>
+            <div id="qrCodeSection" style="flex-shrink: 0; text-align: center; display: none;">
+              <div style="font-size: 12px; color: #666; margin-bottom: 8px; font-weight: 600;">Scan to Navigate</div>
+              <img id="qrCodeImage" style="width: 80px; height: 80px; border: 1px solid #ddd; border-radius: 8px;" alt="QR Code">
+              <div style="font-size: 10px; color: #888; margin-top: 4px;">Open in Maps</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Checkout Modal -->
+  <div id="checkoutModal" class="modal" style="display: none;">
+    <div class="modal-backdrop" onclick="closeCheckoutModal()"></div>
+    <div class="modal-content" style="display: flex; flex-direction: column;">
+      <div class="modal-header">
+        <h3>Your Order</h3>
+        <button class="modal-close" onclick="closeCheckoutModal()">×</button>
+      </div>
+      <div class="modal-body" style="flex: 1; overflow-y: auto; padding: 16px 20px;">
+        <div id="cartItems"></div>
+        <div id="cartEmpty" style="text-align: center; color: #666; padding: 40px 20px; display: none;">
+          <p>Your cart is empty</p>
+        </div>
+      </div>
+      <div id="checkoutFooter" style="padding: 16px 20px; border-top: 1px solid #eee; background: #f8f9fa; flex-shrink: 0; display: none;">
+        <div id="cartTotal" style="font-size: 16px; font-weight: bold; color: #333; margin-bottom: 12px; text-align: center;"></div>
+        <button style="width: 100%; background: var(--primary-color, #FF6900); color: white; border: none; border-radius: 8px; padding: 12px; font-size: 14px; font-weight: 600; cursor: pointer;" onclick="proceedToCheckout()">Proceed to Checkout</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ===== PARAMETERS & GLOBALS =====
+    const qs = new URLSearchParams(location.search);
+    const productType = qs.get('type') || 'restaurant'; // restaurant, shop, unit
+    const productId = qs.get('id') || (productType === 'restaurant' ? 'rest001' : productType === 'shop' ? 'shop001' : 'unit001');
+    const projectId = qs.get('project_id') || '';
+
+    let currentProduct = null;
+    let cart = [];
+    let autoReturnTimer;
+
+    const CONFIG = {
+      restaurant: {
+        dataFile: 'data/rest.json',
+        dataKey: null,
+        theme: 'theme-restaurant',
+        backTarget: 'dining',
+        title: 'Restaurant Details',
+        primaryColor: '#FF6900',
+        itemsTitle: 'Menu Items',
+        itemsKey: 'menu'
+      },
+      shop: {
+        dataFile: 'data/shop.json',
+        dataKey: null,
+        theme: 'theme-shop',
+        backTarget: 'daily',
+        title: 'Shop Details',
+        primaryColor: '#0033cc',
+        itemsTitle: 'Items & Services',
+        itemsKey: 'items'
+      },
+      unit: {
+        dataFile: 'data/unit.json',
+        dataKey: 'units',
+        theme: 'theme-unit',
+        backTarget: 'deal',
+        title: 'Unit Details',
+        primaryColor: '#001D56',
+        itemsTitle: null,
+        itemsKey: null
+      }
+    };
+
+    const config = CONFIG[productType] || CONFIG.restaurant;
+
+    // ===== UTILITY FUNCTIONS =====
+    const withBase = (p) => './' + p.replace(/^\.?\//, '');
+
+    function getImageUrl(imagePath) {
+      if (!imagePath) return withBase('medias/placeholder.jpg');
+      if (imagePath.startsWith('http')) return imagePath;
+      return withBase(imagePath);
+    }
+
+    function escapeHtml(s) {
+      return String(s || '').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+    }
+
+
+    // ===== INITIALIZE THEME =====
+    function initializeTheme() {
+      document.getElementById('pageWrapper').className = 'page-wrapper ' + config.theme;
+      document.getElementById('backTarget').textContent = config.backTarget;
+      document.documentElement.style.setProperty('--primary-color', config.primaryColor);
+    }
+
+    function serviceBadges(arr) {
+      if (!Array.isArray(arr)) return [];
+      const map = {
+        walk_in: { text: 'Walk-in', class: 'walkin' },
+        delivery: { text: 'Delivery', class: 'delivery' },
+        mobile_order: { text: 'Mobile Order', class: 'mobile' },
+        reservation: { text: 'Reservation', class: 'reservation' },
+        ads_only: { text: 'Ads Only', class: 'ads' }
+      };
+      return arr.map(k => map[k] || { text: k, class: 'default' });
+    }
+
+    // ===== INITIALIZE THEME =====
+    function initializeTheme() {
+      document.getElementById('pageWrapper').className = 'page-wrapper ' + config.theme;
+      document.getElementById('backTarget').textContent = config.backTarget;
+      document.documentElement.style.setProperty('--primary-color', config.primaryColor);
+    }
+
+    // ===== IMAGE GALLERY =====
+    function createImageGallery(images, videos) {
+      let currentIndex = 0;
+      const allImages = [];
+
+      if (Array.isArray(images)) allImages.push(...images);
+      if (Array.isArray(videos)) allImages.push(...videos);
+      if (allImages.length === 0) allImages.push('medias/placeholder.jpg');
+
+      const gallery = document.createElement('div');
+      gallery.className = 'image-gallery';
+
+      const container = document.createElement('div');
+      container.className = 'main-image-container';
+
+      const mainImage = document.createElement('img');
+      mainImage.className = 'main-image';
+      mainImage.src = getImageUrl(allImages[0]);
+      mainImage.alt = 'Product Image';
+      mainImage.onerror = function() { this.src = withBase('medias/placeholder.jpg'); };
+
+      const prevBtn = document.createElement('button');
+      prevBtn.className = 'image-nav prev-btn';
+      prevBtn.innerHTML = '‹';
+      prevBtn.addEventListener('click', () => {
+        currentIndex = (currentIndex - 1 + allImages.length) % allImages.length;
+        updateImage();
+      });
+
+      const nextBtn = document.createElement('button');
+      nextBtn.className = 'image-nav next-btn';
+      nextBtn.innerHTML = '›';
+      nextBtn.addEventListener('click', () => {
+        currentIndex = (currentIndex + 1) % allImages.length;
+        updateImage();
+      });
+
+      const counter = document.createElement('div');
+      counter.className = 'image-counter';
+      counter.textContent = `1 / ${allImages.length}`;
+
+      function updateImage() {
+        mainImage.src = getImageUrl(allImages[currentIndex]);
+        counter.textContent = `${currentIndex + 1} / ${allImages.length}`;
+      }
+
+      container.appendChild(mainImage);
+      if (allImages.length > 1) {
+        container.appendChild(prevBtn);
+        container.appendChild(nextBtn);
+      }
+      container.appendChild(counter);
+      gallery.appendChild(container);
+
+      return gallery;
+    }
+
+    // ===== CART SYSTEM =====
+    function updateCartDisplay() {
+      const cartIcon = document.getElementById('cartIcon');
+      const cartCount = document.getElementById('cartCount');
+      if (!cartIcon || !cartCount) return;
+
+      const hasOrderableItems = currentProduct &&
+        Array.isArray(currentProduct.service_type) &&
+        (currentProduct.service_type.includes('mobile_order') ||
+         currentProduct.service_type.includes('delivery'));
+
+      if (hasOrderableItems && cart.length > 0) {
+        cartIcon.style.display = 'block';
+        cartCount.style.display = 'block';
+        cartCount.textContent = cart.reduce((sum, item) => sum + item.quantity, 0);
+      } else if (hasOrderableItems) {
+        cartIcon.style.display = 'block';
+        cartCount.style.display = 'none';
+      } else {
+        cartIcon.style.display = 'none';
+      }
+    }
+
+    function addToCart(item) {
+      const existingItem = cart.find(cartItem => cartItem.id === item.id);
+      if (existingItem) {
+        existingItem.quantity += 1;
+      } else {
+        cart.push({
+          id: item.id || item.name_en,
+          name: item.name_en || item.name_th,
+          price: item.price || 0,
+          image: item.image,
+          quantity: 1
+        });
+      }
+      updateCartDisplay();
+      updateItemControls(item);
+      resetAutoReturn();
+    }
+
+    function removeFromCart(item) {
+      const existingItem = cart.find(cartItem => cartItem.id === (item.id || item.name_en));
+      if (existingItem) {
+        existingItem.quantity -= 1;
+        if (existingItem.quantity <= 0) {
+          cart = cart.filter(cartItem => cartItem.id !== existingItem.id);
+        }
+      }
+      updateCartDisplay();
+      updateItemControls(item);
+      resetAutoReturn();
+    }
+
+    function getCartQuantity(item) {
+      const cartItem = cart.find(cartItem => cartItem.id === (item.id || item.name_en));
+      return cartItem ? cartItem.quantity : 0;
+    }
+
+    function updateItemControls(item) {
+      const itemId = item.id || item.name_en;
+      const quantityDisplay = document.querySelector(`[data-item-id="${itemId}"] .quantity-display`);
+      if (quantityDisplay) {
+        quantityDisplay.textContent = getCartQuantity(item) || '0';
+      }
+    }
+
+    function showCheckoutModal() {
+      const modal = document.getElementById('checkoutModal');
+      const cartItems = document.getElementById('cartItems');
+      const cartEmpty = document.getElementById('cartEmpty');
+      const checkoutFooter = document.getElementById('checkoutFooter');
+      const cartTotal = document.getElementById('cartTotal');
+
+      if (cart.length === 0) {
+        cartItems.innerHTML = '';
+        cartEmpty.style.display = 'block';
+        checkoutFooter.style.display = 'none';
+      } else {
+        cartEmpty.style.display = 'none';
+        checkoutFooter.style.display = 'block';
+
+        cartItems.innerHTML = cart.map(item => `
+          <div style="display: flex; align-items: center; padding: 12px 0; border-bottom: 1px solid #f0f0f0;">
+            <div style="width: 50px; height: 50px; background-image: url('${item.image || 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=100&h=100&fit=crop'}'); background-size: cover; background-position: center; border-radius: 8px; flex-shrink: 0;"></div>
+            <div style="flex: 1; margin-left: 12px;">
+              <div style="font-weight: 600; font-size: 14px; color: #333; margin-bottom: 4px;">${escapeHtml(item.name)}</div>
+              <div style="color: #666; font-size: 12px;">฿${item.price}</div>
+            </div>
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <button style="background: #f0f0f0; border: none; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; cursor: pointer;" onclick="updateCartItemQuantity('${item.id}', -1)">-</button>
+              <div style="font-weight: bold; min-width: 20px; text-align: center; font-size: 14px;">${item.quantity}</div>
+              <button style="background: #f0f0f0; border: none; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; cursor: pointer;" onclick="updateCartItemQuantity('${item.id}', 1)">+</button>
+            </div>
+          </div>
+        `).join('');
+
+        const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+        cartTotal.textContent = `Total: ฿${total}`;
+      }
+
+      modal.style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+      resetAutoReturn();
+    }
+
+    function closeCheckoutModal() {
+      document.getElementById('checkoutModal').style.display = 'none';
+      document.body.style.overflow = 'auto';
+      resetAutoReturn();
+    }
+
+    function updateCartItemQuantity(itemId, change) {
+      const item = cart.find(item => item.id === itemId);
+      if (item) {
+        item.quantity += change;
+        if (item.quantity <= 0) {
+          cart = cart.filter(cartItem => cartItem.id !== itemId);
+        }
+        updateCartDisplay();
+        showCheckoutModal();
+        updateItemControls({ id: itemId, name_en: itemId });
+      }
+    }
+
+    function proceedToCheckout() {
+      alert(`Proceeding to checkout with ${cart.length} items. Total: ฿${cart.reduce((sum, item) => sum + (item.price * item.quantity), 0)}`);
+      cart = [];
+      updateCartDisplay();
+      closeCheckoutModal();
+    }
+
+    // ===== RENDER PRODUCT =====
+    function renderProduct(product, project = null) {
+      currentProduct = product;
+
+      document.getElementById('loadingState').style.display = 'none';
+      document.getElementById('productContent').style.display = 'block';
+
+      // Update header
+      const name = product.name_en || product.name_th || 'Product';
+      document.getElementById('productTitle').textContent = name;
+
+      // Subtitle removed - only show product name in header
+
+      const container = document.getElementById('productContent');
+      container.innerHTML = '';
+
+      // Product Card
+      const productCard = document.createElement('div');
+      productCard.className = 'product-card';
+
+      // Top Section
+      const topSection = document.createElement('div');
+      topSection.className = 'top-section';
+
+      // Info Section
+      const infoSection = document.createElement('div');
+      infoSection.className = 'product-info-section';
+
+      if (productType !== 'unit') {
+        const bgImage = (product.images && product.images.length > 0) ?
+          product.images[0] : 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=400&h=300&fit=crop';
+        infoSection.style.backgroundImage = `url('${bgImage}')`;
+      }
+
+      const headerInfo = document.createElement('div');
+      headerInfo.className = 'product-header-info';
+
+      const productName = document.createElement('div');
+      productName.className = 'product-name';
+      productName.textContent = productType === 'unit' ?
+        `${product.unit?.room_type || 'Unit'} ${product.unit?.unit_number || ''}` : name;
+
+      const productCategory = document.createElement('div');
+      productCategory.className = 'product-category';
+
+      if (productType === 'unit') {
+        productCategory.textContent = `Building ${product.unit?.building || 'N/A'}, Floor ${product.unit?.floor || 'N/A'}`;
+
+        // Status badge for units
+        const statusBadge = document.createElement('div');
+        statusBadge.className = 'status-badge';
+
+        const selling = product.condition?.selling_price;
+        const renting = product.condition?.rental_price;
+        let statusText = 'Available';
+        if (selling && renting) statusText = 'Sale & Rent';
+        else if (selling) statusText = 'For Sale';
+        else if (renting) statusText = 'For Rent';
+
+        statusBadge.textContent = statusText;
+        headerInfo.appendChild(statusBadge);
+      } else {
+        productCategory.textContent = product.category_en || product.category_th || '';
+      }
+
+      const productLocation = document.createElement('div');
+      productLocation.className = 'product-location';
+      productLocation.textContent = productType === 'unit' ? '' :
+        (product.location_en || product.location_th || '');
+
+      const productAbout = document.createElement('div');
+      productAbout.className = 'product-about';
+      productAbout.textContent = product.description_en || product.description_th || '';
+
+      // Service badges
+      if (productType !== 'unit') {
+        const serviceBadgesContainer = document.createElement('div');
+        serviceBadgesContainer.className = 'service-badges';
+        const services = serviceBadges(product.service_type);
+        services.slice(0, 3).forEach(service => {
+          const badge = document.createElement('span');
+          badge.className = 'service-badge';
+          badge.textContent = service.text;
+          serviceBadgesContainer.appendChild(badge);
+        });
+        headerInfo.appendChild(serviceBadgesContainer);
+      }
+
+      // Price section
+      if (productType === 'unit') {
+        const priceSection = document.createElement('div');
+        priceSection.className = 'price-section';
+
+        const priceMain = document.createElement('div');
+        priceMain.className = 'price-main';
+
+        const priceSub = document.createElement('div');
+        priceSub.className = 'price-sub';
+
+        const selling = product.condition?.selling_price;
+        const renting = product.condition?.rental_price;
+
+        if (selling) {
+          priceMain.textContent = `${Number(selling).toLocaleString()} Baht`;
+          const pricePerSqm = product.unit?.room_size ?
+            Math.round(Number(selling) / product.unit.room_size).toLocaleString() : '';
+          priceSub.textContent = pricePerSqm ? `${pricePerSqm} Baht/sqm` : '';
+        } else if (renting) {
+          priceMain.textContent = `${Number(renting).toLocaleString()} Baht/month`;
+          priceSub.textContent = 'Monthly Rent';
+        }
+
+        priceSection.appendChild(priceMain);
+        priceSection.appendChild(priceSub);
+        headerInfo.appendChild(priceSection);
+      }
+
+      headerInfo.appendChild(productName);
+      headerInfo.appendChild(productCategory);
+      if (productLocation.textContent) headerInfo.appendChild(productLocation);
+      if (productAbout.textContent) headerInfo.appendChild(productAbout);
+
+      infoSection.appendChild(headerInfo);
+
+      // Image Gallery
+      const imageGallery = createImageGallery(product.images, product.videos);
+
+      topSection.appendChild(infoSection);
+      topSection.appendChild(imageGallery);
+      productCard.appendChild(topSection);
+
+      // Details Grid
+      const detailsGrid = document.createElement('div');
+      detailsGrid.className = 'details-grid';
+
+      if (productType === 'unit') {
+        // Unit-specific details
+        const details = [
+          { label: 'Room Type', value: product.unit?.room_type || 'N/A' },
+          { label: 'Size', value: product.unit?.room_size ? `${product.unit.room_size} sqm` : 'N/A' },
+          { label: 'Floor', value: product.unit?.floor || 'N/A' },
+          { label: 'View', value: product.unit?.view || 'N/A' },
+          { label: 'Furnishing', value: product.unit?.room_decor || 'N/A' },
+          { label: 'Parking', value: product.unit?.num_parking ? `${product.unit.num_parking} Space${product.unit.num_parking > 1 ? 's' : ''}` : 'None' }
+        ];
+
+        details.forEach(detail => {
+          const detailItem = document.createElement('div');
+          detailItem.className = 'detail-item';
+          detailItem.innerHTML = `
+            <span class="detail-label">${detail.label}</span>
+            <span class="detail-value">${escapeHtml(detail.value)}</span>
+          `;
+          detailsGrid.appendChild(detailItem);
+        });
+      } else {
+        // Restaurant/Shop details
+        const details = [
+          { label: 'Category', value: product.category_en || product.category_th || '' },
+          { label: 'Location', value: product.location_en || product.location_th || '' },
+          { label: 'About', value: product.description_en || product.description_th || '' }
+        ];
+
+        details.forEach(detail => {
+          if (detail.value) {
+            const detailItem = document.createElement('div');
+            detailItem.className = 'detail-item';
+            detailItem.innerHTML = `
+              <span class="detail-label">${detail.label}</span>
+              <span class="detail-value">${escapeHtml(detail.value)}</span>
+            `;
+            detailsGrid.appendChild(detailItem);
+          }
+        });
+      }
+
+      productCard.appendChild(detailsGrid);
+
+      // Items/Menu section (not for units)
+      if (config.itemsKey && product[config.itemsKey] && Array.isArray(product[config.itemsKey]) && product[config.itemsKey].length > 0) {
+        const itemsSection = createItemsSection(product[config.itemsKey]);
+        productCard.appendChild(itemsSection);
+      }
+
+      // Contact Section
+      const contactSection = createContactSection(product);
+      productCard.appendChild(contactSection);
+
+      container.appendChild(productCard);
+    }
+
+    function createItemsSection(items) {
+      const section = document.createElement('div');
+      section.className = 'items-section';
+
+      const title = document.createElement('div');
+      title.className = 'items-title';
+      title.textContent = config.itemsTitle;
+
+      // Cart icon
+      const cartIcon = document.createElement('div');
+      cartIcon.id = 'cartIcon';
+      cartIcon.className = 'cart-icon-container';
+      cartIcon.style.display = 'none';
+      cartIcon.addEventListener('click', showCheckoutModal);
+      cartIcon.innerHTML = `
+        <div class="cart-icon">
+          🛒
+          <div id="cartCount" class="cart-count" style="display: none;">0</div>
+        </div>
+      `;
+
+      const container = document.createElement('div');
+      container.className = 'items-container';
+
+      const scroll = document.createElement('div');
+      scroll.className = 'items-scroll';
+
+      items.forEach(item => {
+        const itemElement = document.createElement('div');
+        itemElement.className = 'item';
+        itemElement.setAttribute('data-item-id', item.id || item.name_en);
+
+        const itemImage = document.createElement('div');
+        itemImage.className = 'item-image';
+
+        if (item.image) {
+          const img = new Image();
+          img.onload = function() {
+            itemImage.style.backgroundImage = `url('${this.src}')`;
+            itemImage.style.backgroundSize = 'cover';
+            itemImage.style.backgroundPosition = 'center';
+          };
+          img.src = getImageUrl(item.image);
+        }
+
+        const overlay = document.createElement('div');
+        overlay.className = 'item-overlay';
+
+        const itemName = document.createElement('div');
+        itemName.className = 'item-name';
+        itemName.textContent = item.name_en || item.name_th || 'Item';
+
+        const itemPrice = document.createElement('div');
+        itemPrice.className = 'item-price';
+        itemPrice.textContent = item.price ? `฿${item.price}` : (item.price === 0 ? 'Free' : '');
+
+        overlay.appendChild(itemName);
+        overlay.appendChild(itemPrice);
+
+        // Add quantity controls for orderable items
+        const hasOrderableItems = currentProduct &&
+          Array.isArray(currentProduct.service_type) &&
+          (currentProduct.service_type.includes('mobile_order') ||
+           currentProduct.service_type.includes('delivery'));
+
+        if (hasOrderableItems) {
+          const controls = document.createElement('div');
+          controls.className = 'quantity-controls';
+
+          const minusBtn = document.createElement('button');
+          minusBtn.className = 'quantity-btn';
+          minusBtn.textContent = '-';
+          minusBtn.onclick = (e) => {
+            e.stopPropagation();
+            removeFromCart(item);
+          };
+
+          const display = document.createElement('div');
+          display.className = 'quantity-display';
+          display.textContent = '0';
+
+          const plusBtn = document.createElement('button');
+          plusBtn.className = 'quantity-btn';
+          plusBtn.textContent = '+';
+          plusBtn.onclick = (e) => {
+            e.stopPropagation();
+            addToCart(item);
+          };
+
+          controls.appendChild(minusBtn);
+          controls.appendChild(display);
+          controls.appendChild(plusBtn);
+          itemElement.appendChild(controls);
+        }
+
+        itemElement.appendChild(itemImage);
+        itemElement.appendChild(overlay);
+        scroll.appendChild(itemElement);
+      });
+
+      container.appendChild(scroll);
+
+      section.appendChild(title);
+      section.appendChild(cartIcon);
+      section.appendChild(container);
+
+      // Initialize scroll functionality
+      setTimeout(() => updateCartDisplay(), 0);
+
+      return section;
+    }
+
+    function createContactSection(product) {
+      const section = document.createElement('div');
+      section.className = 'contact-section';
+
+      const title = document.createElement('div');
+      title.className = 'contact-title';
+      title.textContent = productType === 'unit' ? 'Interested in this unit?' : 'Contact Information';
+
+      const buttons = document.createElement('div');
+      buttons.className = 'contact-buttons';
+
+      const callBtn = document.createElement('button');
+      callBtn.className = 'contact-btn';
+      callBtn.textContent = '📞 Call Now';
+
+      let secondBtn = document.createElement('button');
+      secondBtn.className = 'contact-btn secondary';
+
+      const hasWalkIn = Array.isArray(product.service_type) && product.service_type.includes('walk_in');
+      const hasMapEmbed = product.map_embed_url;
+
+      if (hasWalkIn && hasMapEmbed) {
+        secondBtn.textContent = '🗺️ View Map';
+        secondBtn.addEventListener('click', () => showMapModal(product));
+      } else {
+        secondBtn.textContent = '💬 Inquire';
+      }
+
+      buttons.appendChild(callBtn);
+      buttons.appendChild(secondBtn);
+
+      section.appendChild(title);
+      section.appendChild(buttons);
+
+      return section;
+    }
+
+    // ===== QR CODE GENERATION (OFFLINE) =====
+    function getQRCodePath(product) {
+      // Generate offline QR code path for pre-generated images
+      const itemId = product.id || product.unit_id ||
+        (product.name_en ? product.name_en.toLowerCase().replace(/[^a-z0-9]/g, '-') : 'unknown');
+
+      let prefix = 'rest';
+      if (productType === 'shop') prefix = 'shop';
+      if (productType === 'unit') prefix = 'unit';
+
+      const qrPath = `./images/qr-codes/${prefix}-${itemId}-map.png`;
+      return qrPath;
+    }
+
+    // ===== MAP MODAL =====
+    function showMapModal(product) {
+      if (!product.map_embed_url && !product.address && !product.coordinates) return;
+
+      const modal = document.getElementById('mapModal');
+      const title = document.getElementById('mapModalTitle');
+      const iframe = document.getElementById('mapIframe');
+      const address = document.getElementById('mapAddress');
+      const hours = document.getElementById('mapHours');
+      const contact = document.getElementById('mapContact');
+      const qrSection = document.getElementById('qrCodeSection');
+      const qrImage = document.getElementById('qrCodeImage');
+
+      title.textContent = `${product.name_en || product.name_th || 'Product'} - Location`;
+
+      // Check if we're in Yodeck offline environment (no internet)
+      const isOffline = !navigator.onLine || window.location.protocol === 'file:';
+
+      if (isOffline || !product.map_embed_url) {
+        // Offline mode: Show static map placeholder
+        iframe.style.display = 'none';
+        const mapContainer = document.getElementById('mapContainer');
+
+        // Create offline map placeholder if not exists
+        let offlineMap = mapContainer.querySelector('.offline-map');
+        if (!offlineMap) {
+          offlineMap = document.createElement('div');
+          offlineMap.className = 'offline-map';
+          offlineMap.style.cssText = `
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            background: #f8f9fa;
+            border: 2px dashed #dee2e6;
+            border-radius: 8px;
+            color: #6c757d;
+            text-align: center;
+            padding: 20px;
+          `;
+          offlineMap.innerHTML = `
+            <div style="font-size: 48px; margin-bottom: 16px;">📍</div>
+            <div style="font-size: 16px; font-weight: 600; margin-bottom: 8px;">Location Map</div>
+            <div style="font-size: 14px; margin-bottom: 16px;">Scan QR code below to open in Maps app</div>
+            <div style="font-size: 12px; color: #868e96;">Interactive map requires internet connection</div>
+          `;
+          mapContainer.appendChild(offlineMap);
+        }
+        offlineMap.style.display = 'flex';
+      } else {
+        // Online mode: Show embedded map
+        iframe.style.display = 'block';
+        iframe.src = product.map_embed_url;
+        const offlineMap = document.getElementById('mapContainer').querySelector('.offline-map');
+        if (offlineMap) offlineMap.style.display = 'none';
+      }
+
+      if (product.address) {
+        address.innerHTML = `<strong>Address:</strong><br>${escapeHtml(product.address)}`;
+        address.style.display = 'block';
+      } else {
+        address.style.display = 'none';
+      }
+
+      if (product.opening_hours) {
+        hours.innerHTML = `<strong>Hours:</strong><br>${escapeHtml(product.opening_hours)}`;
+        hours.style.display = 'block';
+      } else {
+        hours.style.display = 'none';
+      }
+
+      const phone = product.contact?.phone || product.phone;
+      if (phone) {
+        contact.innerHTML = `<strong>Phone:</strong> <a href="tel:${escapeHtml(phone)}" style="color: #0066cc; text-decoration: none;">${escapeHtml(phone)}</a>`;
+        contact.style.display = 'block';
+      } else {
+        contact.style.display = 'none';
+      }
+
+      // Display pre-generated QR code
+      const qrPath = getQRCodePath(product);
+      qrImage.src = qrPath;
+      qrImage.onerror = function() {
+        console.warn('QR code not found:', qrPath);
+        qrSection.style.display = 'none';
+      };
+      qrImage.onload = function() {
+        qrSection.style.display = 'block';
+      };
+
+      modal.style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+      resetAutoReturn();
+    }
+
+    function closeMapModal() {
+      document.getElementById('mapModal').style.display = 'none';
+      document.body.style.overflow = 'auto';
+      document.getElementById('mapIframe').src = 'about:blank';
+      resetAutoReturn();
+    }
+
+    // ===== LOAD DATA =====
+    async function loadProductData() {
+      try {
+        const response = await fetch(withBase(config.dataFile));
+        const data = await response.json();
+        const products = Array.isArray(data) ? data : (data[config.dataKey] || []);
+
+        let product;
+        if (productType === 'unit') {
+          product = products.find(p => p.unit_id === productId);
+        } else {
+          product = products.find(p => p.id === productId);
+        }
+
+        if (!product) {
+          showError('Product not found');
+          return;
+        }
+
+        // Load project data for units
+        let project = null;
+        if (productType === 'unit') {
+          try {
+            const projectResponse = await fetch('project/ann/data/project.json');
+            const projectData = await projectResponse.json();
+            project = projectData.projects?.find(p => p.project_id === product.project_id) || {};
+          } catch (e) {
+            // Project data is optional
+          }
+        }
+
+        renderProduct(product, project);
+
+      } catch (error) {
+        console.error('Error loading product data:', error);
+        showError('Failed to load product data');
+      }
+    }
+
+    function showError(message) {
+      document.getElementById('loadingState').style.display = 'none';
+      document.getElementById('errorState').style.display = 'block';
+      document.getElementById('errorState').innerHTML = `
+        <h3>Error</h3>
+        <p>${message}</p>
+      `;
+    }
+
+    // ===== AUTO RETURN =====
+    let countdownInterval;
+    let countdownStartTime;
+    const RETURN_DELAY = 60000; // 60 seconds
+    const COUNTDOWN_SHOW_DELAY = 10000; // Show countdown after 10 seconds
+
+    function resetAutoReturn() {
+      clearTimeout(autoReturnTimer);
+      clearInterval(countdownInterval);
+      document.getElementById('countdownOverlay').style.display = 'none';
+
+      countdownStartTime = Date.now();
+
+      // Set auto return timer
+      autoReturnTimer = setTimeout(() => {
+        const url = new URL('./menu.html', location.origin);
+        if (projectId) url.searchParams.set('project_id', projectId);
+        location.href = url.toString();
+      }, RETURN_DELAY);
+
+      // Show countdown after initial delay
+      setTimeout(() => {
+        showCountdown();
+      }, COUNTDOWN_SHOW_DELAY);
+    }
+
+    function showCountdown() {
+      const overlay = document.getElementById('countdownOverlay');
+      const secondsSpan = document.getElementById('countdownSeconds');
+
+      overlay.style.display = 'block';
+
+      countdownInterval = setInterval(() => {
+        const elapsed = Date.now() - countdownStartTime;
+        const remaining = Math.max(0, Math.ceil((RETURN_DELAY - elapsed) / 1000));
+
+        secondsSpan.textContent = remaining;
+
+        if (remaining <= 0) {
+          clearInterval(countdownInterval);
+          overlay.style.display = 'none';
+        }
+      }, 1000);
+    }
+
+    // ===== EVENT LISTENERS =====
+    document.getElementById('backBtn').addEventListener('click', () => {
+      const url = new URL('/category.html', location.origin);
+      url.searchParams.set('type', config.backTarget);
+      if (projectId) url.searchParams.set('project_id', projectId);
+      location.href = url.toString();
+    });
+
+    // Menu button - navigate to main menu
+    document.getElementById('menuBtn').addEventListener('click', () => {
+      const url = new URL('/menu.html', location.origin);
+      if (projectId) url.searchParams.set('project_id', projectId);
+      location.href = url.toString();
+    });
+
+    // Return to video button - navigate back to signage
+    document.getElementById('returnVideoBtn').addEventListener('click', () => {
+      const url = new URL('/project/ann/index.html', location.origin);
+      if (projectId) url.searchParams.set('project_id', projectId);
+      location.href = url.toString();
+    });
+
+    // Show/hide return to video button based on referrer
+    function checkVideoReferrer() {
+      const referrer = document.referrer;
+      const returnVideoBtn = document.getElementById('returnVideoBtn');
+
+      if (referrer && (referrer.includes('signage.html') || referrer.includes('ann/'))) {
+        returnVideoBtn.style.display = 'flex';
+      } else {
+        returnVideoBtn.style.display = 'none';
+      }
+    }
+
+    ['click', 'touchstart', 'mousemove'].forEach(event => {
+      document.addEventListener(event, resetAutoReturn);
+    });
+
+    // ===== INITIALIZE =====
+    initializeTheme();
+    loadProductData();
+    checkVideoReferrer();
+    resetAutoReturn();
+  </script>
+</body>
+</html>

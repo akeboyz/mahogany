@@ -1,0 +1,93 @@
+// 🔽 shop.json — รายการบริการ Aquamax สำหรับแสดงผลบนระบบจอ/เว็บ
+[
+  {
+    "id": "shop001",
+    "name_th": "อควาแม็กซ์ โฆษณา",
+    "name_en": "aquamax ads",
+    "logo": "logos/aquamx.png",
+    "images": [
+      "images/aquamx-ads01.jpg",
+      "images/aquamx-ads02.jpg"
+    ],
+    "videos": [
+      "videos/aquamx-ads-promo.mp4"
+    ],
+    "description_th": "บริการโฆษณาสำหรับธุรกิจในคอนโด ด้วยสื่อดิจิทัลแบบสัมผัส",
+    "description_en": "Advertising service for local businesses via interactive digital signage in condos.",
+    "type": "service",
+    "category_th": "บริการโฆษณา",
+    "category_en": "Advertising Services",
+    "contact": {
+      "phone": "020000000",
+      "line": "@aquamx"
+    },
+    "location_th": "ทุกคอนโดที่มีหน้าจอของ aquamax",
+    "location_en": "All condominiums with aquamax signage",
+    "projects": ["prj001", "prj002", "prj003"],
+    "status": "active",
+    "map_url": "https://maps.app.goo.gl/aquamxads",
+    "map_embed_url": "https://www.google.com/maps/embed?pb=aquamxads",
+    "address_th": "สำนักงานใหญ่: ถนนสุขุมวิท กรุงเทพฯ",
+    "address_en": "Head Office: Sukhumvit Road, Bangkok",
+    "service_type": [
+      "ads_only"
+    ],
+    "promotions": [
+      {
+        "title_th": "โฆษณาฟรีเดือนแรก!",
+        "title_en": "Free First Month Ad!",
+        "description_th": "เมื่อสมัครแพ็คเกจราย 3 เดือน",
+        "description_en": "Valid with 3-month package subscription",
+        "start_date": "2025-08-01",
+        "end_date": "2025-08-31",
+        "image": "images/promo-aquamxads.jpg"
+      }
+    ]
+  },
+  {
+    "id": "shop002",
+    "name_th": "อควาแม็กซ์ เอเจนท์",
+    "name_en": "aquamax agent",
+    "logo": "logos/aquamx-agent.png",
+    "images": [
+      "images/aquamx-agent01.jpg",
+      "images/aquamx-agent02.jpg"
+    ],
+    "videos": [
+      "videos/aquamx-agent-promo.mp4"
+    ],
+    "description_th": "บริการนายหน้าอสังหาริมทรัพย์มืออาชีพ ขาย/เช่า คอนโดง่าย ๆ",
+    "description_en": "Professional property brokerage service for selling and renting condos.",
+    "type": "service",
+    "category_th": "นายหน้าอสังหาริมทรัพย์",
+    "category_en": "Property Agent",
+    "contact": {
+      "phone": "021234567",
+      "line": "@aquamx"
+    },
+    "location_th": "สำนักงานใหญ่ ถนนสุขุมวิท",
+    "location_en": "Head Office, Sukhumvit Road",
+    "projects": ["prj001", "prj004"],
+    "status": "active",
+    "map_url": "https://maps.app.goo.gl/aquamxagent",
+    "map_embed_url": "https://www.google.com/maps/embed?pb=aquamxagent",
+    "address_th": "สำนักงานใหญ่: ถนนสุขุมวิท แขวงคลองเตยเหนือ กรุงเทพฯ",
+    "address_en": "Head Office: Sukhumvit Road, Wattana, Bangkok",
+    "service_type": [
+      "ads_only",
+      "walk_in",
+      "reservation"
+    ],
+    "promotions": [
+      {
+        "title_th": "ค่าคอมมิชชัน 0% เดือนแรก",
+        "title_en": "0% Commission for First Month",
+        "description_th": "เมื่อฝากขาย/เช่า กับ aquamax ภายในเดือนนี้",
+        "description_en": "Valid when listing with aquamax this month",
+        "start_date": "2025-08-01",
+        "end_date": "2025-08-31",
+        "image": "images/promo-aquamxagent.jpg"
+      }
+    ]
+  }
+]

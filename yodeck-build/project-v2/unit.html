@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Units - Project Overview</title>
+  <style>
+    /* ===== Admin Theme - Modern Dark Gradient ===== */
+    :root { 
+      --maxw: 1200px; 
+      --ui-font: system-ui, -apple-system, "Segoe UI", Tahoma, Arial, sans-serif; 
+    }
+    
+    body { 
+      font-family: var(--ui-font); 
+      margin: 0; 
+      background: linear-gradient(135deg, rgb(15 23 42) 0%, rgb(88 28 135) 50%, rgb(15 23 42) 100%);
+      color: white;
+      min-height: 100vh;
+    }
+    
+    /* Background Effects */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(ellipse at top right, rgba(147, 51, 234, 0.2) 0%, transparent 50%);
+      pointer-events: none;
+      z-index: -1;
+    }
+    
+    header { 
+      max-width: var(--maxw); 
+      margin: 24px auto 0; 
+      padding: 0 24px; 
+      position: relative;
+      z-index: 10;
+    }
+    
+    h1 { 
+      margin: 0 0 12px; 
+      font-size: 3rem; 
+      font-weight: 900;
+      background: linear-gradient(to right, rgb(96 165 250), rgb(147 51 234));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .sub { 
+      color: rgba(255, 255, 255, 0.8); 
+      margin-bottom: 24px; 
+      font-size: 1.1rem;
+      font-weight: 300;
+    }
+    
+    .card { 
+      background: rgba(255, 255, 255, 0.1); 
+      border: 1px solid rgba(255, 255, 255, 0.2); 
+      border-radius: 16px; 
+      padding: 20px; 
+      margin: 16px auto; 
+      max-width: var(--maxw);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    }
+    
+    .back-link { 
+      color: rgb(96 165 250); 
+      text-decoration: none; 
+      margin-bottom: 24px; 
+      display: inline-block; 
+      font-weight: 500;
+      transition: color 0.3s ease;
+    }
+    
+    .back-link:hover { 
+      text-decoration: underline;
+      color: rgb(147 51 234);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="index.html" class="back-link">← Back to Projects Overview</a>
+    <h1>Units by Project</h1>
+    <div class="sub">Property units listing by project</div>
+  </header>
+
+  <div class="card">
+    <h2>Project Units</h2>
+    <p>This page will show units filtered by project ID from the URL parameter.</p>
+    <p>URL Parameter: <strong id="project-id">-</strong></p>
+    <div id="units-list">Loading units...</div>
+  </div>
+
+  <script>
+    // Get project_id from URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const projectId = urlParams.get('project_id');
+    document.getElementById('project-id').textContent = projectId || 'Not specified';
+
+    // Load units data
+    fetch('ann/data/unit.json')
+      .then(r => r.json())
+      .then(data => {
+        const units = data.units || [];
+        const filteredUnits = projectId ? units.filter(u => u.project_id === projectId) : units;
+        
+        const container = document.getElementById('units-list');
+        if (filteredUnits.length === 0) {
+          container.innerHTML = '<p>No units found for this project.</p>';
+          return;
+        }
+
+        container.innerHTML = filteredUnits.map(unit => `
+          <div style="border: 1px solid #ddd; padding: 12px; margin: 8px 0; border-radius: 8px;">
+            <h3>${unit.unit.unit_number} - ${unit.unit.room_type}</h3>
+            <p><strong>Size:</strong> ${unit.unit.room_size} sqm</p>
+            <p><strong>Floor:</strong> ${unit.unit.floor} | <strong>Building:</strong> ${unit.unit.building}</p>
+            <p><strong>View:</strong> ${unit.unit.view}</p>
+            <p><strong>Type:</strong> ${unit.unit.listing_type}</p>
+            ${unit.condition.selling_price ? `<p><strong>Selling Price:</strong> ${unit.condition.selling_price.toLocaleString()} THB</p>` : ''}
+            ${unit.condition.rental_price ? `<p><strong>Rental Price:</strong> ${unit.condition.rental_price.toLocaleString()} THB/month</p>` : ''}
+          </div>
+        `).join('');
+      })
+      .catch(err => {
+        document.getElementById('units-list').innerHTML = '<p>Error loading units data.</p>';
+        console.error(err);
+      });
+  </script>
+</body>
+</html>

@@ -1,0 +1,46 @@
+/* ✅ รีเซ็ตและตั้งค่าพื้นฐาน */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: white;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* ✅ ปรับขนาดวิดีโอให้พอดีกับหน้าจอ */
+video {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  object-fit: contain;
+  background-color: black;
+}
+
+/* ✅ ไอคอน 🔇 แสดงเมื่อวิดีโอถูก mute */
+.mute-overlay {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  font-size: 32px;
+  color: white;
+  z-index: 100;
+  opacity: 0.6;
+  cursor: pointer;
+}
+
+/* ✅ พื้นที่คลิกเพื่อไปหน้าเมนู */
+.menu-zone {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 10;
+}

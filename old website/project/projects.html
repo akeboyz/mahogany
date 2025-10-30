@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Project Detail</title>
+  <style>
+    :root{
+      --bg:#ffffff; --text:#000000; --muted:#4b5563; --accent:#ff6a00;
+      --border:#e5e7eb; --border-soft:#d1d5db; --chip:#f8fafc; --link:#2563eb;
+      --card:#ffffff;
+    }
+    *{box-sizing:border-box}
+    body{margin:0; font-family:system-ui,-apple-system,Segoe UI,Inter,Arial; background:var(--bg); color:var(--text)}
+    a{color:var(--link); text-decoration:none} a:hover{text-decoration:underline}
+    header{display:flex; align-items:center; justify-content:space-between; padding:16px 20px; border-bottom:1px solid var(--border)}
+    header .crumbs{font-size:12px; color:var(--muted)}
+    main{padding:20px; max-width:1200px; margin:0 auto}
+
+    .hero{display:grid; grid-template-columns: 72px 1fr; gap:16px; align-items:center; margin-bottom:16px}
+    .logo{width:64px; height:64px; border-radius:12px; object-fit:cover; border:1px solid var(--border); background:#fff}
+    .title{margin:0; font-size:22px; font-weight:700; color:#0f172a}
+    .sub{margin:4px 0 0; color:var(--muted); font-size:13px}
+    .tags{display:flex; gap:8px; flex-wrap:wrap; margin-top:8px}
+    .tag{background:var(--chip); border:1px solid var(--border); border-radius:999px; padding:6px 10px; font-size:12px}
+
+    .section{margin-top:18px}
+    .card{background:var(--card); border:1px solid var(--border); border-radius:14px; padding:14px}
+    .section h2{margin:0 0 10px; font-size:16px}
+    .grid-4{display:grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap:12px}
+    .stat{border:1px solid var(--border); border-radius:12px; background:var(--chip); padding:12px; text-align:center}
+    .stat .num{font-size:20px; font-weight:800}
+    .stat .lbl{font-size:12px; color:var(--muted)}
+
+    .list{display:grid; gap:8px}
+    .row{display:flex; justify-content:space-between; align-items:center; padding:10px 12px; border:1px solid var(--border); border-radius:10px; background:#fff}
+    .row .left{display:flex; gap:10px; align-items:center; min-width:0}
+    .row .name{font-weight:600; color:#0f172a}
+    .row .meta{color:var(--muted); font-size:12px}
+    .actions{display:flex; gap:8px; margin-top:10px; flex-wrap:wrap}
+    .btn{appearance:none; border:1px solid var(--border-soft); background:#fff; color:#000; padding:8px 12px; border-radius:10px; text-decoration:none; font-size:13px}
+    .btn.primary{border-color:transparent; background:var(--accent); color:#000; font-weight:700}
+    .kvs{display:grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap:10px; margin-top:8px}
+    .kv{border:1px solid var(--border); border-radius:10px; padding:10px; font-size:14px}
+    .kv .k{color:var(--muted); font-size:12px; display:block; margin-bottom:4px}
+
+    .empty, .error{color:var(--muted); padding:16px; text-align:center; border:1px dashed var(--border-soft); border-radius:12px; margin-top:16px}
+
+    @media (max-width: 900px){
+      .grid-4{grid-template-columns: repeat(2, minmax(0,1fr))}
+      .kvs{grid-template-columns: 1fr}
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="crumbs"><a href="index.html">← กลับหน้า Overview</a></div>
+    <div></div>
+  </header>
+
+  <main>
+    <!-- HERO -->
+    <section class="hero" id="hero">
+      <img id="logo" class="logo" alt="" />
+      <div>
+        <h1 id="title" class="title"></h1>
+        <p id="sub" class="sub"></p>
+        <div id="tags" class="tags"></div>
+      </div>
+    </section>
+
+    <!-- STATS -->
+    <section class="section">
+      <h2>สรุปภาพรวม</h2>
+      <div class="grid-4">
+        <div class="stat"><div class="num" id="c_units">0</div><div class="lbl">Units</div></div>
+        <div class="stat"><div class="num" id="c_foodies">0</div><div class="lbl">Foodies</div></div>
+        <div class="stat"><div class="num" id="c_markets">0</div><div class="lbl">Marketplace</div></div>
+        <div class="stat"><div class="num" id="c_ann">0</div><div class="lbl">Announcements</div></div>
+      </div>
+      <div class="actions">
+        <a id="btn_units" class="btn" href="#">ดู Units ทั้งหมด</a>
+        <a id="btn_foodies" class="btn" href="#">ดู Foodies ทั้งหมด</a>
+        <a id="btn_markets" class="btn" href="#">ดู Marketplace ทั้งหมด</a>
+        <a id="btn_ann" class="btn" href="#">ดูประกาศทั้งหมด</a>
+        <a id="btn_signage" class="btn" href="#">เปิด Signage</a>
+        <!-- ปุ่มใหม่: ไป ann/display.html -->
+        <a id="btn_display" class="btn primary" href="#">เปิด Display</a>
+      </div>
+    </section>
+
+    <!-- DETAILS -->
+    <section class="section">
+      <h2>รายละเอียดโครงการ</h2>
+      <div class="card">
+        <div class="kvs">
+          <div class="kv"><span class="k">Project ID</span><span id="kv_pid">-</span></div>
+          <div class="kv"><span class="k">Developer</span><span id="kv_dev">-</span></div>
+          <div class="kv"><span class="k">ที่อยู่</span><span id="kv_addr">-</span></div>
+          <div class="kv"><span class="k">แล้วเสร็จ</span><span id="kv_done">-</span></div>
+          <div class="kv"><span class="k">ประเภท</span><span id="kv_type">-</span></div>
+          <div class="kv"><span class="k">แผนที่</span><span id="kv_map">-</span></div>
+        </div>
+        <div class="tags" id="facilities" style="margin-top:12px"></div>
+      </div>
+    </section>
+
+    <!-- PM -->
+    <section class="section">
+      <h2>ผู้ดูแลโครงการ (PM)</h2>
+      <div class="card" id="pm_card">
+        <div class="list" id="pm_list"></div>
+      </div>
+    </section>
+
+    <!-- UNITS -->
+    <section class="section">
+      <h2>Units</h2>
+      <div class="card">
+        <div class="list" id="unit_list"></div>
+        <div class="actions"><a id="more_units" class="btn" href="#">ดูทั้งหมด</a></div>
+      </div>
+    </section>
+
+    <!-- FOODIES -->
+    <section class="section">
+      <h2>Foodies</h2>
+      <div class="card">
+        <div class="list" id="food_list"></div>
+        <div class="actions"><a id="more_food" class="btn" href="#">ดูทั้งหมด</a></div>
+      </div>
+    </section>
+
+    <!-- MARKETPLACE -->
+    <section class="section">
+      <h2>Marketplace</h2>
+      <div class="card">
+        <div class="list" id="market_list"></div>
+        <div class="actions"><a id="more_market" class="btn" href="#">ดูทั้งหมด</a></div>
+      </div>
+    </section>
+
+    <!-- ANNOUNCEMENTS -->
+    <section class="section">
+      <h2>ประกาศ (Announcements)</h2>
+      <div class="card">
+        <div class="list" id="ann_list"></div>
+        <div class="actions"><a id="more_ann" class="btn" href="#">ดูทั้งหมด</a></div>
+      </div>
+    </section>
+
+    <!-- SIGNAGE -->
+    <section class="section">
+      <h2>Signage</h2>
+      <div class="card">
+        <div class="list">
+          <div class="row">
+            <div class="left">
+              <div class="name">Signage Link</div>
+              <div class="meta">ลิงก์สำหรับเปิด signage ของโครงการนี้</div>
+            </div>
+            <div class="right">
+              <a id="signage_link" href="#" target="_blank" rel="noopener">เปิด Signage →</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div id="error" class="error" style="display:none">โหลดข้อมูลไม่สำเร็จ</div>
+  </main>
+
+  <script>
+    /* ---------- CONFIG ---------- */
+    const DATA_PATHS = {
+      projects: 'ann/data/project.json',
+      pms:      'ann/data/pm.json',
+      units:    'ann/data/unit.json',
+      foodies:  'ann/data/foodie.json',
+      markets:  'ann/data/market.json',
+      announces:'ann/data/announce.json'
+    };
+
+    // ใช้ local signage paths
+
+    /* ---------- HELPERS ---------- */
+    const $ = sel => document.querySelector(sel);
+    const el = (tag, props={}) => Object.assign(document.createElement(tag), props);
+    async function loadJSON(path){
+      const res = await fetch(path,{cache:'no-store'});
+      if(!res.ok) throw new Error(`HTTP ${res.status} @ ${path}`);
+      return res.json();
+    }
+    function getParam(key){ return new URLSearchParams(location.search).get(key); }
+    function groupBy(arr, key){
+      const m=new Map(); (arr||[]).forEach(i=>{
+        const k=i?.[key]; if(!k) return;
+        if(!m.has(k)) m.set(k,[]);
+        m.get(k).push(i);
+      });
+      return m;
+    }
+    const pickText = (o, ...keys) =>
+      keys.map(k=>o?.[k]).find(v=>typeof v==='string' && v.trim().length) || '';
+
+    // ทำให้พาธ asset ถูกต้องจากหน้าปัจจุบัน
+    function resolveAssetPath(p){
+      if (!p) return "";
+      if (/^https?:\/\//i.test(p)) return p;
+      p = p.replace(/^\.\//, "");
+      if (p.startsWith("ann/")) return p;
+      return "ann/" + p;
+    }
+
+    /* ---------- NORMALIZE ---------- */
+    function normalizeAll({projects, pms, units, foodies, markets, announces}, pid){
+      const projList = Array.isArray(projects?.projects) ? projects.projects : [];
+      const project = projList.find(p => p.project_id === pid);
+      const pmList = Array.isArray(pms?.property_management_companies) ? pms.property_management_companies : [];
+      const pmById = new Map(pmList.map(pm => [pm.pm_id, pm]));
+
+      const unitsByProject   = groupBy(Array.isArray(units?.units) ? units.units : [], 'project_id');
+      const foodByProject    = groupBy(Array.isArray(foodies?.foodies) ? foodies.foodies : [], 'project_id');
+      const marketByProject  = groupBy(Array.isArray(markets?.markets) ? markets.markets : [], 'project_id');
+      const annArr = Array.isArray(announces) ? announces : (
+        Array.isArray(announces?.announcements) ? announces.announcements :
+        Array.isArray(announces?.announce) ? announces.announce : []
+      );
+      const annByProject = groupBy(annArr, 'project_id');
+
+      const pm = project?.pm_id ? pmById.get(project.pm_id) : null;
+
+      return {
+        project,
+        pm,
+        units:  unitsByProject.get(pid) || [],
+        food:   foodByProject.get(pid)  || [],
+        market: marketByProject.get(pid)|| [],
+        ann:    annByProject.get(pid)   || []
+      };
+    }
+
+    /* ---------- RENDER ---------- */
+    (async function init(){
+      try{
+        const pid = getParam('project_id');
+        if(!pid){ throw new Error('missing project_id'); }
+
+        const [projects, pms, units, foodies, markets, announces] = await Promise.all([
+          loadJSON(DATA_PATHS.projects),
+          loadJSON(DATA_PATHS.pms),
+          safeLoad(DATA_PATHS.units),
+          safeLoad(DATA_PATHS.foodies),
+          safeLoad(DATA_PATHS.markets),
+          loadJSON(DATA_PATHS.announces)
+        ]);
+
+        const data = normalizeAll({projects,pms,units,foodies,markets,announces}, pid);
+        if(!data.project){ $('#error').style.display=''; return; }
+
+        paintHero(data);
+        paintStats(data, pid);
+        paintDetail(data);
+        paintPM(data.pm);
+        paintList('#unit_list', data.units, 'unit', pid);
+        paintList('#food_list', data.food, 'foodie', pid);
+        paintList('#market_list', data.market, 'marketplace', pid);
+        paintAnn(data.ann, pid);
+        paintSignage(pid);
+
+      }catch(e){
+        console.error(e);
+        $('#error').style.display='';
+      }
+    })();
+
+    async function safeLoad(path){ try { return await loadJSON(path); } catch(e){ return {}; } }
+
+    function paintHero({project, pm}){
+      const logo = $('#logo');
+      if (project.project_logo){
+        logo.src = resolveAssetPath(project.project_logo);
+      } else {
+        logo.style.display='none';
+      }
+      $('#title').textContent = project.project_name || project.project_id;
+      const pmName = pm ? (pm.name_th || pm.name_en || pm.pm_id) : 'ไม่ระบุ PM';
+      $('#sub').innerHTML = `${project.project_address || ''} · PM: ${pm ? `<a href="pm.html?pm_id=${encodeURIComponent(pm.pm_id)}">${pmName}</a>` : pmName}`;
+      const tags = $('#tags'); tags.innerHTML='';
+      if (project.project_status) tags.append(tag(`สถานะ: ${project.project_status}`));
+      if (project.project_type) tags.append(tag(`ประเภท: ${project.project_type}`));
+      if (project.total_units) tags.append(tag(`ยูนิตทั้งหมด: ${project.total_units}`));
+    }
+
+    function paintStats({units, food, market, ann}, pid){
+      $('#c_units').textContent = units.length;
+      $('#c_foodies').textContent = food.length;
+      $('#c_markets').textContent = market.length;
+      $('#c_ann').textContent = ann.length;
+
+      $('#btn_units').href = `unit.html?project_id=${encodeURIComponent(pid)}`;
+      $('#btn_foodies').href = `foodie.html?project_id=${encodeURIComponent(pid)}`;
+      $('#btn_markets').href = `marketplace.html?project_id=${encodeURIComponent(pid)}`;
+      $('#btn_ann').href = `ann/index.html?project_id=${encodeURIComponent(pid)}`;
+
+      $('#more_units').href = `unit.html?project_id=${encodeURIComponent(pid)}`;
+      $('#more_food').href = `foodie.html?project_id=${encodeURIComponent(pid)}`;
+      $('#more_market').href = `marketplace.html?project_id=${encodeURIComponent(pid)}`;
+      $('#more_ann').href = `ann/index.html?project_id=${encodeURIComponent(pid)}`;
+
+      // ปุ่ม Signage (ใช้ local)
+      $('#btn_signage').href = `../ann/signage.html?project_id=${encodeURIComponent(pid)}`;
+
+      // ปุ่มใหม่: Display ภายในโปรเจกต์นี้
+      $('#btn_display').href = `ann/display.html?project_id=${encodeURIComponent(pid)}`;
+    }
+
+    function paintDetail({project}){
+      $('#kv_pid').textContent  = project.project_id || '-';
+      $('#kv_dev').textContent  = project.developer_name || '-';
+      $('#kv_addr').textContent = project.project_address || '-';
+      $('#kv_done').textContent = project.completion_period || '-';
+      $('#kv_type').textContent = project.project_type || '-';
+
+      const mapWrap = $('#kv_map'); mapWrap.innerHTML='';
+      if (project.map_url){
+        mapWrap.appendChild(el('a', {href:project.map_url, textContent:'เปิดแผนที่'}));
+      } else if (project.map_embed_url){
+        mapWrap.textContent = 'มีลิงก์ฝังแผนที่ (embed)';
+      } else {
+        mapWrap.textContent = '-';
+      }
+
+      const fac = $('#facilities'); fac.innerHTML = '';
+      (project.facility_list || []).forEach(f => fac.append(tag(f)));
+    }
+
+    function paintPM(pm){
+      const list = $('#pm_list'); list.innerHTML = '';
+      if(!pm){
+        list.append(empty('ยังไม่มีข้อมูล PM'));
+        return;
+      }
+      const row = el('div', {className:'row'});
+      const left = el('div', {className:'left'});
+      left.append(el('div', {className:'name', textContent: pm.name_th || pm.name_en || pm.pm_id}));
+      const right = el('div', {className:'right'});
+      right.append(el('a', {href:`pm.html?pm_id=${encodeURIComponent(pm.pm_id)}`, textContent:'เปิดหน้า PM →'}));
+      row.append(left, right);
+      list.append(row);
+    }
+
+    function paintList(selector, arr, type, pid){
+      const list = $(selector); list.innerHTML='';
+      if (!arr.length){
+        list.append(empty('ยังไม่มีข้อมูล'));
+        return;
+      }
+      arr.slice(0, 8).forEach(item=>{
+        const row = el('div', {className:'row'});
+        const left = el('div', {className:'left'});
+        const name = pickText(item, 'name_th','name_en','name','title_th','title_en','unit_name','shop_name') || item.id || '-';
+        left.append(el('div', {className:'name', textContent: name}));
+        const metaStr = item.floor ? `ชั้น ${item.floor}` : (item.area_th || item.area_en || '');
+        if(metaStr) left.append(el('div', {className:'meta', textContent: metaStr}));
+        const right = el('div', {className:'right'});
+        right.append(el('a', {href: `${type}.html?project_id=${encodeURIComponent(pid)}`, textContent:'เปิดรายการ →'}));
+        row.append(left, right);
+        list.append(row);
+      });
+    }
+
+    function paintAnn(listData, pid){
+      const list = $('#ann_list'); list.innerHTML='';
+      if (!listData.length){
+        list.append(empty('ยังไม่มีประกาศ'));
+        return;
+      }
+      listData
+        .slice()
+        .sort((a,b)=> parseDate(b.date) - parseDate(a.date))
+        .slice(0, 8)
+        .forEach(a=>{
+          const row = el('div', {className:'row'});
+          const left = el('div', {className:'left'});
+          const title = pickText(a, 'title_th','title_en') || pickText(a, 'type_th','type_en') || 'ประกาศ';
+          const area = pickText(a, 'area_th','area_en');
+          left.append(el('div', {className:'name', textContent: title}));
+          if(a.date || area){
+            left.append(el('div', {className:'meta', textContent: [a.date, area].filter(Boolean).join(' · ')}));
+          }
+          const right = el('div', {className:'right'});
+          right.append(el('a', {href: `ann/index.html?project_id=${encodeURIComponent(pid)}`, textContent:'เปิดประกาศทั้งหมด →'}));
+          row.append(left, right);
+          list.append(row);
+        });
+    }
+
+    function paintSignage(pid){
+      const url = `../ann/signage.html?project_id=${encodeURIComponent(pid)}`;
+      const btn = document.getElementById('btn_signage');
+      if (btn) btn.href = url;
+
+      const a = document.getElementById('signage_link');
+      if (a){
+        a.href = url;
+        a.target = '_blank';
+        a.rel = 'noopener';
+        a.textContent = 'เปิด Signage →';
+      }
+    }
+
+    function tag(text){ return el('span', {className:'tag', textContent:text}); }
+    function empty(text){ return el('div', {className:'empty', textContent:text}); }
+
+    function parseDate(s){
+      if(!s) return 0;
+      const m = String(s).match(/^(\d{1,2})\/(\d{1,2})\/(\d{2,4})/);
+      if(!m) return 0;
+      let [_, d, mo, y] = m;
+      d = +d; mo = +mo; y = +y;
+      if (y < 100) y += 2000;
+      return new Date(y, mo-1, d).getTime();
+    }
+  </script>
+</body>
+</html>

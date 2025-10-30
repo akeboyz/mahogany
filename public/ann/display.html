@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <title>Announce → Video Loop</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <style>
+    html,body{height:100%;margin:0;background:#000}
+    iframe,video{position:absolute;inset:0;width:100%;height:100%;border:0;background:#000}
+    #unlock{
+      position:fixed;right:16px;bottom:16px;z-index:10;
+      padding:10px 14px;border-radius:10px;border:0;cursor:pointer;
+      font:600 16px system-ui;background:#1a73e8;color:#fff;
+      box-shadow:0 6px 18px rgba(0,0,0,.3);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- A) ประกาศ -->
+  <iframe id="ann" allow="autoplay; fullscreen"></iframe>
+
+  <!-- B) วิดีโอ (เล่นครั้งเดียวต่อรอบ แล้วกลับไป A) -->
+  <video id="clip" playsinline preload="metadata" style="display:none"></video>
+
+  <!-- ปุ่มปลดล็อคเสียง (แตะครั้งเดียวพอ) -->
+  <button id="unlock">🔊 เปิดเสียง</button>
+
+  <script>
+    /*** ปรับเฉพาะข้อ 1–2 ***/
+    // [1] อ่าน project_id จาก URL (เช่น /ann/display.html?project_id=prj004)
+    const qs = new URLSearchParams(location.search);
+    const projectId = qs.get('project_id') || 'prj001';
+
+    // [2] สร้าง URL ไปยังประกาศแบบไดนามิก ชี้ที่ /ann/announce.html
+    const ANNOUNCE_URL   = `/ann/announce.html?project_id=${encodeURIComponent(projectId)}`;
+
+    /*** ของเดิมคงไว้ทั้งหมด ***/
+    const ANNOUNCE_MAX_MS= 45_000;       // ถ้าไม่ได้สัญญาณจบจากประกาศ ให้รอตัดเข้า video สูงสุดเท่านี้
+    const VIDEO_SRC      = 'unit001-01.mp4'; // ใส่พาธไฟล์วิดีโอของคุณ
+    /***************************/
+
+    const ifr  = document.getElementById('ann');
+    const clip = document.getElementById('clip');
+    const btn  = document.getElementById('unlock');
+
+    let unlocked = false;   // เคยแตะปลดล็อคเสียงหรือยัง
+    let waiting  = null;    // timer คอยตัดจาก announce → video
+    let listening = false;  // กัน addEventListener ซ้ำ
+
+    // ปลดล็อคเสียงครั้งเดียว ครอบจักรวาล (ทั้ง iframe และวิดีโอ)
+    function unlockAudioOnce(){
+      if (unlocked) return;
+      unlocked = true;
+      btn.style.display = 'none';
+
+      // แจ้งหน้า announce ให้ปลดล็อคเสียงของมันเอง
+      try { ifr.contentWindow?.postMessage({ type: 'UNLOCK_AUDIO' }, '*'); } catch(_) {}
+
+      // prime video: เล่นเงียบ ๆ แป๊บเดียวให้เบราว์เซอร์ยอม
+      try {
+        clip.src = VIDEO_SRC;
+        clip.muted = true;
+        clip.play().then(() => { clip.pause(); clip.currentTime = 0; });
+      } catch(_) {}
+    }
+    btn.addEventListener('click', unlockAudioOnce);
+    window.addEventListener('pointerdown', unlockAudioOnce, { once:true });
+
+    // เริ่มรอบ: เล่นประกาศ
+    function startAnnounce(){
+      // เตรียม iframe ใหม่ทุกครั้งเพื่อกันเสียงค้าง
+      ifr.style.display = 'block';
+      clip.style.display = 'none';
+      clip.pause();
+
+      // รีเซ็ตและโหลดประกาศใหม่
+      ifr.src = 'about:blank';
+      setTimeout(() => { ifr.src = ANNOUNCE_URL; }, 50);
+
+      // ฟังสัญญาณจบรอบจากประกาศ
+      if (!listening) {
+        listening = true;
+        window.addEventListener('message', (ev) => {
+          if (ev?.data?.type === 'ANNOUNCE_CYCLE_DONE') {
+            switchToVideo();
+          }
+        });
+      }
+
+      // ถ้าไม่ได้สัญญาณจบ ให้ fallback ตัดเข้า video ตามเวลา
+      clearTimeout(waiting);
+      waiting = setTimeout(switchToVideo, ANNOUNCE_MAX_MS);
+    }
+
+    // สลับไปวิดีโอ (และ “ปิด” เสียงประกาศชัวร์ ๆ)
+    function switchToVideo(){
+      clearTimeout(waiting);
+
+      // 1) สั่งให้หน้า announce หยุดเสียง
+      try { ifr.contentWindow?.postMessage({ type: 'STOP_AUDIO' }, '*'); } catch(_) {}
+      // 2) ตัดไฟประกาศจริง ๆ กันเสียงค้างจาก cross-origin
+      setTimeout(() => { ifr.src = 'about:blank'; }, 100);
+
+      // โชว์วิดีโอ
+      ifr.style.display = 'none';
+      clip.style.display = 'block';
+
+      // ตั้ง src ถ้ายังไม่ได้ตั้ง (กรณีไม่ได้ prime มาก่อน)
+      if (!clip.src) clip.src = VIDEO_SRC;
+
+      // เปิดเสียงถ้าผู้ใช้เคยแตะปลดล็อคแล้ว
+      clip.muted = !unlocked;
+
+      clip.play().catch(()=>{});
+    }
+
+    // จบวิดีโอ → กลับไปเริ่มประกาศอีกรอบ
+    clip.addEventListener('ended', startAnnounce);
+
+    // เปิดหน้าเสร็จเริ่มประกาศเลย
+    startAnnounce();
+  </script>
+</body>
+</html>

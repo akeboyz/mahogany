@@ -1,0 +1,138 @@
+<!-- ✅ Header Combined -->
+<style>
+  .header-bg {
+    width: 100vw;
+    background: #fff;
+    border-bottom: 1px solid #ddd;
+    box-shadow: 0 1px 5px rgba(0,0,0,0.05);
+  }
+  .header {
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: none;
+    padding: 10px 10px;
+    z-index: 1000;
+    position: relative;
+  }
+  .logo-link {
+    display: flex;
+    align-items: center;
+    margin-left: 6px;
+    height: 100%;
+  }
+  .logo {
+    height: 30px;
+    display: block;
+    margin: auto 0;
+    transition: height 0.3s ease;
+  }
+  .desktop-menu {
+    display: flex;
+    align-items: center;
+    gap: 26px;
+  }
+  .desktop-menu a {
+    margin: 0 10px;
+    text-decoration: none;
+    color: #001D56;
+    font-weight: 600;
+    font-size: 1.18rem;
+  }
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-right: 0px;
+  }
+  .lang-toggle {
+    color: #001D56;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  .hamburger {
+    font-size: 24px;
+    cursor: pointer;
+    display: none;
+  }
+  .mobile-menu {
+    display: none;
+    flex-direction: column;
+    position: absolute;
+    top: 60px; left: 0; right: 0;
+    background: #fff;
+    box-shadow: 0 2px 12px #eee;
+    z-index: 2000;
+    padding: 12px 0 8px 0;
+    animation: fadeInMenu 0.2s;
+  }
+  .mobile-menu a {
+    padding: 12px 24px;
+    color: #001D56;
+    font-weight: 600;
+    text-decoration: none;
+    font-size: 1.15rem;
+    border-bottom: 1px solid #eee;
+  }
+  .mobile-menu a:last-child { border-bottom: none; }
+  .mobile-menu.active { display: flex; }
+  @keyframes fadeInMenu {
+    from { opacity: 0; transform: translateY(-16px);}
+    to { opacity: 1; transform: translateY(0);}
+  }
+  @media (max-width: 700px) {
+    .desktop-menu { display: none; }
+    .hamburger { display: block; }
+    .header {
+      max-width: 100vw;
+      padding: 10px 10px;
+    }
+    .logo {
+      height: 20px;
+    }
+    .header-right {
+      gap: 10px;
+      margin-right: 6px;
+    }
+    .logo-link {
+      margin-left: 6px;
+    }
+  }
+</style>
+
+<div class="header-bg">
+  <header class="header">
+    <a href="index.html" class="logo-link">
+      <img src="center/images/logo.png" alt="AquaMx Logo" class="logo" />
+    </a>
+    <nav class="desktop-menu">
+      <a href="condo.html">Condo</a>
+      <a href="foodies.html">Foodies</a>
+      <a href="marketplace.html">Marketplace</a>
+    </nav>
+    <div class="header-right">
+      <div class="lang-toggle">TH / EN</div>
+      <div class="hamburger">&#9776;</div>
+    </div>
+    <nav class="mobile-menu">
+      <a href="condo.html">Condo</a>
+      <a href="foodies.html">Foodies</a>
+      <a href="marketplace.html">Marketplace</a>
+    </nav>
+  </header>
+</div>
+
+<script>
+  window.addEventListener('DOMContentLoaded', function () {
+    const hamburger = document.querySelector('.hamburger');
+    const mobileMenu = document.querySelector('.mobile-menu');
+    if (hamburger && mobileMenu) {
+      hamburger.addEventListener('click', function () {
+        mobileMenu.classList.toggle('active');
+      });
+    }
+  });
+</script>

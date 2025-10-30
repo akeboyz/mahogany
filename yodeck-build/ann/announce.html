@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="utf-8" />
+  <title>Announcement Player</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <style>
+    :root {
+      --design-w: 1080px;
+      --design-h: 1920px;
+    }
+
+    * { box-sizing: border-box; }
+    html, body {
+      width: 100vw;
+      height: 100vh;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background: #000;
+      color: #fff;
+      font-family: system-ui, -apple-system, "Segoe UI", Tahoma, Arial, sans-serif;
+    }
+
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Fixed frame container */
+    .frame {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: var(--design-w);
+      height: var(--design-h);
+      transform: translate(-50%, -50%) scale(1);
+      transform-origin: center center;
+      will-change: transform;
+      background: #000;
+      overflow: hidden;
+    }
+
+    /* Status overlay */
+    .status {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      padding: 24px;
+      color: #666;
+      font-size: 18px;
+      background: rgba(0,0,0,0.8);
+      border-radius: 12px;
+      display: none;
+    }
+    .status.show { display: block; }
+
+    /* Announcement display area */
+    .stage {
+      position: absolute;
+      inset: 0;
+      display: none;
+    }
+    .stage.show { display: block; }
+
+    /* Announcement image */
+    .announcement-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* Modern Transparent Overlays */
+    .cta-head, .cta-main {
+      position: absolute;
+      z-index: 50;
+      font-size: 48px;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.8);
+      user-select: none;
+      color: white;
+      background: rgba(0,0,0,0.15);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,0.1);
+      padding: 16px 32px;
+      border-radius: 40px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      transition: all 0.3s ease;
+    }
+
+    .cta-head {
+      top: 20px;
+      left: 20px;
+      pointer-events: auto;
+      cursor: pointer;
+      font-size: 48px;
+    }
+
+    .cta-head::before {
+      content: "";
+      font-size: 40px;
+    }
+
+    .cta-main {
+      top: 20px;
+      right: 20px;
+      pointer-events: auto;
+      cursor: pointer;
+    }
+
+    .cta-main::before {
+      content: "☰";
+      font-size: 40px;
+      font-weight: 400;
+    }
+
+    .cta-head:hover,
+    .cta-main:hover {
+      background: rgba(0,0,0,0.25);
+      border-color: rgba(255,255,255,0.2);
+      transform: translateY(-2px);
+    }
+
+    .blink {
+      animation: blink 1.2s ease-in-out infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    /* Title overlay */
+    .title-overlay {
+      position: absolute;
+      bottom: 70px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0,0,0,0.15);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,0.1);
+      padding: 12px 24px;
+      border-radius: 20px;
+      text-align: center;
+      max-width: 85%;
+      z-index: 30;
+    }
+
+    .title-th {
+      font-size: 32px;
+      font-weight: 700;
+      margin-bottom: 6px;
+      color: white;
+      line-height: 1.2;
+    }
+
+    .title-en {
+      font-size: 22px;
+      font-weight: 400;
+      color: rgba(255,255,255,0.8);
+      line-height: 1.2;
+    }
+
+    .date-info {
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
+      background: rgba(0,0,0,0.15);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,0.1);
+      padding: 16px 32px;
+      border-radius: 40px;
+      font-size: 36px;
+      font-weight: 600;
+      z-index: 30;
+    }
+  </style>
+</head>
+<body>
+  <div id="frame" class="frame">
+    <!-- Status overlay -->
+    <div id="status" class="status">
+      <div style="font-weight:700; margin-bottom:6px;">Loading...</div>
+      <div>โหลดประกาศ...</div>
+    </div>
+
+    <!-- Announcement stage -->
+    <div id="stage" class="stage">
+      <!-- Main announcement image -->
+      <img id="announcementImage" class="announcement-image" alt="Announcement">
+
+      <!-- Date overlay -->
+      <div id="dateOverlay" class="date-info"></div>
+
+      <!-- Title overlay -->
+      <div id="titleOverlay" class="title-overlay">
+        <div id="titleTh" class="title-th"></div>
+        <div id="titleEn" class="title-en"></div>
+      </div>
+
+      <!-- CTA overlays removed -->
+    </div>
+  </div>
+
+  <!-- Background music -->
+  <audio id="bgm" preload="auto" playsinline></audio>
+
+  <script>
+    // Scaling function for responsive design
+    (function fitSignage() {
+      const DESIGN_W = 1080;
+      const DESIGN_H = 1920;
+
+      function fit() {
+        const frame = document.getElementById('frame');
+        if (!frame) return;
+
+        const vw = window.innerWidth;
+        const vh = window.innerHeight;
+        const scale = Math.min(vw / DESIGN_W, vh / DESIGN_H);
+
+        frame.style.transform = `translate(-50%, -50%) scale(${scale})`;
+      }
+
+      window.addEventListener('DOMContentLoaded', fit);
+      window.addEventListener('resize', fit);
+      window.addEventListener('orientationchange', fit);
+    })();
+
+    // Background music system
+    (function setupBGM() {
+      const audio = document.getElementById('bgm');
+      const tracks = [1,2,3,4,5].map(n => `./music/bg-music${String(n).padStart(3,'0')}.mp3`);
+      let i = 0;
+
+      audio.volume = 0.6;
+      audio.loop = false;
+
+      function playCurrent() {
+        audio.src = tracks[i];
+        const p = audio.play();
+        if (p && p.catch) {
+          p.catch(() => {
+            const unlock = () => {
+              audio.play().catch(() => {});
+              window.removeEventListener('pointerdown', unlock);
+            };
+            window.addEventListener('pointerdown', unlock, { once: true });
+          });
+        }
+      }
+
+      audio.addEventListener('ended', () => {
+        i = (i + 1) % tracks.length;
+        playCurrent();
+      });
+
+      audio.addEventListener('error', () => {
+        i = (i + 1) % tracks.length;
+        playCurrent();
+      });
+
+      document.addEventListener('DOMContentLoaded', playCurrent);
+    })();
+
+    // Main CTA navigation
+    document.addEventListener('DOMContentLoaded', () => {
+      const ctaMain = document.getElementById('ctaMain');
+      const ctaHead = document.getElementById('ctaHead');
+
+      const params = new URLSearchParams(location.search);
+      const pid = params.get('project_id') || '';
+
+      // Menu button navigation
+      if (ctaMain) {
+        const menuUrl = new URL('/menu.html', location.origin);
+        if (pid) menuUrl.searchParams.set('project_id', pid);
+
+        const goMenu = () => {
+          window.location.href = menuUrl.toString();
+        };
+
+        ctaMain.addEventListener('click', goMenu);
+        ctaMain.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            goMenu();
+          }
+        });
+      }
+
+      // "Tap to explore" navigation to juristic category
+      if (ctaHead) {
+        const categoryUrl = new URL('/category.html', location.origin);
+        categoryUrl.searchParams.set('type', 'juristic');
+        if (pid) categoryUrl.searchParams.set('project_id', pid);
+
+        const goCategory = () => {
+          window.location.href = categoryUrl.toString();
+        };
+
+        ctaHead.addEventListener('click', goCategory);
+        ctaHead.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            goCategory();
+          }
+        });
+
+        // Make ctaHead clickable
+        ctaHead.style.pointerEvents = 'auto';
+        ctaHead.style.cursor = 'pointer';
+      }
+    });
+
+    // Announcement system
+    (function AnnouncementPlayer() {
+      const statusEl = document.getElementById('status');
+      const stageEl = document.getElementById('stage');
+      const imageEl = document.getElementById('announcementImage');
+      const dateEl = document.getElementById('dateOverlay');
+      const titleThEl = document.getElementById('titleTh');
+      const titleEnEl = document.getElementById('titleEn');
+
+      let announcementTimer = null;
+      let currentAnnouncements = [];
+      let currentIndex = 0;
+
+      function showStatus(msg) {
+        if (statusEl) {
+          statusEl.innerHTML = `<div style="font-weight:700; margin-bottom:6px;">${msg}</div>`;
+          statusEl.classList.add('show');
+        }
+        if (stageEl) stageEl.classList.remove('show');
+      }
+
+      function showStage() {
+        if (statusEl) statusEl.classList.remove('show');
+        if (stageEl) stageEl.classList.add('show');
+      }
+
+      function formatDate(dateStr) {
+        if (!dateStr) return '';
+
+        // Handle format like "10/8/25"
+        const parts = dateStr.split('/');
+        if (parts.length === 3) {
+          const day = parts[0];
+          const month = parts[1];
+          let year = parts[2];
+          if (year.length === 2) {
+            year = '20' + year;
+          }
+          return `${day}/${month}/${year}`;
+        }
+        return dateStr;
+      }
+
+      function displayAnnouncement(announcement) {
+        if (!announcement) return;
+
+        // Set image
+        if (imageEl && announcement.image) {
+          imageEl.src = `./${announcement.image}`;
+          imageEl.onerror = () => {
+            console.warn('Failed to load image:', announcement.image);
+            imageEl.src = './images/placeholder-announcement.jpg';
+          };
+        }
+
+        // Set date
+        if (dateEl) {
+          dateEl.textContent = formatDate(announcement.date);
+        }
+
+        // Set titles
+        if (titleThEl) titleThEl.textContent = announcement.title_th || '';
+        if (titleEnEl) titleEnEl.textContent = announcement.title_en || '';
+
+        showStage();
+      }
+
+      function startAnnouncementCycle() {
+        if (!currentAnnouncements.length) {
+          showStatus('ไม่มีประกาศสำหรับโครงการนี้');
+          return;
+        }
+
+        if (announcementTimer) {
+          clearInterval(announcementTimer);
+        }
+
+        const showAnnouncement = () => {
+          const ann = currentAnnouncements[currentIndex];
+          displayAnnouncement(ann);
+
+          currentIndex = (currentIndex + 1) % currentAnnouncements.length;
+        };
+
+        // Show first announcement immediately
+        showAnnouncement();
+
+        // Set up cycle
+        announcementTimer = setInterval(() => {
+          showAnnouncement();
+        }, 8000); // Default 8 seconds per announcement
+      }
+
+      async function loadData() {
+        try {
+          showStatus('กำลังโหลด...');
+
+          const params = new URLSearchParams(location.search);
+          const wantId = params.get('id');
+          const wantProjectId = params.get('project_id');
+
+          if (!wantId && !wantProjectId) {
+            showStatus('โปรดระบุ ?id=... หรือ ?project_id=...');
+            return;
+          }
+
+          // Load announcement data
+          const response = await fetch('./data/announce.json', { cache: 'no-cache' });
+          if (!response.ok) {
+            throw new Error(`HTTP ${response.status}`);
+          }
+
+          const announcements = await response.json();
+          if (!Array.isArray(announcements)) {
+            throw new Error('Invalid announcement data format');
+          }
+
+          // Filter announcements
+          let filteredAnnouncements = [];
+
+          if (wantId) {
+            // Single announcement by ID
+            const ann = announcements.find(a => a.announcement_id === wantId);
+            if (ann) {
+              filteredAnnouncements = [ann];
+            }
+          } else if (wantProjectId) {
+            // All announcements for project
+            filteredAnnouncements = announcements.filter(a =>
+              String(a.project_id) === String(wantProjectId) &&
+              a.status === 'active'
+            );
+          }
+
+          if (filteredAnnouncements.length === 0) {
+            showStatus(wantId ? `ไม่พบประกาศรหัส ${wantId}` : `ไม่มีประกาศสำหรับโครงการ ${wantProjectId}`);
+            return;
+          }
+
+          currentAnnouncements = filteredAnnouncements;
+          startAnnouncementCycle();
+
+        } catch (error) {
+          console.error('Error loading announcements:', error);
+          showStatus('โหลดข้อมูลไม่สำเร็จ: ' + error.message);
+        }
+      }
+
+      // Initialize
+      document.addEventListener('DOMContentLoaded', loadData);
+
+      // Message to parent (for signage integration)
+      function announceDone() {
+        try {
+          window.parent.postMessage({ type: 'ANNOUNCE_CYCLE_DONE' }, '*');
+        } catch (_) {}
+      }
+
+      // Auto-complete after one full cycle if in iframe
+      const IN_IFRAME = (window.parent && window.parent !== window);
+      if (IN_IFRAME && currentAnnouncements.length > 0) {
+        setTimeout(() => {
+          announceDone();
+        }, currentAnnouncements.length * 8000);
+      }
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,9 @@
+{
+  "loop": true,
+  "items": [
+    { "media_id": "unit001-01" },
+    { "media_id": "od001-01" },
+    { "media_id": "dine001-01" },
+    { "media_id": "od002-01" }
+  ]
+}

@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Unit Details (Grid 3x3 Layout)</title>
+
+  <!-- ✅ Combined CSS: Header + Unit (เดิมจาก unit.css) -->
+  <style>
+    /* ===== Header CSS ===== */
+    .header-bg {
+      width: 100vw;
+      background: #fff;
+      border-bottom: 1px solid #ddd;
+      box-shadow: 0 1px 5px rgba(0,0,0,0.05);
+    }
+    .header {
+      max-width: 1200px;
+      margin: 0 auto;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: none;
+      padding: 10px 10px;
+      z-index: 1000;
+      position: relative;
+    }
+    .logo-link { display: flex; align-items: center; margin-left: 6px; height: 100%; }
+    .logo { height: 30px; display: block; margin: auto 0; transition: height 0.3s ease; }
+    .desktop-menu { display: flex; align-items: center; gap: 26px; }
+    .desktop-menu a {
+      margin: 0 10px; text-decoration: none; color: #001D56;
+      font-weight: 600; font-size: 1.18rem;
+    }
+    .header-right { display: flex; align-items: center; gap: 20px; margin-right: 0px; }
+    .lang-toggle { color: #001D56; font-weight: bold; cursor: pointer; }
+    .hamburger { font-size: 24px; cursor: pointer; display: none; }
+    .mobile-menu {
+      display: none; flex-direction: column; position: absolute; top: 60px; left: 0; right: 0;
+      background: #fff; box-shadow: 0 2px 12px #eee; z-index: 2000; padding: 12px 0 8px 0; animation: fadeInMenu 0.2s;
+    }
+    .mobile-menu a {
+      padding: 12px 24px; color: #001D56; font-weight: 600; text-decoration: none; font-size: 1.15rem;
+      border-bottom: 1px solid #eee;
+    }
+    .mobile-menu a:last-child { border-bottom: none; }
+    .mobile-menu.active { display: flex; }
+    @keyframes fadeInMenu { from { opacity: 0; transform: translateY(-16px);} to { opacity: 1; transform: translateY(0);} }
+    @media (max-width: 700px) {
+      .desktop-menu { display: none; }
+      .hamburger { display: block; }
+      .header { max-width: 100vw; padding: 10px 10px; }
+      .logo { height: 20px; }
+      .header-right { gap: 10px; margin-right: 6px; }
+      .logo-link { margin-left: 6px; }
+    }
+
+    /* ===== unit.css (ตามที่ให้มา) ===== */
+    /* ================== (1) Global Font & BG ================== */
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: #f7f8fa;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* ================== (2) Unit Grid Layout ================== */
+    .unit-grid {
+      display: grid;
+      grid-template-columns: 61.8% 38.2%;   /* Golden ratio */
+      grid-template-rows: auto auto auto;
+      gap: 10px 10px;
+      max-width: 1200px;
+      margin: 36px auto 32px auto;
+    }
+    .cell {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 2px 12px #eee;
+      padding: 26px;
+    }
+
+    /* ================== (3) Project Header (2 Columns) ================== */
+    .project-header-grid {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 20px;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 2px 12px #eee;
+      padding: 26px;
+    }
+    .header-main { margin-top: 0; }
+
+    /* ========== (NEW) ราคาขาย-เช่า ========== */
+    .price { font-size: 4.8rem; font-weight: bold; color: #0077cc; line-height: 1.05; display: inline-block; }
+    .price-label { font-size: 2.2rem; font-weight: 400; color: #FF6900; vertical-align: baseline; position: relative; margin-left: 6px; }
+    .per-sqm { font-size: 1.5rem; color: #444; margin-left: 22px; font-weight: 400; letter-spacing: 0.1px; vertical-align: middle; }
+
+    .header-actions { display: flex; flex-direction: column; align-items: flex-end; gap: 14px; min-width: 0; margin-top: 0px; }
+    .action-btn {
+      background: #f3f7fd; color: #0077cc; font-weight: 600; border: 1.5px solid #d6e8ff; border-radius: 22px;
+      padding: 8px 26px; font-size: 1.01rem; cursor: pointer; box-shadow: 0 1px 5px #eef6ff; transition: background 0.16s, color 0.16s;
+    }
+    .action-btn:hover, .action-btn:focus { background: #0077cc; color: #fff; border-color: #0077cc; }
+    .save-btn::before { content: "★ "; font-size: 1.1em; color: #FF6900; }
+    .share-btn::before { content: "⤴ "; font-size: 1.1em; color: #0077cc; }
+
+    /* ================== (4) Room Details Table ================== */
+    .room-details table { width: 100%; font-size: 1.05rem; }
+    .room-details td:first-child { color: #0077cc; font-weight: 600; width: 110px; }
+    .room-details td:last-child { color: #1a2a3b; }
+
+    /* ================== (5) Main Gallery Section ================== */
+    .main.main-gallery .gallery-wrapper { width: 100%; display: flex; }
+    .main-gallery .main-image-box {
+      position: relative; width: 100%; aspect-ratio: 16/9; background: #fafbfc; border-radius: 12px; overflow: hidden;
+      box-shadow: 0 1px 8px #aaa2; display: flex; align-items: center; justify-content: center;
+    }
+    .main-gallery .main-image-box img#main-image {
+      width: 100%; height: 100%; object-fit: cover; border-radius: 12px; display: block;
+    }
+
+    /* ===== Overlay: Project Logo ===== */
+    .project-logo-overlay {
+      position: absolute; top: 12px; left: 12px; z-index: 11; background: none !important; box-shadow: none !important;
+      border: none !important; padding: 0 !important; border-radius: 0 !important; max-width: 240px; max-height: 112px; display: flex; align-items: flex-start;
+    }
+    .project-logo-overlay img {
+      display: block; width: auto; height: 100px; max-width: 240px; max-height: 112px; background: none; border: none; box-shadow: none; padding: 0;
+    }
+    .project-overlay { display: none; }
+
+    /* ============ Overlay Thumbs ============= */
+    .thumbs-overlay { position: absolute; right: 14px; bottom: 14px; display: flex; flex-direction: row; z-index: 4; }
+    .thumbs-row {
+      display: flex; flex-direction: row; gap: 4px; align-items: center; justify-content: center;
+      background: none; border-radius: 0; padding: 0; box-shadow: none; z-index: 4;
+    }
+    .thumb-box { position: relative; display: inline-block; }
+    .thumbs-row img {
+      width: 50px; height: 50px; object-fit: cover; border-radius: 6px; border: 1.5px solid #eee; cursor: pointer; background: none; margin: 0; transition: border-color 0.2s;
+    }
+    .thumbs-row img.selected { border: 2px solid #0077cc; }
+    .thumb-nav-overlay {
+      position: absolute; top: 50%; transform: translateY(-50%); background: #fff; color: #0077cc; border: 1.5px solid #0077cc;
+      border-radius: 50%; width: 28px; height: 28px; font-size: 1.15rem; font-weight: bold; box-shadow: 0 1px 5px #ccc; cursor: pointer; z-index: 10;
+      display: flex; align-items: center; justify-content: center; opacity: 0.94; transition: background 0.2s; padding: 0; line-height: 1; outline: none;
+    }
+    .thumb-nav-left  { left: -18px; }
+    .thumb-nav-right { right: -18px; }
+
+    /* ================== (6) Project Details Table ================== */
+    .project-details table { width: 100%; font-size: 1.03rem; }
+    .project-details td:first-child { color: #0077cc; font-weight: 600; width: 115px; }
+    .project-details td:last-child { color: #1a2a3b; }
+
+    /* ================== (7) Other Details & Map ================== */
+    .other-details { min-height: 90px; }
+    .map { min-height: 220px; }
+    .map iframe { width: 100%; height: 220px; border: 0; border-radius: 12px; }
+
+    /* ================== (8) Responsive ================== */
+    @media (max-width: 1020px) {
+      .unit-grid { max-width: 96vw; gap: 18px 10px; }
+      .main-gallery .main-image-box { width: 240px; height: 240px; }
+      .thumbs-row img { width: 44px; height: 44px; }
+      .project-logo-overlay { max-width: 208px; max-height: 80px; top: 8px; left: 8px; padding: 2px 8px; }
+      .project-logo-overlay img { max-height: 56px; }
+      .price { font-size: 3rem; }
+      .price-label { font-size: 1.3rem; }
+      .per-sqm { font-size: 1.1rem; }
+    }
+    @media (max-width: 700px) {
+      .unit-grid { grid-template-columns: 1fr; grid-template-rows: auto auto auto auto auto auto; }
+      .cell { padding: 14px; }
+      .main-gallery .main-image-box { width: 96vw; height: 38vw; min-height: 140px; }
+      .thumbs-row img { width: 15vw; height: 15vw; min-width: 36px; min-height: 36px; }
+      .project-header-grid { flex-direction: column; gap: 12px; padding: 14px; }
+      .header-actions { flex-direction: row; align-items: flex-start; gap: 8px; min-width: 0; }
+      .action-btn { width: auto; padding: 7px 15px; font-size: 0.95rem; margin-top: 0; }
+      .project-logo-overlay { max-width: 128px; max-height: 48px; top: 6px; left: 6px; padding: 1px 4px; }
+      .project-logo-overlay img { max-height: 32px; }
+      .price { font-size: 2rem; }
+      .price-label { font-size: 1.02rem; }
+      .per-sqm { font-size: 0.95rem; }
+    }
+
+    /* ========== (NEW) Sell/Rent Block Layout ========== */
+    .price-row-sell, .price-row-rent { line-height: 1.15; margin-top: 8px; margin-bottom: 4px; }
+    .price-sell, .price-rent { color: #1080e7; font-size: 2.2rem; font-weight: 700; letter-spacing: 0.5px; display: inline-block; }
+    .price-label { color: #ff6900; font-size: 1rem; font-weight: 400; margin-left: 3px; }
+    .price-sqm { color: #1080e7; font-size: 1.1rem; font-weight: 600; margin-left: 0px; display: block; }
+    .header-main h1 { margin-top: 0; margin-bottom: 0px; }
+    .address { margin-top: 0; margin-bottom: 10px; font-size: 1.1rem; color: #222; }
+
+    /* ========== Mid Image Section (from index.html) ========== */
+    .mid-image-section {
+      position: relative;
+      min-height: auto;
+      width: 100vw;
+      background-color: #f0f0f0;
+      margin: 0;
+      padding: 40px 0;
+      border-radius: 0;
+      box-shadow: none;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .search-title {
+      font-size: 2.5rem;
+      font-weight: 300;
+      color: #001D56;
+      margin-bottom: 30px;
+      text-align: center;
+    }
+
+    .search-container {
+      position: static;
+      top: auto;
+      left: auto;
+      transform: none;
+      width: 80%;
+      max-width: 900px;
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 0;
+      background-color: transparent;
+      border-radius: 12px;
+      box-shadow: none !important;
+      margin: 0 auto 20px auto;
+    }
+
+    .category-buttons-wrapper {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 0px;
+    }
+
+    .category-btn {
+      background-color: white !important;
+      color: #001D56 !important;
+      border: none !important;
+      padding: 10px 20px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      user-select: none;
+      white-space: nowrap;
+      transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+      border-radius: 0;
+      box-shadow: none !important;
+    }
+    .category-btn:hover {
+      background-color: #cce0ff;
+    }
+    .category-btn.active {
+      background-color: #0033cc !important;
+      color: white !important;
+      border-color: #0033cc !important;
+      box-shadow: 0 4px 8px rgba(0,51,204,0.3) !important;
+    }
+
+    .search-bar {
+      display: flex;
+      flex-wrap: nowrap;
+      flex-grow: 1;
+      background-color: white;
+      border-radius: 0px;
+      overflow: visible;
+      width: 100%;
+      box-shadow: none;
+      border: none;
+      margin-top: 12px;
+    }
+
+    .search-box {
+      display: flex;
+      align-items: center;
+      padding: 10px 16px;
+      border-right: 1px solid #ccd6e6;
+      min-width: 200px;
+      flex: 1 1 200px;
+      background-color: transparent;
+      border-radius: 0;
+    }
+    .search-box:last-child {
+      border-right: none;
+    }
+    .search-box-where {
+      min-width: 220px;
+    }
+
+    .icon {
+      margin-right: 8px;
+      font-size: 18px;
+      color: #666;
+    }
+
+    .search-input {
+      border: none;
+      outline: none;
+      font-size: 16px;
+      width: 100%;
+      color: #001D56;
+      background-color: transparent;
+      font-weight: 500;
+    }
+
+    .search-button {
+      padding: 10px 24px;
+      background-color: #FF6900;
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 16px;
+      flex: 0 0 auto;
+      border-radius: 0;
+      transition: background-color 0.3s ease;
+    }
+    .search-button:hover {
+      background-color: #e05d00;
+    }
+  </style>
+</head>
+<body>
+  <!-- ✅ Header HTML (inlined) -->
+  <div class="header-bg">
+    <header class="header">
+      <a href="index.html" class="logo-link">
+        <img src="center/images/logo.png" alt="AquaMx Logo" class="logo" />
+      </a>
+      <nav class="desktop-menu">
+        <a href="condo.html">Condo</a>
+        <a href="foodies.html">Foodies</a>
+        <a href="marketplace.html">Marketplace</a>
+      </nav>
+      <div class="header-right">
+        <div class="lang-toggle">TH / EN</div>
+        <div class="hamburger">&#9776;</div>
+      </div>
+      <nav class="mobile-menu">
+        <a href="condo.html">Condo</a>
+        <a href="foodies.html">Foodies</a>
+        <a href="marketplace.html">Marketplace</a>
+      </nav>
+    </header>
+  </div>
+
+  <main>
+    <!-- Search Section with Landing Page Format -->
+    <section class="mid-image-section">
+      <div class="search-title">find anything...</div>
+
+      <div class="search-container">
+        <!-- Category buttons matching index.html -->
+        <div class="category-buttons-wrapper">
+          <button type="button" class="category-btn active" data-value="condo">Condo</button>
+          <button type="button" class="category-btn" data-value="foodies">Foodies</button>
+          <button type="button" class="category-btn" data-value="marketplace">Marketplace</button>
+        </div>
+
+        <div class="search-bar">
+          <div class="search-box">
+            <span class="icon">🔍</span>
+            <input type="text" placeholder="What are you looking for? (e.g. Sushi)" class="search-input" />
+          </div>
+          <div class="search-box search-box-where">
+            <span class="icon">📍</span>
+            <input type="text" placeholder="Where (e.g. Sukhumvit 24)" list="locations" class="search-input" />
+            <datalist id="locations">
+              <option value="Sukhumvit 24"></option>
+              <option value="Sukhumvit 26"></option>
+              <option value="Sukhumvit 38"></option>
+              <option value="Sukhumvit 39"></option>
+            </datalist>
+          </div>
+          <button class="search-button">Search</button>
+        </div>
+      </div>
+    </section>
+
+    <div class="unit-grid">
+
+      <!-- Row 1: Project Header + Action Buttons -->
+      <div class="cell project-header-grid">
+        <div class="header-main">
+          <h1 id="project-name">The Sukhumvit Residence</h1>
+          <div class="address" id="address">Sukhumvit 23, Bangkok, Thailand</div>
+          <div id="price-block"></div>
+        </div>
+        <div class="header-actions">
+          <button class="action-btn save-btn">Save</button>
+          <button class="action-btn share-btn">Share</button>
+        </div>
+      </div>
+
+      <div class="cell room-details">
+        <table>
+          <tr><td>Room Type</td><td id="room-type">4 Bedroom</td></tr>
+          <tr><td>Size</td><td id="room-size">90 sqm</td></tr>
+          <tr><td>Floor</td><td id="floor">12</td></tr>
+          <tr><td>View</td><td id="view">Garden View</td></tr>
+        </table>
+      </div>
+
+      <!-- Row 2 -->
+      <div class="cell main-gallery">
+        <div class="gallery-wrapper">
+          <div class="main-image-box">
+            <div id="project-logo-overlay" class="project-logo-overlay"></div>
+            <img id="main-image" src="" alt="Main Room" />
+            <div class="thumbs-overlay" id="thumbs-overlay"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="cell project-details">
+        <table>
+          <tr><td>Developer</td><td id="developer-name">XYZ Developer Co., Ltd.</td></tr>
+          <tr><td>Completion</td><td id="completion-period">Jan-2016</td></tr>
+          <tr><td>Facilities</td><td id="facility-list">Swimming Pool, Fitness, Sauna, 24h Security, Parking</td></tr>
+          <tr><td>Total Units</td><td id="total-units">200</td></tr>
+        </table>
+      </div>
+
+      <!-- Row 3 -->
+      <div class="cell other-details">
+        <div>Other details (custom content)</div>
+      </div>
+      <div class="cell map">
+        <iframe
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3876.827079585109!2d100.56415101535758!3d13.738026201047011!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x30e29ed93d307d27%3A0x2eb3d70e2e634b7d!2sThe%20Sukhumvit%20Residence!5e0!3m2!1sth!2sth!4v1690000000000"
+          width="100%" height="220" style="border:0; border-radius: 12px;" allowfullscreen="" loading="lazy"></iframe>
+      </div>
+    </div>
+  </main>
+
+  <!-- ✅ Combined JS: Header toggle + unit.js -->
+  <script>
+    // Header mobile menu toggle
+    window.addEventListener('DOMContentLoaded', function () {
+      const hamburger = document.querySelector('.hamburger');
+      const mobileMenu = document.querySelector('.mobile-menu');
+      if (hamburger && mobileMenu) {
+        hamburger.addEventListener('click', function () {
+          mobileMenu.classList.toggle('active');
+        });
+      }
+    });
+
+    // ------- 1. ดึง unitID อัตโนมัติจาก query string -------
+    function getUnitIDFromQuery() {
+      const params = new URLSearchParams(window.location.search);
+      return params.get('unit') || params.get('id') || 'unit001';
+    }
+
+    // ------- 2. สร้างชื่อรูปภาพตาม unitID -------
+    function getUnitImages(unitID, count = 5) {
+      const imgList = [];
+      for (let i = 1; i <= count; i++) {
+        const num = String(i).padStart(2, '0');
+        imgList.push(`${unitID}-${num}.jpeg`);
+      }
+      return imgList;
+    }
+
+    // ------- 3. ฟังก์ชันแสดงแกลอรี่แบบ swipe thumbs (ทีละ 3) พร้อมปุ่ม overlay -------
+    function showGallery(imgList) {
+      const mainImg = document.getElementById("main-image");
+      const thumbsOverlay = document.getElementById("thumbs-overlay");
+
+      thumbsOverlay.innerHTML = `<div class="thumbs-row" id="thumbs-row"></div>`;
+      const thumbsRow = document.getElementById("thumbs-row");
+
+      let thumbStart = 0;
+      const THUMB_PER_PAGE = 3;
+
+      function renderThumbs() {
+        thumbsRow.innerHTML = "";
+        const subImgs = imgList.slice(thumbStart, thumbStart + THUMB_PER_PAGE);
+
+        subImgs.forEach((img, idx) => {
+          const thumbBox = document.createElement("div");
+          thumbBox.className = "thumb-box";
+          const thumb = document.createElement("img");
+          thumb.src = "images/" + img;
+          thumb.alt = "thumb" + (thumbStart + idx + 1);
+
+          if (mainImg.src.includes(img)) thumb.classList.add("selected");
+
+          thumb.onclick = function() {
+            mainImg.src = "images/" + img;
+            thumbsRow.querySelectorAll('img').forEach(el => el.classList.remove('selected'));
+            thumb.classList.add('selected');
+          };
+          thumbBox.appendChild(thumb);
+
+          // < ปุ่ม overlay เฉพาะซ้ายสุด
+          if (idx === 0 && thumbStart > 0) {
+            const btnPrev = document.createElement("button");
+            btnPrev.className = "thumb-nav-overlay thumb-nav-left";
+            btnPrev.innerText = "<";
+            btnPrev.onclick = function(e) {
+              e.stopPropagation();
+              if (thumbStart > 0) { thumbStart--; renderThumbs(); }
+            };
+            thumbBox.appendChild(btnPrev);
+          }
+          // > ปุ่ม overlay เฉพาะขวาสุด
+          if (idx === subImgs.length - 1 && thumbStart < imgList.length - THUMB_PER_PAGE) {
+            const btnNext = document.createElement("button");
+            btnNext.className = "thumb-nav-overlay thumb-nav-right";
+            btnNext.innerText = ">";
+            btnNext.onclick = function(e) {
+              e.stopPropagation();
+              if (thumbStart < imgList.length - THUMB_PER_PAGE) { thumbStart++; renderThumbs(); }
+            };
+            thumbBox.appendChild(btnNext);
+          }
+          thumbsRow.appendChild(thumbBox);
+        });
+      }
+
+      mainImg.src = "images/" + imgList[0];
+      renderThumbs();
+    }
+
+    // ------- 4. แสดงโลโก้โครงการบน overlay ซ้ายบน gallery -------
+    async function loadAndSetProjectLogoOverlay() {
+      const unitID = getUnitIDFromQuery();
+      const unitRes = await fetch(`project/ann/data/unit.json`);
+      const unitData = await unitRes.json();
+      const unit = unitData.units.find(u => u.unit_id === unitID);
+
+      if (!unit) return;
+
+      // โหลด project.json เพื่อหา project_id
+      const projectRes = await fetch(`project/ann/data/project.json`);
+      const projectData = await projectRes.json();
+      const project = projectData.projects.find(p => p.project_id === unit.project_id);
+
+      // แสดงโลโก้ (เช่น images/prj001.png)
+      const logoOverlay = document.getElementById('project-logo-overlay');
+      const logoFile = project ? `images/${project.project_id}.png` : '';
+      if (logoFile) {
+        logoOverlay.innerHTML = `<img src="${logoFile}" alt="Project Logo" class="logo-img" />`;
+      } else {
+        logoOverlay.innerHTML = '';
+      }
+    }
+
+    // ------- 5. อัปเดตราคาขาย + ราคาต่อตร.ม. (Baht/sqm) ใน price-block -------
+    async function updatePriceBlock() {
+      const unitID = getUnitIDFromQuery();
+      const unitRes = await fetch(`project/ann/data/unit.json`);
+      const unitData = await unitRes.json();
+      const unit = unitData.units.find(u => u.unit_id === unitID);
+      if (!unit) return;
+
+      const priceBlock = document.getElementById('price-block');
+      let priceHtml = "";
+
+      // SELL
+      if (
+        (unit.unit.listing_type === "Sell" || unit.unit.listing_type === "Both") &&
+        unit.condition.selling_price && unit.unit.room_size
+      ) {
+        const price = parseFloat(unit.condition.selling_price);
+        const size = parseFloat(unit.unit.room_size);
+        let pricePerSqm = "";
+        if (price > 0 && size > 0) {
+          pricePerSqm = Math.round(price / size).toLocaleString();
+        }
+        priceHtml += `
+          <div class="price-row-sell">
+            <span class="price-sell">Sell ${price.toLocaleString()}</span>
+            <span class="price-label">Baht</span>
+            ${pricePerSqm ? `<span class="price-sqm">(${pricePerSqm} Baht/sqm.)</span>` : ""}
+          </div>
+        `;
+      }
+
+      // RENT
+      if (
+        (unit.unit.listing_type === "Rent" || unit.unit.listing_type === "Both") &&
+        unit.condition.rental_price
+      ) {
+        const rentPrice = parseFloat(unit.condition.rental_price);
+        priceHtml += `
+          <div class="price-row-rent">
+            <span class="price-rent">Rent ${rentPrice.toLocaleString()}</span>
+            <span class="price-label">Baht</span>
+          </div>
+        `;
+      }
+
+      priceBlock.innerHTML = priceHtml;
+    }
+
+    // ------- 6. เรียกใช้ทุกอย่าง ---------
+    document.addEventListener("DOMContentLoaded", function() {
+      const unitID = getUnitIDFromQuery();
+      const imgList = getUnitImages(unitID, 5);
+      showGallery(imgList);
+      loadAndSetProjectLogoOverlay();
+      updatePriceBlock();
+    });
+  </script>
+</body>
+</html>

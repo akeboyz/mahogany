@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Shop Details - Signage</title>
+
+  <style>
+    /* ================== Reset & Base ================== */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html, body {
+      width: 100vw;
+      height: 100vh;
+      background: black;
+      overflow: hidden;
+      font-family: 'Nunito', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* ================== Signage Container (9:16) ================== */
+    .signage-wrapper {
+      aspect-ratio: 9 / 16;
+      width: 100%;
+      height: 100vh;
+      max-width: 56.25vh;
+      display: flex;
+      flex-direction: column;
+      background: white;
+      position: relative;
+    }
+
+    /* ================== Header Section ================== */
+    .shop-header {
+      background: linear-gradient(135deg, #0033cc 0%, #001D56 100%);
+      color: white;
+      padding: 20px;
+      text-align: center;
+      position: relative;
+    }
+
+    .shop-title {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 5px;
+      line-height: 1.2;
+    }
+
+    .shop-subtitle {
+      font-size: 1.2rem;
+      font-weight: 400;
+      opacity: 0.9;
+      line-height: 1.3;
+    }
+
+    /* ================== Back Button ================== */
+    .back-button {
+      position: absolute;
+      top: 15px;
+      left: 15px;
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-radius: 12px;
+      padding: 8px 12px;
+      font-size: 14px;
+      cursor: pointer;
+      backdrop-filter: blur(10px);
+      transition: all 0.3s ease;
+    }
+
+    .back-button:hover {
+      background: rgba(255, 255, 255, 0.3);
+      border-color: rgba(255, 255, 255, 0.5);
+    }
+
+    /* ================== Content Section ================== */
+    .content-container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      padding: 15px;
+      overflow-y: auto;
+    }
+
+    /* ================== Image Gallery ================== */
+    .image-section {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      background: #f5f7fa;
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .main-media {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .media-nav {
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      display: flex;
+      gap: 6px;
+      background: rgba(0, 0, 0, 0.5);
+      padding: 8px 12px;
+      border-radius: 20px;
+    }
+
+    .nav-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.6);
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .nav-dot.active {
+      background: white;
+      transform: scale(1.2);
+    }
+
+    /* ================== Category & Service Section ================== */
+    .service-section {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 20px;
+      justify-content: center;
+    }
+
+    .service-badge {
+      background: #0033cc;
+      color: white;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      text-align: center;
+    }
+
+    .service-badge.category { background: #FF6900; }
+    .service-badge.walk_in { background: #28a745; }
+    .service-badge.mobile_order { background: #6f42c1; }
+    .service-badge.delivery { background: #17a2b8; }
+    .service-badge.reservation { background: #fd7e14; }
+
+    /* ================== Details Grid ================== */
+    .details-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    .detail-card {
+      background: #f8f9ff;
+      border: 1px solid #e4e8ff;
+      border-radius: 12px;
+      padding: 15px;
+    }
+
+    .detail-label {
+      font-size: 0.9rem;
+      color: #666;
+      font-weight: 600;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .detail-value {
+      font-size: 1.1rem;
+      color: #001D56;
+      font-weight: 500;
+      line-height: 1.4;
+    }
+
+    /* ================== Contact Section ================== */
+    .contact-section {
+      background: linear-gradient(135deg, #FF6900 0%, #e05d00 100%);
+      color: white;
+      padding: 20px;
+      border-radius: 12px;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .contact-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .contact-info {
+      font-size: 1.1rem;
+      font-weight: 500;
+      opacity: 0.9;
+    }
+
+    /* ================== Status Section ================== */
+    .status-section {
+      background: #e8f5e8;
+      border: 2px solid #c3e6c3;
+      border-radius: 12px;
+      padding: 15px;
+      text-align: center;
+      margin-bottom: 15px;
+    }
+
+    .status-section.inactive {
+      background: #fff3cd;
+      border-color: #ffeaa7;
+    }
+
+    .status-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #155724;
+      margin-bottom: 5px;
+    }
+
+    .status-section.inactive .status-title {
+      color: #856404;
+    }
+
+    .status-desc {
+      font-size: 1rem;
+      color: #155724;
+    }
+
+    .status-section.inactive .status-desc {
+      color: #856404;
+    }
+
+    /* ================== Projects Section ================== */
+    .projects-section {
+      background: linear-gradient(135deg, #f8f9ff 0%, #e4e8ff 100%);
+      border: 2px solid #d6e8ff;
+      border-radius: 12px;
+      padding: 15px;
+      margin-bottom: 15px;
+    }
+
+    .projects-title {
+      font-size: 1.1rem;
+      color: #001D56;
+      font-weight: 700;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+
+    .project-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+    }
+
+    .project-item {
+      background: white;
+      color: #001D56;
+      padding: 6px 12px;
+      border-radius: 15px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    }
+
+    /* ================== Auto-return Message ================== */
+    .auto-return {
+      position: absolute;
+      bottom: 10px;
+      right: 15px;
+      background: rgba(0, 0, 0, 0.7);
+      color: white;
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      backdrop-filter: blur(10px);
+    }
+
+    /* ================== Loading State ================== */
+    .loading {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      font-size: 1.2rem;
+      color: #666;
+    }
+  </style>
+</head>
+<body>
+  <div class="signage-wrapper">
+    <!-- Header -->
+    <div class="shop-header">
+      <button class="back-button" id="backBtn">← Back</button>
+      <div class="shop-title" id="shopTitle">Loading...</div>
+      <div class="shop-subtitle" id="shopSubtitle"></div>
+    </div>
+
+    <!-- Content -->
+    <div class="content-container" id="contentContainer">
+      <div class="loading">Loading shop details...</div>
+    </div>
+
+    <!-- Auto-return notice -->
+    <div class="auto-return">Returns to menu in 60s</div>
+  </div>
+
+  <script>
+    // ===== PARAMETERS =====
+    const qs = new URLSearchParams(location.search);
+    const shopId = qs.get('shop') || 'shop001';
+    const projectId = qs.get('project_id') || '';
+
+    // ===== UTILITY FUNCTIONS =====
+    const withBase = (p) => './' + p.replace(/^\.?\//, '');
+
+    function escapeHtml(s) {
+      return String(s || '').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+    }
+
+    function serviceBadges(arr, category) {
+      const badges = [];
+
+      // Add category badge first
+      if (category) {
+        badges.push({ text: category, class: 'category' });
+      }
+
+      // Add service badges
+      if (Array.isArray(arr)) {
+        const map = {
+          walk_in: { text: 'Walk-in', class: 'walk_in' },
+          mobile_order: { text: 'Mobile Order', class: 'mobile_order' },
+          delivery: { text: 'Delivery', class: 'delivery' },
+          reservation: { text: 'Reservation', class: 'reservation' },
+          ads_only: { text: 'Ads Only', class: 'ads' }
+        };
+        arr.forEach(k => {
+          if (map[k]) badges.push(map[k]);
+          else badges.push({ text: k, class: 'default' });
+        });
+      }
+
+      return badges;
+    }
+
+    // ===== MEDIA GALLERY =====
+    function createMediaGallery(images, videos) {
+      let currentIndex = 0;
+      const media = [];
+
+      // Combine images and videos
+      if (Array.isArray(images)) {
+        images.forEach(src => media.push({ type: 'image', src }));
+      }
+      if (Array.isArray(videos)) {
+        videos.forEach(src => media.push({ type: 'video', src }));
+      }
+
+      if (media.length === 0) {
+        media.push({ type: 'image', src: 'medias/placeholder.jpg' });
+      }
+
+      const imageSection = document.createElement('div');
+      imageSection.className = 'image-section';
+
+      const mainMedia = document.createElement('img');
+      mainMedia.className = 'main-media';
+      mainMedia.src = withBase(media[0].src);
+      mainMedia.alt = 'Shop Media';
+
+      const mediaNav = document.createElement('div');
+      mediaNav.className = 'media-nav';
+
+      // Create navigation dots
+      media.forEach((_, index) => {
+        const dot = document.createElement('div');
+        dot.className = 'nav-dot' + (index === 0 ? ' active' : '');
+        dot.addEventListener('click', () => {
+          currentIndex = index;
+          showMedia(currentIndex);
+          updateDots();
+        });
+        mediaNav.appendChild(dot);
+      });
+
+      function showMedia(index) {
+        const item = media[index];
+        if (item.type === 'video') {
+          const video = document.createElement('video');
+          video.className = 'main-media';
+          video.src = withBase(item.src);
+          video.controls = true;
+          video.autoplay = true;
+          video.muted = true;
+          mainMedia.parentNode.replaceChild(video, mainMedia);
+        } else {
+          if (mainMedia.tagName === 'VIDEO') {
+            const img = document.createElement('img');
+            img.className = 'main-media';
+            img.alt = 'Shop Media';
+            mainMedia.parentNode.replaceChild(img, mainMedia);
+          }
+          document.querySelector('.main-media').src = withBase(item.src);
+        }
+      }
+
+      function updateDots() {
+        mediaNav.querySelectorAll('.nav-dot').forEach((dot, index) => {
+          dot.classList.toggle('active', index === currentIndex);
+        });
+      }
+
+      // Auto-advance media every 8 seconds
+      setInterval(() => {
+        currentIndex = (currentIndex + 1) % media.length;
+        showMedia(currentIndex);
+        updateDots();
+      }, 8000);
+
+      imageSection.appendChild(mainMedia);
+      if (media.length > 1) {
+        imageSection.appendChild(mediaNav);
+      }
+
+      return imageSection;
+    }
+
+    // ===== RENDER SHOP DETAILS =====
+    function renderShopDetails(shop) {
+      const container = document.getElementById('contentContainer');
+      container.innerHTML = '';
+
+      // Update header
+      const name = shop.name_en || shop.name_th || 'Shop';
+      document.getElementById('shopTitle').textContent = name;
+
+      const category = shop.category_en || shop.category_th || '';
+      const location = shop.location_en || shop.location_th || '';
+      document.getElementById('shopSubtitle').textContent = [category, location].filter(Boolean).join(' • ');
+
+      // Media gallery
+      const mediaGallery = createMediaGallery(shop.images, shop.videos);
+      container.appendChild(mediaGallery);
+
+      // Service badges (category + services)
+      const serviceSection = document.createElement('div');
+      serviceSection.className = 'service-section';
+      const badges = serviceBadges(shop.service_type, category);
+      badges.forEach(badge => {
+        const badgeEl = document.createElement('div');
+        badgeEl.className = `service-badge ${badge.class}`;
+        badgeEl.textContent = badge.text;
+        serviceSection.appendChild(badgeEl);
+      });
+      container.appendChild(serviceSection);
+
+      // Status section
+      const statusSection = document.createElement('div');
+      statusSection.className = `status-section ${shop.status !== 'active' ? 'inactive' : ''}`;
+      const statusText = shop.status === 'active' ? '🟢 Currently Open' : '⚠️ Currently Closed';
+      const statusDesc = shop.status === 'active' ? 'Available for service' : 'Temporarily unavailable';
+      statusSection.innerHTML = `
+        <div class="status-title">${statusText}</div>
+        <div class="status-desc">${statusDesc}</div>
+      `;
+      container.appendChild(statusSection);
+
+      // Details grid
+      const detailsGrid = document.createElement('div');
+      detailsGrid.className = 'details-grid';
+
+      // Shop info
+      const infoCard = document.createElement('div');
+      infoCard.className = 'detail-card';
+      infoCard.innerHTML = `
+        <div class="detail-label">Shop Information</div>
+        <div class="detail-value">
+          <strong>Category:</strong> ${escapeHtml(category)}<br/>
+          <strong>Type:</strong> ${escapeHtml(shop.type || 'N/A')}<br/>
+          <strong>Location:</strong> ${escapeHtml(location)}<br/>
+          <strong>Address:</strong> ${escapeHtml(shop.address_en || shop.address_th || 'N/A')}
+        </div>
+      `;
+      detailsGrid.appendChild(infoCard);
+
+      // Description
+      if (shop.description_en || shop.description_th) {
+        const descCard = document.createElement('div');
+        descCard.className = 'detail-card';
+        descCard.innerHTML = `
+          <div class="detail-label">About</div>
+          <div class="detail-value">${escapeHtml(shop.description_en || shop.description_th)}</div>
+        `;
+        detailsGrid.appendChild(descCard);
+      }
+
+      container.appendChild(detailsGrid);
+
+      // Contact section
+      if (shop.contact) {
+        const contactSection = document.createElement('div');
+        contactSection.className = 'contact-section';
+
+        const contactInfo = [];
+        if (shop.contact.phone) contactInfo.push(`📞 ${shop.contact.phone}`);
+        if (shop.contact.line) contactInfo.push(`💬 Line: ${shop.contact.line}`);
+
+        if (contactInfo.length > 0) {
+          contactSection.innerHTML = `
+            <div class="contact-title">Contact Information</div>
+            <div class="contact-info">${contactInfo.join('<br/>')}</div>
+          `;
+          container.appendChild(contactSection);
+        }
+      }
+
+      // Projects section
+      if (shop.projects && Array.isArray(shop.projects) && shop.projects.length > 0) {
+        const projectsSection = document.createElement('div');
+        projectsSection.className = 'projects-section';
+        projectsSection.innerHTML = '<div class="projects-title">🏢 Available at Projects</div>';
+
+        const projectList = document.createElement('div');
+        projectList.className = 'project-list';
+
+        shop.projects.forEach(project => {
+          const projectItem = document.createElement('div');
+          projectItem.className = 'project-item';
+          projectItem.textContent = project;
+          projectList.appendChild(projectItem);
+        });
+
+        projectsSection.appendChild(projectList);
+        container.appendChild(projectsSection);
+      }
+    }
+
+    // ===== LOAD SHOP DATA =====
+    async function loadShopData() {
+      try {
+        const response = await fetch(withBase('data/shop.json'));
+        const data = await response.json();
+        const shops = Array.isArray(data) ? data : (data.shops || []);
+        const shop = shops.find(s => s.id === shopId);
+
+        if (!shop) {
+          document.getElementById('contentContainer').innerHTML = '<div class="loading">Shop not found</div>';
+          return;
+        }
+
+        renderShopDetails(shop);
+
+      } catch (error) {
+        console.error('Error loading shop data:', error);
+        document.getElementById('contentContainer').innerHTML = '<div class="loading">Error loading shop details</div>';
+      }
+    }
+
+    // ===== BACK BUTTON =====
+    document.getElementById('backBtn').addEventListener('click', () => {
+      const url = new URL('/category.html', location.origin);
+      url.searchParams.set('type', 'daily');
+      if (projectId) url.searchParams.set('project_id', projectId);
+      location.href = url.toString();
+    });
+
+    // ===== AUTO RETURN =====
+    let timeout = setTimeout(() => {
+      const url = new URL('./menu.html', location.origin);
+      if (projectId) url.searchParams.set('project_id', projectId);
+      location.href = url.toString();
+    }, 60000);
+
+    // Reset timer on user interaction
+    ['click', 'touchstart', 'mousemove'].forEach(event => {
+      document.addEventListener(event, () => {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => {
+          const url = new URL('./menu.html', location.origin);
+          if (projectId) url.searchParams.set('project_id', projectId);
+          location.href = url.toString();
+        }, 60000);
+      });
+    });
+
+    // ===== INITIALIZE =====
+    loadShopData();
+  </script>
+</body>
+</html>

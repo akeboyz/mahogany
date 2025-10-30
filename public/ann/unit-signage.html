@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Unit Details - Digital Signage</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      overflow-x: hidden;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ===== HEADER BANNER ===== */
+    .header-banner {
+      width: 100%;
+      height: 120px;
+      background: rgba(0, 0, 0, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 30px;
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .project-info h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    .project-info p {
+      font-size: 1rem;
+      opacity: 0.9;
+      margin-top: 5px;
+    }
+
+    .back-btn {
+      background: rgba(255, 255, 255, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      color: white;
+      padding: 12px 24px;
+      border-radius: 25px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      backdrop-filter: blur(10px);
+      transition: all 0.3s ease;
+    }
+
+    .back-btn:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: translateY(-2px);
+    }
+
+    /* ===== MAIN CONTENT ===== */
+    .main-content {
+      flex: 1;
+      padding: 20px;
+      max-width: 100%;
+      overflow-y: auto;
+    }
+
+    .unit-card {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 20px;
+      padding: 25px;
+      margin-bottom: 20px;
+      color: #333;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      backdrop-filter: blur(10px);
+    }
+
+    .unit-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .unit-title h2 {
+      font-size: 1.8rem;
+      color: #001D56;
+      margin-bottom: 8px;
+    }
+
+    .unit-subtitle {
+      color: #666;
+      font-size: 1rem;
+    }
+
+    .price-section {
+      text-align: right;
+      min-width: 200px;
+    }
+
+    .price-main {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #FF6900;
+    }
+
+    .price-sub {
+      font-size: 0.9rem;
+      color: #666;
+      margin-top: 4px;
+    }
+
+    .status-badge {
+      display: inline-block;
+      background: #0033cc;
+      color: white;
+      padding: 6px 12px;
+      border-radius: 15px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-top: 10px;
+    }
+
+    /* ===== IMAGE GALLERY ===== */
+    .image-gallery {
+      margin: 20px 0;
+      border-radius: 15px;
+      overflow: hidden;
+      position: relative;
+      background: #f5f5f5;
+    }
+
+    .main-image-container {
+      position: relative;
+      width: 100%;
+      height: 300px;
+      overflow: hidden;
+    }
+
+    .main-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      cursor: pointer;
+    }
+
+    .image-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(0, 0, 0, 0.5);
+      color: white;
+      border: none;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 1.2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .prev-btn { left: 10px; }
+    .next-btn { right: 10px; }
+
+    .image-counter {
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      background: rgba(0, 0, 0, 0.7);
+      color: white;
+      padding: 5px 10px;
+      border-radius: 12px;
+      font-size: 0.8rem;
+    }
+
+    /* ===== UNIT DETAILS GRID ===== */
+    .details-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+      margin: 20px 0;
+    }
+
+    .detail-item {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .detail-label {
+      font-size: 0.9rem;
+      color: #666;
+      margin-bottom: 5px;
+      font-weight: 600;
+    }
+
+    .detail-value {
+      font-size: 1.1rem;
+      color: #333;
+      font-weight: 600;
+    }
+
+    /* ===== CONTACT SECTION ===== */
+    .contact-section {
+      background: rgba(0, 29, 86, 0.1);
+      border-radius: 15px;
+      padding: 20px;
+      margin-top: 20px;
+    }
+
+    .contact-title {
+      font-size: 1.2rem;
+      color: #001D56;
+      margin-bottom: 15px;
+      font-weight: 700;
+    }
+
+    .contact-buttons {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .contact-btn {
+      flex: 1;
+      min-width: 120px;
+      background: #FF6900;
+      color: white;
+      border: none;
+      padding: 15px 20px;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .contact-btn:hover {
+      background: #e05d00;
+      transform: translateY(-2px);
+    }
+
+    .contact-btn.secondary {
+      background: #001D56;
+    }
+
+    .contact-btn.secondary:hover {
+      background: #001a4d;
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 768px) {
+      .header-banner {
+        height: 100px;
+        padding: 0 20px;
+      }
+
+      .project-info h1 {
+        font-size: 1.5rem;
+      }
+
+      .unit-header {
+        flex-direction: column;
+        gap: 15px;
+      }
+
+      .price-section {
+        text-align: left;
+        min-width: auto;
+      }
+
+      .details-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .contact-buttons {
+        flex-direction: column;
+      }
+
+      .main-content {
+        padding: 15px;
+      }
+    }
+
+    /* ===== LOADING STATE ===== */
+    .loading {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 200px;
+      color: #666;
+      font-size: 1.2rem;
+    }
+
+    .error {
+      background: rgba(220, 53, 69, 0.1);
+      border: 1px solid rgba(220, 53, 69, 0.3);
+      color: #dc3545;
+      padding: 20px;
+      border-radius: 15px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <!-- Header Banner -->
+  <div class="header-banner">
+    <div class="project-info">
+      <h1 id="projectName">Unit Details</h1>
+      <p id="projectAddress">Loading...</p>
+    </div>
+    <button class="back-btn" id="backBtn">← Back to Deals</button>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <div id="loadingState" class="loading">Loading unit details...</div>
+
+    <div id="errorState" class="error" style="display: none;">
+      <h3>Unit Not Found</h3>
+      <p>The requested unit could not be loaded.</p>
+    </div>
+
+    <div id="unitContent" style="display: none;">
+      <!-- Unit Info Card -->
+      <div class="unit-card">
+        <div class="unit-header">
+          <div class="unit-title">
+            <h2 id="unitName">4 Bedroom A108</h2>
+            <div class="unit-subtitle" id="unitSubtitle">Building A, Floor 12</div>
+            <div class="status-badge" id="statusBadge">For Sale</div>
+          </div>
+          <div class="price-section">
+            <div class="price-main" id="mainPrice">5,000,000 Baht</div>
+            <div class="price-sub" id="subPrice">55,556 Baht/sqm</div>
+          </div>
+        </div>
+
+        <!-- Image Gallery -->
+        <div class="image-gallery">
+          <div class="main-image-container">
+            <img id="mainImage" class="main-image" src="medias/placeholder.jpg" alt="Unit Image">
+            <button class="image-nav prev-btn" id="prevBtn">‹</button>
+            <button class="image-nav next-btn" id="nextBtn">›</button>
+            <div class="image-counter" id="imageCounter">1 / 5</div>
+          </div>
+        </div>
+
+        <!-- Unit Details -->
+        <div class="details-grid">
+          <div class="detail-item">
+            <span class="detail-label">Room Type</span>
+            <span class="detail-value" id="roomType">4 Bedroom</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Size</span>
+            <span class="detail-value" id="roomSize">90 sqm</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Floor</span>
+            <span class="detail-value" id="floor">12</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">View</span>
+            <span class="detail-value" id="view">Garden View</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Furnishing</span>
+            <span class="detail-value" id="furnishing">Partially Furnished</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Parking</span>
+            <span class="detail-value" id="parking">1 Space</span>
+          </div>
+        </div>
+
+        <!-- Contact Section -->
+        <div class="contact-section">
+          <div class="contact-title">Interested in this unit?</div>
+          <div class="contact-buttons">
+            <button class="contact-btn" id="callBtn">📞 Call Now</button>
+            <button class="contact-btn secondary" id="inquireBtn">💬 Inquire</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Get parameters
+    function getParam(name) {
+      const url = new URL(window.location.href);
+      return url.searchParams.get(name);
+    }
+
+    const unitId = getParam('id');
+    const projectId = getParam('project_id') || 'prj001';
+
+    // Navigation state
+    let currentImages = [];
+    let currentImageIndex = 0;
+
+    // Load unit data
+    async function loadUnitData() {
+      try {
+        if (!unitId) {
+          showError('Missing unit ID parameter');
+          return;
+        }
+
+        // Load unit and project data
+        const [unitData, projectData] = await Promise.all([
+          fetch('data/unit.json').then(r => r.json()),
+          fetch('project/ann/data/project.json').then(r => r.json()).catch(() => ({ projects: [] }))
+        ]);
+
+        const unit = unitData.units.find(u => u.unit_id === unitId);
+        if (!unit) {
+          showError('Unit not found');
+          return;
+        }
+
+        const project = projectData.projects?.find(p => p.project_id === unit.project_id) || {};
+
+        displayUnit(unit, project);
+
+      } catch (error) {
+        console.error('Error loading unit data:', error);
+        showError('Failed to load unit data');
+      }
+    }
+
+    function displayUnit(unit, project) {
+      // Hide loading, show content
+      document.getElementById('loadingState').style.display = 'none';
+      document.getElementById('unitContent').style.display = 'block';
+
+      // Project info
+      document.getElementById('projectName').textContent = project.project_name || 'Unit Details';
+      document.getElementById('projectAddress').textContent = project.project_address || 'Property Details';
+
+      // Unit header
+      const unitName = `${unit.unit?.room_type || 'Unit'} ${unit.unit?.unit_number || ''}`;
+      document.getElementById('unitName').textContent = unitName;
+      document.getElementById('unitSubtitle').textContent =
+        `Building ${unit.unit?.building || 'N/A'}, Floor ${unit.unit?.floor || 'N/A'}`;
+
+      // Status badge
+      const listingType = unit.unit?.listing_type?.toLowerCase();
+      const selling = unit.condition?.selling_price;
+      const renting = unit.condition?.rental_price;
+
+      let statusText = 'Available';
+      if (selling && renting) statusText = 'Sale & Rent';
+      else if (selling) statusText = 'For Sale';
+      else if (renting) statusText = 'For Rent';
+
+      document.getElementById('statusBadge').textContent = statusText;
+
+      // Pricing
+      if (selling) {
+        document.getElementById('mainPrice').textContent = `${Number(selling).toLocaleString()} Baht`;
+        const pricePerSqm = unit.unit?.room_size ?
+          Math.round(Number(selling) / unit.unit.room_size).toLocaleString() : '';
+        document.getElementById('subPrice').textContent = pricePerSqm ? `${pricePerSqm} Baht/sqm` : '';
+      } else if (renting) {
+        document.getElementById('mainPrice').textContent = `${Number(renting).toLocaleString()} Baht/month`;
+        document.getElementById('subPrice').textContent = 'Monthly Rent';
+      }
+
+      // Unit details
+      document.getElementById('roomType').textContent = unit.unit?.room_type || 'N/A';
+      document.getElementById('roomSize').textContent = unit.unit?.room_size ? `${unit.unit.room_size} sqm` : 'N/A';
+      document.getElementById('floor').textContent = unit.unit?.floor || 'N/A';
+      document.getElementById('view').textContent = unit.unit?.view || 'N/A';
+      document.getElementById('furnishing').textContent = unit.unit?.room_decor || 'N/A';
+      document.getElementById('parking').textContent = unit.unit?.num_parking ?
+        `${unit.unit.num_parking} Space${unit.unit.num_parking > 1 ? 's' : ''}` : 'None';
+
+      // Image gallery
+      setupImageGallery(unit.images || []);
+    }
+
+    function setupImageGallery(images) {
+      currentImages = images.filter(img => img && img.length > 0);
+      currentImageIndex = 0;
+
+      if (currentImages.length === 0) {
+        currentImages = ['medias/placeholder.jpg'];
+      }
+
+      updateImage();
+
+      // Image navigation
+      document.getElementById('prevBtn').addEventListener('click', () => {
+        currentImageIndex = (currentImageIndex - 1 + currentImages.length) % currentImages.length;
+        updateImage();
+      });
+
+      document.getElementById('nextBtn').addEventListener('click', () => {
+        currentImageIndex = (currentImageIndex + 1) % currentImages.length;
+        updateImage();
+      });
+
+      // Hide nav buttons if only one image
+      const showNav = currentImages.length > 1;
+      document.getElementById('prevBtn').style.display = showNav ? 'flex' : 'none';
+      document.getElementById('nextBtn').style.display = showNav ? 'flex' : 'none';
+    }
+
+    function updateImage() {
+      document.getElementById('mainImage').src = currentImages[currentImageIndex];
+      document.getElementById('imageCounter').textContent =
+        `${currentImageIndex + 1} / ${currentImages.length}`;
+    }
+
+    function showError(message) {
+      document.getElementById('loadingState').style.display = 'none';
+      document.getElementById('errorState').style.display = 'block';
+      document.getElementById('errorState').innerHTML = `
+        <h3>Error</h3>
+        <p>${message}</p>
+      `;
+    }
+
+    // Back navigation
+    document.getElementById('backBtn').addEventListener('click', () => {
+      const url = new URL('/category.html', window.location.origin);
+      url.searchParams.set('type', 'deal');
+      url.searchParams.set('project_id', projectId);
+      window.location.href = url.toString();
+    });
+
+    // Contact buttons
+    document.getElementById('callBtn').addEventListener('click', () => {
+      alert('Contact feature - Connect to property hotline');
+    });
+
+    document.getElementById('inquireBtn').addEventListener('click', () => {
+      alert('Inquiry feature - Open contact form');
+    });
+
+    // Auto return to menu after 2 minutes of inactivity
+    let inactivityTimer;
+    function resetInactivityTimer() {
+      clearTimeout(inactivityTimer);
+      inactivityTimer = setTimeout(() => {
+        const url = new URL('./menu.html', window.location.origin);
+        if (projectId) url.searchParams.set('project_id', projectId);
+        window.location.href = url.toString();
+      }, 120000); // 2 minutes
+    }
+
+    ['click', 'touchstart', 'mousemove', 'keydown'].forEach(event => {
+      document.addEventListener(event, resetInactivityTimer);
+    });
+    resetInactivityTimer();
+
+    // Initialize
+    loadUnitData();
+  </script>
+</body>
+</html>

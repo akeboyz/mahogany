@@ -1,0 +1,491 @@
+[
+  {
+    "id": "shop001",
+    "name_th": "อควาแม็กซ์ โฆษณา",
+    "name_en": "AquaMax Ads",
+    "logo": "logos/aquamx.png",
+    "images": [
+      "images/aquamx-ads01.jpg",
+      "images/aquamx-ads02.jpg"
+    ],
+    "videos": [
+      "videos/aquamx-ads-promo.mp4"
+    ],
+    "description_th": "บริการโฆษณาสำหรับธุรกิจในคอนโด ด้วยสื่อดิจิทัลแบบสัมผัส",
+    "description_en": "Advertising service for local businesses via interactive digital signage in condos.",
+    "type": "service",
+    "category_th": "บริการโฆษณา",
+    "category_en": "Advertising Services",
+    "contact": {
+      "phone": "020000000",
+      "line": "@aquamx"
+    },
+    "location_th": "ทุกคอนโดที่มีหน้าจอของ aquamax",
+    "location_en": "All condominiums with aquamax signage",
+    "address_th": "สำนักงานใหญ่: ถนนสุขุมวิท กรุงเทพฯ",
+    "address_en": "Head Office: Sukhumvit Road, Bangkok",
+    "projects": ["prj001", "prj002", "prj003"],
+    "status": "active",
+    "service_type": ["ads_only"],
+    "image": "medias/shop001-01.MP4",
+    "map_url": "https://maps.app.goo.gl/aquamxads",
+    "map_embed_url": "https://www.google.com/maps/embed?pb=aquamxads",
+    "promotions": [
+      {
+        "title_th": "โฆษณาฟรีเดือนแรก!",
+        "title_en": "Free First Month Ad!",
+        "description_th": "เมื่อสมัครแพ็คเกจราย 3 เดือน",
+        "description_en": "Valid with 3-month package subscription",
+        "start_date": "2025-08-01",
+        "end_date": "2025-08-31",
+        "image": "images/promo-aquamxads.jpg"
+      }
+    ]
+  },
+  {
+    "id": "shop002",
+    "name_th": "อควาแม็กซ์ เอเจนท์",
+    "name_en": "AquaMax Agent",
+    "logo": "logos/aquamx-agent.png",
+    "images": [
+      "images/aquamx-agent01.jpg",
+      "images/aquamx-agent02.jpg"
+    ],
+    "videos": [
+      "videos/aquamx-agent-promo.mp4"
+    ],
+    "description_th": "บริการนายหน้าอสังหาริมทรัพย์มืออาชีพ ขาย/เช่า คอนโดง่าย ๆ",
+    "description_en": "Professional property brokerage service for selling and renting condos.",
+    "type": "service",
+    "category_th": "นายหน้าอสังหาริมทรัพย์",
+    "category_en": "Property Agent",
+    "contact": {
+      "phone": "021234567",
+      "line": "@aquamx"
+    },
+    "location_th": "สำนักงานใหญ่ ถนนสุขุมวิท",
+    "location_en": "Head Office, Sukhumvit Road",
+    "address_th": "สำนักงานใหญ่: ถนนสุขุมวิท แขวงคลองเตยเหนือ กรุงเทพฯ",
+    "address_en": "Head Office: Sukhumvit Road, Wattana, Bangkok",
+    "projects": ["prj001", "prj004"],
+    "status": "active",
+    "service_type": ["ads_only", "walk_in", "reservation"],
+    "image": "medias/shop002-01.MP4",
+    "map_url": "https://maps.app.goo.gl/aquamxagent",
+    "map_embed_url": "https://www.google.com/maps/embed?pb=aquamxagent",
+    "promotions": [
+      {
+        "title_th": "ค่าคอมมิชชัน 0% เดือนแรก",
+        "title_en": "0% Commission for First Month",
+        "description_th": "เมื่อฝากขาย/เช่า กับ aquamax ภายในเดือนนี้",
+        "description_en": "Valid when listing with aquamax this month",
+        "start_date": "2025-08-01",
+        "end_date": "2025-08-31",
+        "image": "images/promo-aquamxagent.jpg"
+      }
+    ]
+  },
+  {
+    "id": "shop003",
+    "name_th": "ซุปเปอร์มาร์เก็ต เฟรช",
+    "name_en": "Fresh Supermarket",
+    "logo": "logos/freshsuper.png",
+    "images": [
+      "images/freshsuper-1.jpg",
+      "images/supermarket-interior.jpg"
+    ],
+    "videos": [],
+    "description_th": "ซุปเปอร์มาร์เก็ตสะดวกซื้อ อาหารสด เครื่องใช้ในบ้าน เปิด 24 ชั่วโมง",
+    "description_en": "Convenient 24-hour supermarket with fresh food and household items.",
+    "type": "non-service",
+    "category_th": "ซุปเปอร์มาร์เก็ต",
+    "category_en": "Supermarket",
+    "contact": {
+      "phone": "022334455"
+    },
+    "location_th": "ชั้น G โซนช้อปปิ้ง",
+    "location_en": "Ground floor, Shopping zone",
+    "address_th": "99 ถนนสุขุมวิท แขวงคลองเตย กรุงเทพฯ",
+    "address_en": "99 Sukhumvit Rd, Klongtoey, Bangkok",
+    "projects": ["prj001", "prj002"],
+    "status": "active",
+    "service_type": ["ads_only", "walk_in"],
+    "image": "medias/shop001-02.MP4",
+    "map_url": "https://maps.app.goo.gl/freshsuper",
+    "map_embed_url": "https://www.google.com/maps/embed?pb=freshsuper",
+    "promotions": [
+      {
+        "title_th": "ลด 10% สินค้าสด ทุกวันศุกร์",
+        "title_en": "10% OFF Fresh Products Every Friday",
+        "description_th": "ผลไม้ ผัก เนื้อสด ปลาสด",
+        "description_en": "Fruits, vegetables, fresh meat, fresh fish",
+        "start_date": "2025-08-01",
+        "end_date": "2025-12-31",
+        "image": "images/promo-freshsuper.jpg"
+      }
+    ]
+  },
+  {
+    "id": "shop004",
+    "name_th": "ร้านขายยา คิวร์",
+    "name_en": "Cure Pharmacy",
+    "logo": "logos/pharmacy.png",
+    "images": [
+      "images/pharmacy-interior.jpg",
+      "medias/placeholder.jpg"
+    ],
+    "videos": [],
+    "description_th": "ร้านขายยาและเวชภัณฑ์ครบครัน เภสัชกรประจำร้าน",
+    "description_en": "Complete pharmacy with healthcare products and licensed pharmacist.",
+    "type": "non-service",
+    "category_th": "ร้านขายยา",
+    "category_en": "Pharmacy",
+    "contact": {
+      "phone": "023445566",
+      "line": "@curepharmacy"
+    },
+    "location_th": "ชั้น 1 โซนสุขภาพ",
+    "location_en": "1st floor, Health zone",
+    "address_th": "88 ถนนสุขุมวิท แขวงวัฒนา กรุงเทพฯ",
+    "address_en": "88 Sukhumvit Rd, Wattana, Bangkok",
+    "projects": ["prj002", "prj003"],
+    "status": "active",
+    "service_type": ["ads_only", "walk_in"],
+    "image": "medias/shop002-02.MP4",
+    "map_url": "https://maps.app.goo.gl/curepharmacy",
+    "map_embed_url": "https://www.google.com/maps/embed?pb=curepharmacy",
+    "promotions": [
+      {
+        "title_th": "ฟรีการวัดความดันโลหิต",
+        "title_en": "Free Blood Pressure Check",
+        "description_th": "บริการฟรีทุกวัน 9:00-18:00 น.",
+        "description_en": "Free service daily 9am-6pm",
+        "start_date": "2025-08-01",
+        "end_date": "2025-12-31"
+      }
+    ]
+  },
+  {
+    "id": "shop005",
+    "name_th": "บริการทำความสะอาด โปร",
+    "name_en": "Pro Cleaning Service",
+    "logo": "logos/procleaning.png",
+    "images": [
+      "images/cleaning-service.jpg",
+      "medias/placeholder.jpg"
+    ],
+    "videos": [
+      "videos/procleaning-promo.mp4"
+    ],
+    "description_th": "บริการทำความสะอาดบ้าน สำนักงาน คอนโด มืออาชีพ",
+    "description_en": "Professional home, office and condo cleaning service.",
+    "type": "service",
+    "category_th": "บริการทำความสะอาด",
+    "category_en": "Cleaning Service",
+    "contact": {
+      "phone": "024556677",
+      "line": "@procleaning"
+    },
+    "location_th": "บริการนัดหมายถึงที่",
+    "location_en": "On-site appointment service",
+    "address_th": "สำนักงาน: ซอยสุขุมวิท 24 กรุงเทพฯ",
+    "address_en": "Office: Soi Sukhumvit 24, Bangkok",
+    "projects": ["prj001", "prj003", "prj004"],
+    "status": "active",
+    "service_type": ["ads_only", "reservation", "mobile_order"],
+    "image": "medias/unit001-01.MP4",
+    "map_url": "https://maps.app.goo.gl/procleaning",
+    "map_embed_url": "https://www.google.com/maps/embed?pb=procleaning",
+    "promotions": [
+      {
+        "title_th": "ลด 20% บริการครั้งแรก",
+        "title_en": "20% OFF First Service",
+        "description_th": "สำหรับลูกค้าใหม่ ทำความสะอาดทั้งห้อง",
+        "description_en": "For new customers, full room cleaning",
+        "start_date": "2025-08-01",
+        "end_date": "2025-09-30"
+      }
+    ]
+  },
+  {
+    "id": "shop006",
+    "name_th": "ร้านสะดวกซื้อ มินิ",
+    "name_en": "Mini Convenience Store",
+    "logo": "logos/miniconvenience.png",
+    "images": [
+      "images/convenience-store.jpg",
+      "medias/placeholder.jpg"
+    ],
+    "videos": [],
+    "description_th": "ร้านสะดวกซื้อขนาดเล็ก ของใช้จำเป็น เครื่องดื่ม ขนม เปิด 6-24 น.",
+    "description_en": "Small convenience store with essentials, drinks, snacks. Open 6am-12am.",
+    "type": "non-service",
+    "category_th": "ร้านสะดวกซื้อ",
+    "category_en": "Convenience Store",
+    "contact": {
+      "phone": "025667788"
+    },
+    "location_th": "ชั้น G ใกล้ล็อบบี้",
+    "location_en": "Ground floor, near lobby",
+    "address_th": "77 ถนนสุขุมวิท แขวงคลองเตย กรุงเทพฯ",
+    "address_en": "77 Sukhumvit Rd, Klongtoey, Bangkok",
+    "projects": ["prj003", "prj004"],
+    "status": "active",
+    "service_type": ["ads_only", "walk_in"],
+    "image": "medias/rest001-01.MP4",
+    "map_url": "https://maps.app.goo.gl/ministore",
+    "map_embed_url": "https://www.google.com/maps/embed?pb=ministore"
+  },
+  {
+    "id": "shop007",
+    "name_th": "ร้านซักแห้ง เอ็กซ์เพรส",
+    "name_en": "Express Dry Cleaning",
+    "logo": "logos/drycleaning.png",
+    "images": [
+      "images/drycleaning-1.jpg",
+      "images/drycleaning-2.jpg"
+    ],
+    "videos": [],
+    "description_th": "บริการซักแห้ง ซักรีด รับ-ส่ง ภายในวัน",
+    "description_en": "Dry cleaning and laundry service with same-day pickup and delivery.",
+    "type": "service",
+    "category_th": "ซักแห้ง",
+    "category_en": "Dry Cleaning",
+    "contact": {
+      "phone": "026778899",
+      "line": "@expressdry"
+    },
+    "location_th": "ชั้น 1 โซนบริการ",
+    "location_en": "1st floor, Service zone",
+    "address_th": "ซอยสุขุมวิท 26 กรุงเทพฯ",
+    "address_en": "Soi Sukhumvit 26, Bangkok",
+    "projects": ["prj001", "prj002"],
+    "status": "active",
+    "service_type": ["walk_in", "delivery", "mobile_order"],
+    "image": "medias/shop001-01.MP4",
+    "map_url": "https://maps.app.goo.gl/expressdry",
+    "map_embed_url": "https://www.google.com/maps/embed?pb=expressdry",
+    "promotions": [
+      {
+        "title_th": "ลด 15% เสื้อเชิ้ต 5 ตัวขึ้นไป",
+        "title_en": "15% OFF 5+ Shirts",
+        "description_th": "ซักรีดเสื้อเชิ้ต 5 ตัวขึ้นไปในครั้งเดียว",
+        "description_en": "Laundry service for 5+ shirts at once",
+        "start_date": "2025-08-01",
+        "end_date": "2025-10-31"
+      }
+    ]
+  },
+  {
+    "id": "shop008",
+    "name_th": "ร้านดอกไม้ บลูม",
+    "name_en": "Bloom Flower Shop",
+    "logo": "logos/flowershop.png",
+    "images": [
+      "images/flowershop-1.jpg",
+      "images/flowershop-2.jpg",
+      "images/flowershop-3.jpg"
+    ],
+    "videos": [
+      "videos/flowershop-promo.mp4"
+    ],
+    "description_th": "ร้านดอกไม้สด ช่อดอกไม้ ดอกไม้ประดับ และของขวัญ",
+    "description_en": "Fresh flowers, bouquets, floral arrangements and gifts.",
+    "type": "non-service",
+    "category_th": "ร้านดอกไม้",
+    "category_en": "Flower Shop",
+    "contact": {
+      "phone": "027889900",
+      "line": "@bloomflowers"
+    },
+    "location_th": "ชั้น G โซนของขวัญ",
+    "location_en": "Ground floor, Gift zone",
+    "address_th": "ซอยสุขุมวิท 39 กรุงเทพฯ",
+    "address_en": "Soi Sukhumvit 39, Bangkok",
+    "projects": ["prj002", "prj004"],
+    "status": "active",
+    "service_type": ["walk_in", "delivery", "reservation"],
+    "image": "medias/shop001-02.MP4",
+    "map_url": "https://maps.app.goo.gl/bloomflowers",
+    "map_embed_url": "https://www.google.com/maps/embed?pb=bloomflowers",
+    "promotions": [
+      {
+        "title_th": "ช่อดอกไม้วาเลนไทน์ พิเศษ!",
+        "title_en": "Special Valentine's Bouquet!",
+        "description_th": "ช่อดอกกุหลาบแดง 12 ดอก ราคาพิเศษ",
+        "description_en": "12 red roses bouquet special price",
+        "start_date": "2025-02-01",
+        "end_date": "2025-02-14",
+        "image": "images/valentine-bouquet.jpg"
+      }
+    ]
+  },
+  {
+    "id": "shop009",
+    "name_th": "ร้านอาหารสัตว์เลี้ยง เพ็ทเซ็นเตอร์",
+    "name_en": "Pet Center",
+    "logo": "logos/petcenter.png",
+    "images": [
+      "images/petcenter-1.jpg",
+      "images/petcenter-2.jpg"
+    ],
+    "videos": [],
+    "description_th": "อาหารสัตว์เลี้ยง อุปกรณ์ดูแล และบริการตัดขนสัตว์เลี้ยง",
+    "description_en": "Pet food, care supplies and pet grooming services.",
+    "type": "non-service",
+    "category_th": "ร้านสัตว์เลี้ยง",
+    "category_en": "Pet Store",
+    "contact": {
+      "phone": "028990011",
+      "line": "@petcenter"
+    },
+    "location_th": "ชั้น 2 โซนสัตว์เลี้ยง",
+    "location_en": "2nd floor, Pet zone",
+    "address_th": "ซอยสุขุมวิท 23 กรุงเทพฯ",
+    "address_en": "Soi Sukhumvit 23, Bangkok",
+    "projects": ["prj001", "prj003"],
+    "status": "active",
+    "service_type": ["walk_in", "delivery", "reservation"],
+    "image": "medias/shop002-01.MP4",
+    "map_url": "https://maps.app.goo.gl/petcenter",
+    "map_embed_url": "https://www.google.com/maps/embed?pb=petcenter",
+    "promotions": [
+      {
+        "title_th": "ซื้อ 2 แถม 1 อาหารสุนัข",
+        "title_en": "Buy 2 Get 1 Free Dog Food",
+        "description_th": "อาหารสุนัขแบรนด์ชั้นนำ ทุกขนาด",
+        "description_en": "Premium dog food brands, all sizes",
+        "start_date": "2025-08-01",
+        "end_date": "2025-08-31"
+      }
+    ]
+  },
+  {
+    "id": "shop010",
+    "name_th": "ร้านกาแฟโบราณ เฮอริเทจ",
+    "name_en": "Heritage Coffee Roasters",
+    "logo": "logos/heritagecoffee.png",
+    "images": [
+      "images/coffee-shop.jpg",
+      "images/barista-1.jpg",
+      "medias/placeholder.jpg"
+    ],
+    "videos": [
+      "videos/coffee-roasting.mp4"
+    ],
+    "description_th": "ร้านกาแฟคั่วเมล็ด เครื่องชงกาแฟ และอุปกรณ์บาริสต้า",
+    "description_en": "Coffee bean roastery, brewing equipment and barista supplies.",
+    "type": "non-service",
+    "category_th": "ร้านกาแฟ",
+    "category_en": "Coffee Shop",
+    "contact": {
+      "phone": "029001122",
+      "line": "@heritagecoffee"
+    },
+    "location_th": "ชั้น 1 โซนคาเฟ่",
+    "location_en": "1st floor, Café zone",
+    "address_th": "ซอยสุขุมวิท 38 กรุงเทพฯ",
+    "address_en": "Soi Sukhumvit 38, Bangkok",
+    "projects": ["prj003", "prj004"],
+    "status": "active",
+    "service_type": ["walk_in", "delivery"],
+    "image": "medias/shop002-02.MP4",
+    "map_url": "https://maps.app.goo.gl/heritagecoffee",
+    "map_embed_url": "https://www.google.com/maps/embed?pb=heritagecoffee",
+    "promotions": [
+      {
+        "title_th": "ลด 25% เมล็ดกาแฟคั่วสด",
+        "title_en": "25% OFF Fresh Roasted Beans",
+        "description_th": "เมล็ดกาแฟคั่วสดทุกสายพันธุ์",
+        "description_en": "All varieties of fresh roasted coffee beans",
+        "start_date": "2025-08-01",
+        "end_date": "2025-09-15",
+        "image": "images/coffee-beans-promo.jpg"
+      }
+    ]
+  },
+  {
+    "id": "shop011",
+    "name_th": "บริการซ่อมมือถือ ฟิกซ์มี",
+    "name_en": "Fix Me Mobile Repair",
+    "logo": "logos/mobilerepair.png",
+    "images": [
+      "images/mobilerepair-1.jpg",
+      "images/mobilerepair-2.jpg"
+    ],
+    "videos": [],
+    "description_th": "ซ่อมมือถือ แท็บเล็ต เปลี่ยนจอ แบตเตอรี่ บริการด่วน",
+    "description_en": "Mobile phone and tablet repair, screen replacement, battery service.",
+    "type": "service",
+    "category_th": "ซ่อมมือถือ",
+    "category_en": "Mobile Repair",
+    "contact": {
+      "phone": "029112233",
+      "line": "@fixmemobile"
+    },
+    "location_th": "ชั้น 1 โซนเทคโนโลยี",
+    "location_en": "1st floor, Technology zone",
+    "address_th": "ซอยสุขุมวิท 24 กรุงเทพฯ",
+    "address_en": "Soi Sukhumvit 24, Bangkok",
+    "projects": ["prj001", "prj002", "prj004"],
+    "status": "active",
+    "service_type": ["walk_in", "reservation"],
+    "image": "medias/unit001-01.MP4",
+    "map_url": "https://maps.app.goo.gl/fixmemobile",
+    "map_embed_url": "https://www.google.com/maps/embed?pb=fixmemobile",
+    "promotions": [
+      {
+        "title_th": "รับประกันการซ่อม 6 เดือน",
+        "title_en": "6-Month Repair Warranty",
+        "description_th": "รับประกันงานซ่อมทุกชิ้นส่วน 6 เดือนเต็ม",
+        "description_en": "Full 6-month warranty on all repair work",
+        "start_date": "2025-08-01",
+        "end_date": "2025-12-31"
+      }
+    ]
+  },
+  {
+    "id": "shop012",
+    "name_th": "ร้านเครื่องประดับ จิวเวลรี่ เฮ้าส์",
+    "name_en": "Jewelry House",
+    "logo": "logos/jewelryhouse.png",
+    "images": [
+      "images/jewelryhouse-1.jpg",
+      "images/jewelryhouse-2.jpg",
+      "images/jewelryhouse-3.jpg"
+    ],
+    "videos": [
+      "videos/jewelry-showcase.mp4"
+    ],
+    "description_th": "เครื่องประดับทอง เงิน เพชร แหวนแต่งงาน และของขวัญพิเศษ",
+    "description_en": "Gold, silver, diamond jewelry, wedding rings and special gifts.",
+    "type": "non-service",
+    "category_th": "เครื่องประดับ",
+    "category_en": "Jewelry Store",
+    "contact": {
+      "phone": "029223344",
+      "line": "@jewelryhouse"
+    },
+    "location_th": "ชั้น 2 โซนเครื่องประดับ",
+    "location_en": "2nd floor, Jewelry zone",
+    "address_th": "ซอยสุขุมวิท 26 กรุงเทพฯ",
+    "address_en": "Soi Sukhumvit 26, Bangkok",
+    "projects": ["prj002", "prj003"],
+    "status": "active",
+    "service_type": ["walk_in", "reservation"],
+    "image": "medias/rest001-01.MP4",
+    "map_url": "https://maps.app.goo.gl/jewelryhouse",
+    "map_embed_url": "https://www.google.com/maps/embed?pb=jewelryhouse",
+    "promotions": [
+      {
+        "title_th": "ลด 30% แหวนแต่งงาน",
+        "title_en": "30% OFF Wedding Rings",
+        "description_th": "แหวนแต่งงานทุกแบบ ทุกขนาด",
+        "description_en": "All wedding rings, all sizes",
+        "start_date": "2025-08-01",
+        "end_date": "2025-10-31",
+        "image": "images/wedding-rings-promo.jpg"
+      }
+    ]
+  }
+]

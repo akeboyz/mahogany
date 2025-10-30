@@ -1,0 +1,199 @@
+[
+  {
+    "id": "dine001",
+    "name_th": "ร้านก๋วยเตี๋ยวเรือเจ๊แดง",
+    "name_en": "Je Daeng Boat Noodle",
+    "logo": "./images/businesses/dine01_logo.png",
+    "images": [
+      "./images/businesses/dine01_interior.jpg"
+    ],
+    "videos": [
+      "videos/dine001-promo.mp4"
+    ],
+    "description_th": "ก๋วยเตี๋ยวเรือรสเด็ดสูตรต้นตำรับ เส้นเหนียวนุ่ม น้ำซุปเข้มข้น",
+    "description_en": "Authentic boat noodles with rich broth and tender noodles.",
+    "type": "dine",
+    "category_th": "ร้านอาหารไทย",
+    "category_en": "Thai Restaurant",
+    "contact": { "phone": "0812345678", "line": "@jedaeng" },
+    "location_th": "ชั้น 2 โซนฟู้ดคอร์ท",
+    "location_en": "2nd floor, Food Court zone",
+    "status": "active",
+    "map_url": "https://maps.app.goo.gl/example1",
+    "map_embed_url": "https://www.google.com/maps/embed?pb=example1",
+    "address_th": "22 ซอยสุขุมวิท 23 เขตวัฒนา กรุงเทพฯ",
+    "address_en": "22 Soi Sukhumvit 23, Wattana, Bangkok",
+    "service_type": [
+      "ads_only",
+      "walk_in",
+      "mobile_order"
+    ],
+    "promotions": [
+      {
+        "title_th": "โปรลด 10% เมนูเส้นทุกชนิด",
+        "title_en": "10% OFF All Noodle Dishes",
+        "description_th": "เฉพาะวันจันทร์-ศุกร์ เวลา 11:00-14:00 น.",
+        "description_en": "Monday–Friday, 11am–2pm only.",
+        "start_date": "2025-08-05",
+        "end_date": "2025-08-31",
+        "image": "images/promo-jedaeng.jpg"
+      }
+    ],
+    "ctas": [
+      {
+        "id": "view_menu",
+        "text_th": "ดูเมนู",
+        "text_en": "View Menu",
+        "type": "modal",
+        "action": "show_menu",
+        "icon": "📋",
+        "priority": "primary",
+        "features": ["menu_display", "no_cart"]
+      },
+      {
+        "id": "reserve_table",
+        "text_th": "จองโต๊ะ",
+        "text_en": "Reserve Table",
+        "type": "modal",
+        "action": "reservation_form",
+        "icon": "📅",
+        "priority": "primary",
+        "features": ["guest_count", "phone_input", "otp_request", "otp_verify"]
+      },
+      {
+        "id": "view_map",
+        "text_th": "ดูแผนที่",
+        "text_en": "View Map",
+        "type": "modal",
+        "action": "show_map",
+        "icon": "🗺️",
+        "priority": "secondary",
+        "features": ["google_maps", "directions", "address"]
+      },
+      {
+        "id": "contact_us",
+        "text_th": "ติดต่อเรา",
+        "text_en": "Contact Us",
+        "type": "modal",
+        "action": "contact_info",
+        "icon": "📞",
+        "priority": "secondary",
+        "features": ["social_media", "qr_code", "phone", "line"]
+      }
+    ]
+  },
+  {
+    "id": "dine002",
+    "name_th": "พิซซ่า เอ็กซ์เพรส",
+    "name_en": "Pizza Express",
+    "logo": "./images/businesses/dine02_logo.png",
+    "images": [
+      "./images/businesses/dine02_interior.jpg"
+    ],
+    "videos": [],
+    "description_th": "พิซซ่าสไตล์อิตาเลียนแป้งบางกรอบ ทำสดใหม่ทุกวัน",
+    "description_en": "Italian-style thin crust pizzas baked fresh daily.",
+    "type": "both",
+    "category_th": "ร้านพิซซ่า",
+    "category_en": "Pizza Restaurant",
+    "contact": { "phone": "0855555555" },
+    "location_th": "ชั้น 1 ติดลิฟต์",
+    "location_en": "1st floor, next to elevator",
+    "projects": ["prj001", "prj003"],
+    "status": "active",
+    "map_url": "https://maps.app.goo.gl/example2",
+    "map_embed_url": "https://www.google.com/maps/embed?pb=example2",
+    "address_th": "99 ถนนสุขุมวิท แขวงคลองเตย กรุงเทพฯ",
+    "address_en": "99 Sukhumvit Rd, Klongtoey, Bangkok",
+    "service_type": [
+      "ads_only",
+      "walk_in",
+      "reservation",
+      "delivery"
+    ],
+    "promotions": [
+      {
+        "title_th": "ซื้อ 1 แถม 1 เมนูพิซซ่า",
+        "title_en": "Buy 1 Get 1 Free Pizza",
+        "description_th": "ทุกวันพุธ เฉพาะทานที่ร้าน",
+        "description_en": "Every Wednesday, dine-in only.",
+        "start_date": "2025-08-01",
+        "end_date": "2025-08-31",
+        "image": "images/promo-pizzaexpress.jpg"
+      }
+    ]
+  },
+  {
+    "id": "dine003",
+    "name_th": "เพสทรี เดอ ปารีส",
+    "name_en": "Pâtisserie de Paris",
+    "logo": "./images/businesses/dine03_logo.png",
+    "images": [
+      "./images/businesses/dine03_interior.jpg"
+    ],
+    "videos": [
+      "videos/pastryparis-promo.mp4"
+    ],
+    "description_th": "ขนมอบและเบเกอรี่สไตล์ฝรั่งเศสแท้ ๆ หอมกรุ่นจากเตาทุกวัน",
+    "description_en": "Authentic French pastries and bakery, freshly baked every day.",
+    "type": "dine",
+    "category_th": "เบเกอรี่ & ขนมอบ",
+    "category_en": "Bakery & Pastry Shop",
+    "contact": { "phone": "0991234567", "line": "@pastryparis" },
+    "location_th": "ชั้น 1 โซนเบเกอรี่",
+    "location_en": "1st floor, Bakery zone",
+    "projects": ["prj001", "prj004"],
+    "status": "active",
+    "map_url": "https://maps.app.goo.gl/pastryparis001",
+    "map_embed_url": "https://www.google.com/maps/embed?pb=pastryparis001",
+    "address_th": "11 ถนนสุขุมวิท ថ เขตวัฒนา กรุงเทพฯ",
+    "address_en": "11 Sukhumvit Rd, Klongtoey, Bangkok",
+    "service_type": [
+      "ads_only",
+      "walk_in"
+    ],
+    "promotions": [
+      {
+        "title_th": "ลด 15% เมนูขนมอบทุกชนิด",
+        "title_en": "15% OFF All Pastries",
+        "description_th": "เมื่อซื้อครบ 3 รายการขึ้นไป",
+        "description_en": "When you buy 3 items or more.",
+        "start_date": "2025-08-10",
+        "end_date": "2025-09-10",
+        "image": "images/promo-pastryparis.jpg"
+      }
+    ],
+    "ctas": [
+      {
+        "id": "view_menu",
+        "text_th": "ดูเมนู",
+        "text_en": "View Menu",
+        "type": "modal",
+        "action": "show_menu",
+        "icon": "📋",
+        "priority": "primary",
+        "features": ["menu_display", "no_cart"]
+      },
+      {
+        "id": "view_map",
+        "text_th": "ดูแผนที่",
+        "text_en": "View Map",
+        "type": "modal",
+        "action": "show_map",
+        "icon": "🗺️",
+        "priority": "secondary",
+        "features": ["google_maps", "directions", "address"]
+      },
+      {
+        "id": "contact_us",
+        "text_th": "ติดต่อเรา",
+        "text_en": "Contact Us",
+        "type": "modal",
+        "action": "contact_info",
+        "icon": "📞",
+        "priority": "secondary",
+        "features": ["social_media", "qr_code", "phone", "line"]
+      }
+    ]
+  }
+]

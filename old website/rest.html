@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Restaurant Details</title>
+  <link rel="stylesheet" href="unit.css"/>
+
+  <!-- ✅ Header CSS -->
+  <style>
+    .header-bg{width:100%;background:#fff;border-bottom:1px solid #eee;box-shadow:0 1px 5px rgba(0,0,0,.05);}
+    .header{
+      max-width:1200px;margin:0 auto;height:auto;
+      display:flex;align-items:center;justify-content:space-between;
+      padding:10px 10px;background:#fff;position:relative;z-index:1000;
+    }
+    .logo-link{display:flex;align-items:center;margin-left:6px;height:100%;}
+    .logo{height:30px;display:block;margin:auto 0;transition:height .3s ease;}
+    .desktop-menu{display:flex;align-items:center;gap:26px;}
+    .desktop-menu a{margin:0 10px;color:#001D56;font-weight:600;font-size:1.06rem;text-decoration:none;}
+    .header-right{display:flex;align-items:center;gap:20px;margin-right:0;}
+    .lang-toggle{color:#001D56;font-weight:700;cursor:pointer;}
+    .hamburger{font-size:24px;cursor:pointer;display:none;}
+    .mobile-menu{
+      display:none;flex-direction:column;position:absolute;top:60px;left:0;right:0;
+      background:#fff;box-shadow:0 2px 12px #eee;z-index:2000;padding:12px 0 8px 0;animation:fadeInMenu .2s;
+    }
+    .mobile-menu a{padding:12px 24px;color:#001D56;font-weight:600;font-size:1.02rem;border-bottom:1px solid #eee;text-decoration:none;}
+    .mobile-menu a:last-child{border-bottom:none;}
+    .mobile-menu.active{display:flex;}
+    @keyframes fadeInMenu{from{opacity:0;transform:translateY(-16px)}to{opacity:1;transform:translateY(0)}}
+    @media (max-width: 700px){
+      .desktop-menu{display:none;}
+      .hamburger{display:block;}
+      .header{max-width:100vw;padding:10px 10px;}
+      .logo{height:20px;}
+      .header-right{gap:10px;margin-right:6px;}
+      .logo-link{margin-left:6px;}
+    }
+
+    /* ====== สไตล์เสริมของหน้า Restaurant ====== */
+    .unit-grid { max-width: 1200px; margin: 0 auto; padding: 12px; }
+    .cell { background:#fff; border-radius:12px; box-shadow:0 2px 8px rgb(0 0 0 / .08); padding:16px; }
+    .project-header-grid { display:flex; gap:16px; align-items:flex-start; justify-content:space-between; }
+    .header-main h1 { margin:0 0 6px 0; color:#001D56; font-size:1.6rem; }
+    .address { color:#445; opacity:.9; margin-bottom:8px; }
+    #price-block { display:flex; flex-wrap:wrap; gap:8px; }
+    .badge { background:#0033cc; color:#fff; padding:6px 10px; border-radius:999px; font-weight:700; font-size:.85rem; }
+    .promo-card { background:#f6f8ff; border:1px solid #e4e8ff; border-radius:10px; padding:10px; margin-top:8px; }
+    .promo-card img { width:100%; border-radius:8px; margin-top:8px; }
+    .room-details table, .project-details table { width:100%; border-collapse:collapse; }
+    .room-details td, .project-details td { padding:8px 6px; border-bottom:1px solid #eee; vertical-align:top; }
+    .room-details td:first-child, .project-details td:first-child { width:32%; color:#445; font-weight:700; }
+    .gallery-wrapper { width:100%; }
+    .main-image-box { position:relative; width:100%; aspect-ratio: 16/9; background:#f3f5f8; border-radius:12px; overflow:hidden; }
+    #main-image, #main-video { width:100%; height:100%; object-fit:cover; display:block; }
+    .thumbs-overlay { position:absolute; left:12px; right:12px; bottom:12px; display:flex; gap:8px; overflow:auto; padding-bottom:4px; }
+    .thumbs-overlay img, .thumbs-overlay video { height:60px; width:96px; object-fit:cover; border-radius:8px; opacity:.8; cursor:pointer; border:2px solid transparent; background:#fff; }
+    .thumbs-overlay img.active, .thumbs-overlay video.active { opacity:1; border-color:#ff6900; }
+    .project-logo-overlay { position:absolute; top:12px; left:12px; }
+    .project-logo-overlay img { height:40px; border-radius:6px; background:#fff; padding:4px; box-shadow:0 2px 6px rgba(0,0,0,.08); }
+    .map iframe { width:100%; height:280px; border:0; border-radius:12px; }
+    .muted { color:#768; }
+    @media (min-width: 900px) {
+      .unit-grid { display:grid; grid-template-columns: 2fr 1fr; grid-auto-rows: minmax(120px, auto); gap:16px; }
+      .project-header-grid { grid-column: 1 / span 2; }
+      .main-gallery { grid-column: 1 / span 1; }
+      .project-details { grid-column: 2 / span 1; }
+      .other-details { grid-column: 1 / span 1; }
+      .map { grid-column: 2 / span 1; }
+    }
+  </style>
+</head>
+<body>
+  <!-- ✅ Header HTML -->
+  <div class="header-bg">
+    <header class="header">
+      <a href="index.html" class="logo-link">
+        <img src="center/images/logo.png" alt="AquaMx Logo" class="logo" />
+      </a>
+      <nav class="desktop-menu">
+        <a href="condo.html">Condo</a>
+        <a href="foodies.html">Foodies</a>
+        <a href="marketplace.html">Marketplace</a>
+      </nav>
+      <div class="header-right">
+        <div class="lang-toggle">TH / EN</div>
+        <div class="hamburger" id="hamburger">&#9776;</div>
+      </div>
+      <nav class="mobile-menu" id="mobileMenu">
+        <a href="condo.html">Condo</a>
+        <a href="foodies.html">Foodies</a>
+        <a href="marketplace.html">Marketplace</a>
+      </nav>
+    </header>
+  </div>
+
+  <main>
+    <div class="unit-grid">
+
+      <!-- Row 1: Header + Action Buttons -->
+      <div class="cell project-header-grid">
+        <div class="header-main">
+          <h1 id="project-name">Restaurant</h1>
+          <div class="address" id="address">Address</div>
+          <div id="price-block"></div>
+        </div>
+        <div class="header-actions">
+          <button class="action-btn save-btn">Save</button>
+          <button class="action-btn share-btn" id="shareBtn">Share</button>
+        </div>
+      </div>
+
+      <!-- ข้อมูลหลัก -->
+      <div class="cell room-details">
+        <table>
+          <tr><td>Category</td><td id="room-type" class="muted">-</td></tr>
+          <tr><td>Type</td><td id="room-size" class="muted">-</td></tr>
+          <tr><td>Contact</td><td id="floor" class="muted">-</td></tr>
+          <tr><td>Services</td><td id="view" class="muted">-</td></tr>
+        </table>
+      </div>
+
+      <!-- แกลเลอรี -->
+      <div class="cell main-gallery">
+        <div class="gallery-wrapper">
+          <div class="main-image-box">
+            <div id="project-logo-overlay" class="project-logo-overlay"></div>
+            <img id="main-image" src="" alt="Main" />
+            <video id="main-video" controls playsinline style="display:none;"></video>
+            <div class="thumbs-overlay" id="thumbs-overlay"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- รายละเอียดเพิ่มเติม -->
+      <div class="cell project-details">
+        <table>
+          <tr><td>Location</td><td id="developer-name" class="muted">-</td></tr>
+          <tr><td>Projects</td><td id="completion-period" class="muted">-</td></tr>
+          <tr><td>Status</td><td id="facility-list" class="muted">-</td></tr>
+          <tr><td>Description</td><td id="total-units" class="muted">-</td></tr>
+        </table>
+      </div>
+
+      <!-- โปรโมชัน -->
+      <div class="cell other-details" id="promo-block">
+        <div class="muted">Promotions</div>
+      </div>
+
+      <!-- แผนที่ -->
+      <div class="cell map">
+        <iframe id="map-frame" src="" loading="lazy" allowfullscreen=""></iframe>
+      </div>
+    </div>
+  </main>
+
+  <!-- ✅ Header JS -->
+  <script>
+    (function(){
+      const burger = document.getElementById('hamburger');
+      const menu = document.getElementById('mobileMenu');
+      if (burger && menu) burger.addEventListener('click', () => menu.classList.toggle('active'));
+    })();
+  </script>
+
+  <!-- ✅ Page JS -->
+  <script>
+    function getParam(name){
+      const url = new URL(window.location.href);
+      return url.searchParams.get(name);
+    }
+    function esc(s){
+      return String(s||'').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));
+    }
+    function serviceBadges(arr){
+      if(!Array.isArray(arr)) return [];
+      const map = {
+        walk_in: 'Walk-in', delivery: 'Delivery',
+        mobile_order: 'Mobile Order', reservation: 'Reservation',
+        ads_only: 'Ads Only'
+      };
+      return arr.map(k => map[k] || k);
+    }
+    function renderPromotions(container, promos){
+      container.innerHTML = '<div class="muted" style="margin-bottom:6px;">Promotions</div>';
+      if(!Array.isArray(promos) || promos.length===0){
+        const p = document.createElement('div'); p.className = 'muted'; p.textContent = '—'; container.appendChild(p); return;
+      }
+      promos.forEach(pm => {
+        const card = document.createElement('div'); card.className = 'promo-card';
+        const title = esc(pm.title_en || pm.title_th || 'Promotion');
+        const desc = esc(pm.description_en || pm.description_th || '');
+        const period = [pm.start_date, pm.end_date].filter(Boolean).join(' — ');
+        card.innerHTML = `<strong>${title}</strong><br/><span class="muted">${desc}</span><br/><small class="muted">${esc(period)}</small>`;
+        if(pm.image){ const img = document.createElement('img'); img.src = pm.image; img.alt = title; card.appendChild(img); }
+        container.appendChild(card);
+      });
+    }
+    (function init(){
+      const restId = getParam('rest');
+      if(!restId){ alert('Missing ?rest= parameter'); return; }
+      fetch('project/ann/data/rest.json')
+        .then(r => r.json())
+        .then(list => {
+          const arr = Array.isArray(list) ? list : (list.restaurants || []);
+          const data = arr.find(x => x.id === restId);
+          if(!data){ document.querySelector('.unit-grid').innerHTML = '<div class="cell">Restaurant not found.</div>'; return; }
+          hydrate(data);
+        })
+        .catch(err => {
+          console.error('Load rest.json failed:', err);
+          document.querySelector('.unit-grid').innerHTML = '<div class="cell">Cannot load restaurant data.</div>';
+        });
+    })();
+    function hydrate(d){
+      const name = d.name_en || d.name_th || 'Restaurant';
+      document.getElementById('project-name').textContent = name;
+      document.getElementById('address').textContent =
+        (d.address_en || d.address_th || '') + (d.location_en ? ' • ' + d.location_en : (d.location_th ? ' • ' + d.location_th : ''));
+      const priceBlock = document.getElementById('price-block'); priceBlock.innerHTML = '';
+      const cat = d.category_en || d.category_th;
+      if(cat){ const b = document.createElement('span'); b.className = 'badge'; b.textContent = cat; priceBlock.appendChild(b); }
+      serviceBadges(d.service_type).forEach(txt => { const b = document.createElement('span'); b.className = 'badge'; b.textContent = txt; priceBlock.appendChild(b); });
+      document.getElementById('room-type').textContent = cat || '-';
+      document.getElementById('room-size').textContent = d.type || '-';
+      const contactParts = [];
+      if(d.contact && d.contact.phone) contactParts.push('📞 ' + d.contact.phone);
+      if(d.contact && d.contact.line) contactParts.push('Line: ' + d.contact.line);
+      document.getElementById('floor').textContent = contactParts.join(' • ') || '-';
+      document.getElementById('view').textContent = serviceBadges(d.service_type).join(' • ') || '-';
+      document.getElementById('developer-name').textContent = d.location_en || d.location_th || '-';
+      document.getElementById('completion-period').textContent = Array.isArray(d.projects) ? d.projects.join(', ') : '-';
+      document.getElementById('facility-list').textContent = d.status || '-';
+      document.getElementById('total-units').textContent = d.description_en || d.description_th || '-';
+      const logoBox = document.getElementById('project-logo-overlay'); logoBox.innerHTML = d.logo ? `<img src="${d.logo}" alt="logo">` : '';
+      const mainImg = document.getElementById('main-image');
+      const mainVid = document.getElementById('main-video');
+      const thumbs = document.getElementById('thumbs-overlay');
+      const media = [];
+      if(Array.isArray(d.images)) d.images.forEach(src => media.push({type:'img', src}));
+      if(Array.isArray(d.videos)) d.videos.forEach(src => media.push({type:'video', src}));
+      function show(idx){
+        const item = media[idx];
+        if(!item){ mainImg.src=''; mainVid.style.display='none'; return; }
+        if(item.type === 'img'){ mainVid.pause(); mainVid.style.display='none'; mainImg.style.display = 'block'; mainImg.src = item.src; }
+        else{ mainImg.style.display='none'; mainVid.style.display='block'; if(mainVid.src !== item.src) mainVid.src = item.src; }
+        [...thumbs.children].forEach((el,i)=> el.classList.toggle('active', i===idx));
+      }
+      thumbs.innerHTML = '';
+      media.forEach((m, i) => {
+        let t;
+        if(m.type==='img'){ t = document.createElement('img'); t.src = m.src; }
+        else{ t = document.createElement('video'); t.src = m.src; t.muted = true; }
+        t.addEventListener('click', ()=> show(i));
+        thumbs.appendChild(t);
+      });
+      show(0);
+      renderPromotions(document.getElementById('promo-block'), d.promotions);
+      document.getElementById('map-frame').src = d.map_embed_url || d.map_url || '';
+      const shareBtn = document.getElementById('shareBtn');
+      if(navigator.share){
+        shareBtn.addEventListener('click', async () => { try{ await navigator.share({ title: name, text: name, url: window.location.href }); }catch(e){} });
+      }else{
+        shareBtn.addEventListener('click', () => { navigator.clipboard && navigator.clipboard.writeText(window.location.href); shareBtn.textContent = 'Copied!'; setTimeout(()=> shareBtn.textContent='Share', 1200); });
+      }
+    }
+  </script>
+</body>
+</html>

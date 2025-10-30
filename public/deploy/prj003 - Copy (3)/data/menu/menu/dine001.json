@@ -1,0 +1,72 @@
+[
+  {
+    "id": "noodle001",
+    "name_th": "ก๋วยเตี๋ยวเรือต้นตำรับ",
+    "name_en": "Traditional Boat Noodle",
+    "description_th": "ก๋วยเตี๋ยวเรือรสต้นตำรับ เส้นเล็กน้ำใส หอมกลิ่นเครื่องเทศ",
+    "description_en": "Traditional boat noodle with thin noodles in clear broth and aromatic spices",
+    "price": 45,
+    "category_th": "ก๋วยเตี๋ยว",
+    "category_en": "Noodles",
+    "image": "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=200&h=150&fit=crop",
+    "available": true,
+    "spicy_level": 2,
+    "tags": ["signature", "traditional"]
+  },
+  {
+    "id": "noodle002",
+    "name_th": "ก๋วยเตี๋ยวเรือเผ็ด",
+    "name_en": "Spicy Boat Noodle",
+    "description_th": "ก๋วยเตี๋ยวเรือรสเผ็ด เส้นเล็กน้ำแดง รสจัดจ้าน",
+    "description_en": "Spicy boat noodle with thin noodles in red spicy broth",
+    "price": 50,
+    "category_th": "ก๋วยเตี๋ยว",
+    "category_en": "Noodles",
+    "image": "https://images.unsplash.com/photo-1588166524941-3bf61a9c41db?w=200&h=150&fit=crop",
+    "available": true,
+    "spicy_level": 4,
+    "tags": ["spicy", "popular"]
+  },
+  {
+    "id": "noodle003",
+    "name_th": "ก๋วยเตี๋ยวเรือพิเศษ",
+    "name_en": "Special Boat Noodle",
+    "description_th": "ก๋วยเตี๋ยวเรือพิเศษ เนื้อ 3 ชนิด ใส่เครื่องในครบ",
+    "description_en": "Special boat noodle with 3 types of meat and full organ meat",
+    "price": 65,
+    "category_th": "ก๋วยเตี๋ยว",
+    "category_en": "Noodles",
+    "image": "https://images.unsplash.com/photo-1617093727343-374698b1b08d?w=200&h=150&fit=crop",
+    "available": true,
+    "spicy_level": 2,
+    "tags": ["special", "premium"]
+  },
+  {
+    "id": "drink001",
+    "name_th": "น้ำใสใจเย็น",
+    "name_en": "Iced Water",
+    "description_th": "น้ำใสเย็น ๆ ดับกระหาย",
+    "description_en": "Fresh cold ice water",
+    "price": 10,
+    "category_th": "เครื่องดื่ม",
+    "category_en": "Beverages",
+    "image": "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=200&h=150&fit=crop",
+    "available": true,
+    "spicy_level": 0,
+    "tags": ["drink", "refreshing"]
+  },
+  {
+    "id": "drink002",
+    "name_th": "โค้กเย็น",
+    "name_en": "Iced Coke",
+    "description_th": "โคคาโคล่าเย็น ๆ",
+    "description_en": "Ice-cold Coca-Cola",
+    "price": 25,
+    "category_th": "เครื่องดื่ม",
+    "category_en": "Beverages",
+    "image": "https://images.unsplash.com/photo-1581006852262-e4307cf6283a?w=200&h=150&fit=crop",
+    "available": true,
+    "spicy_level": 0,
+    "tags": ["drink", "soft drink"]
+  }
+]

@@ -1,0 +1,144 @@
+[
+  {
+    "id": "rest001",
+    "name_th": "ร้านก๋วยเตี๋ยวเรือเจ๊แดง",
+    "name_en": "Je Daeng Boat Noodle",
+    "logo": "logos/jedaeng.png",
+    "images": [
+      "images/rest001-1.jpg",
+      "images/rest001-2.jpg"
+    ],
+    "videos": [
+      "videos/rest001-promo.mp4"
+    ],
+    "description_th": "ก๋วยเตี๋ยวเรือรสเด็ดสูตรต้นตำรับ เส้นเหนียวนุ่ม น้ำซุปเข้มข้น",
+    "description_en": "Authentic boat noodles with rich broth and tender noodles.",
+    "type": "dine",
+    "category_th": "ร้านอาหารไทย",
+    "category_en": "Thai Restaurant",
+    "contact": { "phone": "0812345678", "line": "@jedaeng" },
+    "location_th": "ชั้น 2 โซนฟู้ดคอร์ท",
+    "location_en": "2nd floor, Food Court zone",
+    "projects": ["prj001", "prj002"],
+    "status": "active",
+    "service_type": ["ads_only", "walk_in", "mobile_order"],
+    "image": "medias/rest001-01.MP4"
+  },
+  {
+    "id": "rest002",
+    "name_th": "พิซซ่า เอ็กซ์เพรส",
+    "name_en": "Pizza Express",
+    "logo": "logos/pizzaexpress.png",
+    "images": [
+      "images/rest002-1.jpg"
+    ],
+    "videos": [],
+    "description_th": "พิซซ่าสไตล์อิตาเลียนแป้งบางกรอบ ทำสดใหม่ทุกวัน",
+    "description_en": "Italian-style thin crust pizzas baked fresh daily.",
+    "type": "both",
+    "category_th": "ร้านพิซซ่า",
+    "category_en": "Pizza Restaurant",
+    "contact": { "phone": "0855555555" },
+    "location_th": "ชั้น 1 ติดลิฟต์",
+    "location_en": "1st floor, next to elevator",
+    "projects": ["prj001", "prj003"],
+    "status": "active",
+    "service_type": ["ads_only", "walk_in", "reservation", "delivery"],
+    "image": "medias/shop001-01.MP4"
+  },
+  {
+    "id": "rest003",
+    "name_th": "เพสทรี เดอ ปารีส",
+    "name_en": "Pâtisserie de Paris",
+    "logo": "logos/pastryparis.png",
+    "images": [
+      "images/pastryparis-1.jpg",
+      "images/pastryparis-2.jpg"
+    ],
+    "videos": [
+      "videos/pastryparis-promo.mp4"
+    ],
+    "description_th": "ขนมอบและเบเกอรี่สไตล์ฝรั่งเศสแท้ ๆ หอมกรุ่นจากเตาทุกวัน",
+    "description_en": "Authentic French pastries and bakery, freshly baked every day.",
+    "type": "dine",
+    "category_th": "เบเกอรี่ & ขนมอบ",
+    "category_en": "Bakery & Pastry Shop",
+    "contact": { "phone": "0991234567", "line": "@pastryparis" },
+    "location_th": "ชั้น 1 โซนเบเกอรี่",
+    "location_en": "1st floor, Bakery zone",
+    "projects": ["prj001", "prj004"],
+    "status": "active",
+    "service_type": ["ads_only", "walk_in"],
+    "image": "medias/shop001-02.MP4"
+  },
+  {
+    "id": "rest004",
+    "name_th": "สเต็กเฮ้าส์ ปรีเมียม",
+    "name_en": "Premium Steakhouse",
+    "logo": "logos/steakhouse.png",
+    "images": [
+      "images/steakhouse-1.jpg",
+      "images/steakhouse-2.jpg"
+    ],
+    "videos": [
+      "videos/steakhouse-promo.mp4"
+    ],
+    "description_th": "เนื้อวัวคุณภาพพรีเมียมและอาหารนานาชาติ บรรยากาศหรูหรา",
+    "description_en": "Premium beef steaks and international cuisine in elegant atmosphere.",
+    "type": "dine",
+    "category_th": "ร้านสเต็ก",
+    "category_en": "Steakhouse",
+    "contact": { "phone": "0876543210", "line": "@premiumsteak" },
+    "location_th": "ชั้น 3 โซนร้านอาหารหรู",
+    "location_en": "3rd floor, Fine Dining zone",
+    "projects": ["prj002", "prj003"],
+    "status": "active",
+    "service_type": ["ads_only", "walk_in", "reservation"],
+    "image": "medias/shop002-01.MP4"
+  },
+  {
+    "id": "rest005",
+    "name_th": "ซูชิ โซน",
+    "name_en": "Sushi Zone",
+    "logo": "logos/sushizone.png",
+    "images": [
+      "images/sushizone-1.jpg"
+    ],
+    "videos": [],
+    "description_th": "ซูชิสดใหม่จากเชฟญี่ปุ่นแท้ บุฟเฟต์และเมนูอลาคาร์ท",
+    "description_en": "Fresh sushi by authentic Japanese chefs, buffet and à la carte.",
+    "type": "both",
+    "category_th": "ร้านอาหารญี่ปุ่น",
+    "category_en": "Japanese Restaurant",
+    "contact": { "phone": "0823456789" },
+    "location_th": "ชั้น 2 โซนอาหารญี่ปุ่น",
+    "location_en": "2nd floor, Japanese Food zone",
+    "projects": ["prj001", "prj004"],
+    "status": "active",
+    "service_type": ["ads_only", "walk_in", "delivery"],
+    "image": "medias/shop002-02.MP4"
+  },
+  {
+    "id": "rest006",
+    "name_th": "คาเฟ่ บาริสต้า",
+    "name_en": "Barista Café",
+    "logo": "logos/barista.png",
+    "images": [
+      "images/barista-1.jpg",
+      "images/barista-2.jpg"
+    ],
+    "videos": [],
+    "description_th": "กาแฟสดคั่วใหม่ทุกวัน เบเกอรี่โฮมเมด และบรรยากาศสบาย ๆ",
+    "description_en": "Freshly roasted coffee daily, homemade bakery in cozy atmosphere.",
+    "type": "both",
+    "category_th": "คาเฟ่",
+    "category_en": "Café",
+    "contact": { "phone": "0834567890", "line": "@baristacafe" },
+    "location_th": "ชั้น 1 โซนคาเฟ่",
+    "location_en": "1st floor, Café zone",
+    "projects": ["prj003", "prj004"],
+    "status": "active",
+    "service_type": ["ads_only", "walk_in", "delivery", "mobile_order"],
+    "image": "medias/unit001-01.MP4"
+  }
+]

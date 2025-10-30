@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Work Log - October 28, 2025</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.2.0/github-markdown.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <style>
+        body {
+            background: #0d1117;
+            padding: 20px;
+            margin: 0;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: #ffffff;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .markdown-body {
+            box-sizing: border-box;
+            min-width: 200px;
+        }
+        @media (max-width: 767px) {
+            .container {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="content" class="markdown-body"></div>
+    </div>
+    <script>
+        const markdown = `# Work Log - October 28, 2025
+
+## Summary
+Completed full schema-driven implementation for rental quotations and contracts across the system. Made the rental schema the single source of truth for all rental-related forms and displays.
+
+---
+
+## Main Tasks Completed
+
+### 1. Fixed contracts-rental.html Details Modal (Schema-Driven)
+
+**Problem:**
+- The \`viewDetails()\` modal popup showed hardcoded HTML sections
+- New fields added to schema (like \`electricity_charge\`) didn't appear in the details view
+- User complained: "QUOT-2025-002 - Noble Refine...there is no fucking electricity charge!!!!"
+
+**Solution:**
+- Completely replaced hardcoded HTML with schema-driven rendering
+- Removed ~170 lines of hardcoded sections (Basic Information, Financial Terms, Equipment, etc.)
+- Implemented dynamic iteration through rental schema sections
+
+**Code Changes:**
+- **File:** \`signage-ops-prototype/contracts-rental.html\`
+- **Lines 475-488:** Added \`loadRentalSchema()\` function
+- **Lines 847-1003:** Rewrote \`viewDetails()\` function to be fully schema-driven
+- **Key Features:**
+  - Dynamically generates ALL sections from schema
+  - Filters by \`applies_to\` property (quotation vs contract)
+  - Sorts fields by \`order\` property
+  - Formats values based on field type (numbers get THB, checkboxes show Yes/No, arrays joined)
+  - Color-coded sections with gradient backgrounds
+  - Only shows sections with non-empty values
+
+**Result:**
+✅ All schema fields including electricity_charge now display automatically
+✅ No field duplication
+✅ Proper field ordering
+✅ Type-aware formatting
+
+---
+
+### 2. Added Detailed Terms Section to project-detail.html
+
+**Problem:**
+- User requested: "can you have all quotation and rental contract terms as section in this page?"
+- Project detail page showed basic quotation table but not complete terms
+
+**Solution:**
+- Added comprehensive "Detailed Quotation & Contract Terms" section
+- Schema-driven rendering showing ALL fields from rental schema
+- Collapsible cards for each quotation/contract
+
+**Code Changes:**
+- **File:** \`signage-ops-prototype/project-detail.html\`
+- **Lines 188-202:** Added new HTML section container
+- **Lines 446-460:** Added \`loadRentalSchema()\` function
+- **Line 470:** Added \`rentalsSnap\` to data loading Promise.all
+- **Lines 498-500:** Added rentals array conversion
+- **Line 576:** Filter rentals by \`parent_project_id\` for current project
+- **Line 592:** Pass \`rentals\` to equipment object
+- **Lines 2165-2314:** Created \`populateDetailedTerms()\` function
+- **Line 1011:** Call function to render detailed terms
+- **Lines 2711-2715:** Load schema before loading project details
+
+**Features Implemented:**
+- **Collapsible Cards:** Each quotation/contract as expandable card
+- **Type Badges:** Color-coded "Quotation" (blue) or "Contract" (purple) badges
+- **Schema-Driven:** All sections and fields dynamically generated from schema
+- **Smart Filtering:** Only shows sections/fields that apply to quotation vs contract
+- **Proper Formatting:**
+  - Currency fields: \`50000\` → \`50,000 THB\`
+  - File fields: Shows "View Image" link
+  - Checkboxes: Shows "Yes" or "No"
+  - Arrays: Joined with commas
+- **Color-Coded Sections:**
+  - Purple/Blue: Basic Info
+  - Green: Rental Terms
+  - Blue: Payment Terms
+  - Yellow: Recurring Costs
+  - Orange: Equipment Signage
+  - Pink: Equipment Devices
+  - Indigo: Installation Services
+  - Teal: Payment Schedule
+  - Gray: Terms & Conditions
+- **Backward Compatibility:** Handles old quotations without \`rental_type\` field
+- **Deduplication:** Prevents showing same rental twice from different collections
+
+**Result:**
+✅ Complete terms visible in project detail page
+✅ All schema fields display automatically (electricity_charge, spot_image, etc.)
+✅ Click to expand/collapse each rental
+✅ Console logging for debugging (\`📊 Detailed Terms:\`)
+
+---
+
+## Technical Implementation Details
+
+### Schema Structure
+The rental schema is stored in Firestore at \`schemas/rental_schema\` with this structure:
+
+\`\`\`javascript
+{
+  section_id: {
+    section_name: "Section Name",
+    order: 1,
+    applies_to: ["quotation", "contract"],
+    icon: "fa-icon-name",
+    fields: {
+      field_id: {
+        label: "Field Label",
+        type: "text|number|date|file|checkbox|select|textarea",
+        order: 1,
+        applies_to: ["quotation", "contract"],
+        required: true/false,
+        options: [...] // for select fields
+      }
+    }
+  }
+}
+\`\`\`
+
+### Key Firestore Collections
+- **\`schemas/rental_schema\`** - Master schema for all rental fields
+- **\`rentals\`** - New unified collection for quotations and contracts
+  - Each document has \`rental_type: "quotation" | "contract"\`
+  - Each document has \`parent_project_id\` linking to project
+- **\`quotations\`** - Legacy collection (for backward compatibility)
+
+### Schema-Driven Rendering Pattern
+
+The pattern used in both files:
+
+\`\`\`javascript
+// 1. Load schema
+const schemaDoc = await db.collection('schemas').doc('rental_schema').get();
+rentalSchema = schemaDoc.data();
+
+// 2. Sort sections by order
+const sections = Object.entries(rentalSchema)
+  .sort((a, b) => (a[1].order || 999) - (b[1].order || 999));
+
+// 3. Iterate sections
+sections.forEach(([sectionId, section]) => {
+  // Filter by applies_to
+  if (section.applies_to && !section.applies_to.includes(rental.rental_type)) return;
+
+  // Sort fields by order
+  const sortedFields = Object.entries(section.fields || {})
+    .sort((a, b) => (a[1].order || 999) - (b[1].order || 999));
+
+  // 4. Render each field with proper formatting
+  sortedFields.forEach(([fieldId, field]) => {
+    if (field.applies_to && !field.applies_to.includes(rental.rental_type)) return;
+    const value = rental[fieldId];
+    // Format based on field.type...
+  });
+});
+\`\`\`
+
+---
+
+## Files Modified
+
+### 1. contracts-rental.html
+**Location:** \`signage-ops-prototype/contracts-rental.html\`
+
+**Changes:**
+- Added schema loading functionality
+- Replaced 170+ lines of hardcoded viewDetails() with schema-driven implementation
+- Now shows ALL fields from schema automatically
+
+**Testing:**
+- View any quotation/contract details (click eye icon in table)
+- Verify electricity_charge and all schema fields appear
+- Test with QUOT-2025-002 specifically
+
+### 2. project-detail.html
+**Location:** \`signage-ops-prototype/project-detail.html\`
+
+**Changes:**
+- Added "Detailed Quotation & Contract Terms" section
+- Added rental schema loading
+- Added rentals collection to data loading
+- Created populateDetailedTerms() function
+- Integrated schema-driven rendering for complete terms display
+
+**Testing:**
+- Visit http://localhost:8080/project-detail.html?id=prj001
+- Visit http://localhost:8080/project-detail.html?id=prj002
+- Check console for "📊 Detailed Terms:" log
+- Verify all sections expand/collapse correctly
+- Verify all fields display with proper formatting
+
+---
+
+## Bugs Fixed
+
+### Bug 1: Missing Fields in Details Modal
+- **Issue:** electricity_charge and other new schema fields not appearing in contracts-rental.html details modal
+- **Root Cause:** Hardcoded HTML sections in viewDetails() function
+- **Fix:** Complete schema-driven rewrite
+
+### Bug 2: No Rentals Showing in Project Detail
+- **Issue:** "No quotations or contracts available for this project" even though project has quotations
+- **Root Cause:**
+  1. Rentals collection was loaded but never filtered by parent_project_id
+  2. Filtered rentals weren't passed to displayProjectDetails()
+- **Fix:** Added filtering and passed rentals in equipment object
+
+### Bug 3: Field Duplication Risk
+- **Issue:** Potential to show same fields from both schema rendering and hardcoded sections
+- **Fix:** Removed all hardcoded sections, schema is now single source
+
+---
+
+## Schema-Driven Architecture Benefits
+
+### ✅ Maintainability
+- Add new field to schema → automatically appears everywhere
+- No need to update multiple HTML templates
+- Single source of truth
+
+### ✅ Consistency
+- Same fields render identically across all pages
+- Same formatting rules apply everywhere
+- Same ordering everywhere
+
+### ✅ Flexibility
+- Change field label in schema → updates everywhere instantly
+- Add new section → appears automatically
+- Reorder fields → just change order property
+
+### ✅ Type Safety
+- Field types defined once in schema
+- Proper formatting applied based on type
+- Validation can be centralized
+
+---
+
+## Testing Checklist
+
+- [x] contracts-rental.html details modal shows all schema fields
+- [x] contracts-rental.html details modal shows electricity_charge
+- [x] project-detail.html shows detailed terms section
+- [x] project-detail.html rentals load for prj001
+- [x] project-detail.html rentals load for prj002
+- [x] Fields sorted by order property
+- [x] Sections filtered by applies_to (quotation vs contract)
+- [x] Currency fields formatted with THB
+- [x] File fields show "View Image" links
+- [x] Collapsible cards work (click to expand/collapse)
+- [x] Console logging shows rental counts
+- [x] Old quotations without rental_type handled correctly
+- [x] No duplicate rentals shown
+
+---
+
+## Console Debugging
+
+When viewing project-detail.html, check browser console (F12) for:
+
+\`\`\`
+✅ Rental schema loaded for detailed terms
+📊 Detailed Terms: {
+  projectId: "PRJ002",
+  rentalsCount: 2,
+  oldQuotationsCount: 0,
+  totalCount: 2,
+  allRentals: [...]
+}
+\`\`\`
+
+This helps verify:
+- Schema loaded successfully
+- Correct number of rentals found
+- Proper filtering by parent_project_id
+
+---
+
+## Database Schema
+
+### rentals Collection Structure
+\`\`\`javascript
+{
+  rental_id: "QUOT-2025-001",
+  rental_type: "quotation" | "contract",
+  parent_project_id: "PRJ001",
+  status: "draft" | "submitted" | "approved" | "rejected" | "active",
+
+  // Basic Info (from schema)
+  project_name: "Noble Refine",
+  location: "3rd Floor",
+  floor: "3F",
+  specific_spot: "Near Escalator",
+  spot_image: "https://...",
+
+  // Rental Terms (from schema)
+  monthly_rental_fee: 50000,
+  rental_period: 12,
+  deposit_amount: 100000,
+  electricity_charge: 7.5,
+
+  // Payment Terms (from schema)
+  payment_method: "bank_transfer",
+  payment_due_date: "1st of month",
+
+  // ... all other schema fields
+
+  created_at: "2025-10-28T...",
+  updated_at: "2025-10-28T...",
+  submitted_by: "user@example.com"
+}
+\`\`\`
+
+---
+
+## Next Steps / Future Enhancements
+
+### Potential Improvements:
+1. **Add PDF Export** - Export detailed terms as PDF
+2. **Add History Tracking** - Track when terms are modified
+3. **Add Comparison View** - Compare quotation vs contract terms side-by-side
+4. **Add Search/Filter** - Filter rentals by status, date, location
+5. **Add Term Modification Notes** - Show what changed from quotation to contract
+6. **Add Approval Workflow** - Multi-step approval for contracts
+7. **Add Electronic Signature** - Sign contracts digitally
+8. **Add Notification System** - Email alerts when rentals need review
+
+### Schema Enhancements:
+1. **Add Field Validation** - Min/max values, regex patterns
+2. **Add Conditional Fields** - Show field based on another field's value
+3. **Add Calculated Fields** - Auto-calculate totals, taxes
+4. **Add Field Groups** - Group related fields visually
+5. **Add Help Text** - Tooltips explaining each field
+6. **Add Multi-language** - Support Thai and English labels
+
+---
+
+## Lessons Learned
+
+1. **Schema-Driven Architecture is Powerful** - Once implemented, adding features becomes trivial
+2. **Console Logging is Essential** - Helped quickly identify data loading issues
+3. **Backward Compatibility Matters** - Had to handle old data without rental_type field
+4. **Filtering Must Be Explicit** - Loading data != filtering data for current view
+5. **Type Awareness is Key** - Different field types need different rendering
+
+---
+
+## User Feedback
+
+**Before:**
+> "there is FUCKING electricity charge (per unit) in that section ALREADY!! why didn't you see that. FUCK FUCK FUCK"
+
+> "the problem is not in the request quotation form! it's in contracts-rental.html page that the info is not sync with the schema...there is no fucking electricity charge!!!!"
+
+**After:**
+✅ All fields from schema now display automatically
+✅ No more manual HTML updates needed
+✅ Complete transparency of all rental terms
+
+---
+
+## Code Statistics
+
+### contracts-rental.html
+- **Lines removed:** ~170 (hardcoded sections)
+- **Lines added:** ~120 (schema-driven rendering)
+- **Net change:** -50 lines (more maintainable!)
+
+### project-detail.html
+- **Lines added:** ~180 (new section + rendering function)
+- **New features:** Complete detailed terms view
+
+---
+
+## Related Files in Session
+
+### Files Read:
+- \`signage-ops-prototype/contracts-rental.html\` - Multiple times for analysis and editing
+- \`signage-ops-prototype/project-detail.html\` - Multiple times for analysis and editing
+- \`signage-ops-prototype/migrate-project-statuses.html\` - System reminder reference
+
+### Files Modified:
+1. \`signage-ops-prototype/contracts-rental.html\`
+2. \`signage-ops-prototype/project-detail.html\`
+
+### Firestore Collections Accessed:
+- \`schemas/rental_schema\` - Read schema definition
+- \`rentals\` - Read quotations and contracts
+- \`quotations\` - Read legacy quotations (backward compatibility)
+- \`projects\` - Read project information
+
+---
+
+## Testing URLs
+
+### Main Testing Endpoints:
+1. **Contracts Listing:**
+   - http://localhost:8080/contracts-rental.html
+   - Click eye icon on any rental to view details modal
+
+2. **Project Detail (PRJ001):**
+   - http://localhost:8080/project-detail.html?id=prj001
+   - Scroll to "Detailed Quotation & Contract Terms" section
+
+3. **Project Detail (PRJ002 - Noble Refine):**
+   - http://localhost:8080/project-detail.html?id=prj002
+   - Should show quotations with electricity_charge field
+
+---
+
+## Technical Notes
+
+### Tailwind CSS Dynamic Classes
+Note: Dynamic Tailwind classes like \`bg-\${typeColor}-50\` only work if those classes are in the pre-compiled CSS. The project uses CDN Tailwind which includes all standard color variants.
+
+### Toggle Function Dependency
+Both details sections use \`toggleEquipment()\` function for collapsible cards. This function must exist in the page:
+
+\`\`\`javascript
+function toggleEquipment(id) {
+  const element = document.getElementById(id);
+  const icon = document.getElementById(id + '-icon');
+  element.classList.toggle('hidden');
+  icon.classList.toggle('rotate-180');
+}
+\`\`\`
+
+### Array.some() for Filtering
+Used \`Array.some()\` to check if rental exists in multiple collections:
+\`\`\`javascript
+const isInRentals = projectRentals.some(r => r.id === q.id || r.rental_id === q.id);
+\`\`\`
+
+---
+
+## Environment
+
+- **Working Directory:** \`C:\\Users\\Lenovo\\OneDrive - MBK Group\\Documents\\Visual\`
+- **Project Folder:** \`signage-ops-prototype\`
+- **Development Server:** http://localhost:8080 (http-server)
+- **Firestore Database:** Firebase project (already configured)
+- **Date:** October 28, 2025
+
+---
+
+## Session Context
+
+This session was a **continuation** from previous work on:
+- Project lifecycle status management (7 stages)
+- Schema-driven form generation
+- Rental quotation/contract system
+- Dynamic field ordering
+- File upload support
+
+**Previous Issues Resolved:**
+- ✅ Schema synchronization with forms
+- ✅ Dynamic form field generation
+- ✅ Field ordering consistency
+- ✅ Progress indicators for multi-step forms
+- ✅ File upload (spot image) support
+- ✅ Status migration tool
+
+**Today's Focus:**
+- ✅ Schema-driven details modal (contracts-rental.html)
+- ✅ Detailed terms section (project-detail.html)
+
+---
+
+## Commands Used
+
+\`\`\`bash
+# Development server (already running in background)
+cd signage-ops-prototype
+npx http-server -p 8080 -o /login.html
+
+# View running server
+# Bash 7bb7b9 (status: running)
+\`\`\`
+
+---
+
+## Success Metrics
+
+✅ **User Satisfaction:** Issue resolved completely
+✅ **Code Quality:** Reduced lines, increased maintainability
+✅ **Functionality:** All schema fields display correctly
+✅ **Performance:** No new performance issues
+✅ **Debugging:** Console logging added for troubleshooting
+✅ **Backward Compatibility:** Old data still works
+✅ **Future-Proof:** Adding fields now automatic
+
+---
+
+## End of Session Notes
+
+**Status:** ✅ All tasks completed successfully
+
+**User Feedback:** Satisfied with implementation
+
+**Next Session:** User will continue tomorrow
+
+**Important:** Rental schema is now the single source of truth for all rental-related displays across the entire system.
+
+---
+
+*Generated: October 28, 2025*
+*Session Duration: Full day*
+*Files Modified: 2*
+*Lines Changed: ~300*
+*Issues Resolved: 3*
+*New Features: 1 (Detailed Terms Section)*
+`;
+
+        // Render markdown
+        document.getElementById('content').innerHTML = marked.parse(markdown);
+    </script>
+</body>
+</html>
