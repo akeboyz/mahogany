@@ -1292,8 +1292,12 @@ else if (item.kind === 'announcement') {
           .then((registration) => {
             console.log('✅ Service Worker registered successfully:', registration.scope);
 
-            // Preload all media files from the sequence
-            registration.active && preloadMediaFiles();
+            // Wait for Service Worker to be ready (handles both first load and subsequent loads)
+            return navigator.serviceWorker.ready;
+          })
+          .then((registration) => {
+            console.log('✅ Service Worker is ready and active');
+            // Preload will be called after sequence is built
           })
           .catch((error) => {
             console.error('❌ Service Worker registration failed:', error);
@@ -1310,20 +1314,58 @@ else if (item.kind === 'announcement') {
     }
 
     // Preload all media files in the sequence for instant playback
-    function preloadMediaFiles(){
-      if (!navigator.serviceWorker.controller || sequence.length === 0) return;
+    async function preloadMediaFiles(){
+      if (sequence.length === 0) {
+        console.log('⏭️ No sequence to preload yet');
+        return;
+      }
 
+      // Wait for Service Worker to be ready (crucial for first load)
+      if ('serviceWorker' in navigator) {
+        try {
+          const registration = await navigator.serviceWorker.ready;
+
+          if (!navigator.serviceWorker.controller) {
+            console.log('⏳ Service Worker not controlling yet, waiting...');
+            // On very first load, page needs to be refreshed for SW to take control
+            // But we can still try to preload via direct fetch
+            await preloadMediaDirect();
+            return;
+          }
+
+          const mediaUrls = sequence
+            .filter(item => item.kind === 'video' || item.kind === 'image')
+            .map(item => item.src);
+
+          if (mediaUrls.length > 0) {
+            console.log('📦 Requesting preload of', mediaUrls.length, 'media files via Service Worker...');
+            navigator.serviceWorker.controller.postMessage({
+              action: 'preloadMedia',
+              urls: mediaUrls
+            });
+          }
+        } catch (error) {
+          console.error('❌ Service Worker preload failed:', error);
+        }
+      }
+    }
+
+    // Direct preload fallback for first load before Service Worker is controlling
+    async function preloadMediaDirect(){
       const mediaUrls = sequence
         .filter(item => item.kind === 'video' || item.kind === 'image')
         .map(item => item.src);
 
-      if (mediaUrls.length > 0) {
-        console.log('📦 Requesting preload of', mediaUrls.length, 'media files...');
-        navigator.serviceWorker.controller.postMessage({
-          action: 'preloadMedia',
-          urls: mediaUrls
-        });
-      }
+      console.log('📦 Direct preloading', mediaUrls.length, 'media files (first visit)...');
+
+      // Fetch files to populate browser cache
+      const promises = mediaUrls.slice(0, 3).map(url => // Only preload first 3 on first visit
+        fetch(url, { mode: 'no-cors' })
+          .then(() => console.log('✅ Preloaded:', url))
+          .catch(err => console.warn('⚠️ Failed to preload:', url, err))
+      );
+
+      await Promise.all(promises);
     }
 
     function init(){

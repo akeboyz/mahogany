@@ -274,11 +274,6 @@
         resolved = '.' + s;
       }
 
-      // Fix case sensitivity: .mp4 -> .MP4 for video files
-      if (resolved.endsWith('.mp4')) {
-        resolved = resolved.replace('.mp4', '.MP4');
-      }
-
       return resolved;
     }
 

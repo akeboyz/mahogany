@@ -1,8 +1,8 @@
 // Service Worker for Media Caching
-// Version 1.0
+// Version 2.0 - Fixed first-load caching
 
-const CACHE_NAME = 'signage-media-cache-v1';
-const DATA_CACHE_NAME = 'signage-data-cache-v1';
+const CACHE_NAME = 'signage-media-cache-v2';
+const DATA_CACHE_NAME = 'signage-data-cache-v2';
 
 // Files to cache immediately on install
 const STATIC_CACHE = [

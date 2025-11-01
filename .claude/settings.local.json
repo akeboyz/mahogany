@@ -94,7 +94,18 @@
       "Bash(gh auth status:*)",
       "Bash(git remote set-url:*)",
       "Bash(git rm:*)",
-      "Bash(git filter-branch:*)"
+      "Bash(git filter-branch:*)",
+      "Bash(git for-each-ref:*)",
+      "Bash(git update-ref:*)",
+      "Bash(git reflog:*)",
+      "Bash(git gc:*)",
+      "Bash(netlify deploy:*)",
+      "Bash(for dir in \"mahogany-signage\" \"signage-ops-prototype\" \"public/project/ann\" \"yodeck-build/project/ann\")",
+      "Bash(then echo \"EXISTS: $dir\")",
+      "Bash(else echo \"NOT FOUND: $dir\")",
+      "Bash(do if [ -d \"$dir/.git\" ])",
+      "Bash(then echo \"GIT REPO: $dir\")",
+      "Bash(else echo \"NOT A GIT REPO: $dir\")"
     ],
     "deny": [],
     "ask": []
