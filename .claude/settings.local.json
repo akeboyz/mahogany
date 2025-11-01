@@ -91,7 +91,10 @@
       "Bash(find:*)",
       "Bash(fi)",
       "Bash(nul)",
-      "Bash(gh auth status:*)"
+      "Bash(gh auth status:*)",
+      "Bash(git remote set-url:*)",
+      "Bash(git rm:*)",
+      "Bash(git filter-branch:*)"
     ],
     "deny": [],
     "ask": []
