@@ -58,5 +58,6 @@ nul
 *.zip
 temp-review/
 netlify-deploy/
+yodeck-build/
 public/project/ann.zip
 public/deploy/*.zip
