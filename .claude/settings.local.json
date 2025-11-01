@@ -82,7 +82,16 @@
       "Bash(node scripts/create-zip.js:*)",
       "Bash(node scripts/add-favicon.js:*)",
       "Bash(node scripts/debug-yodeck.js:*)",
-      "Bash(node scripts/check-zip.js:*)"
+      "Bash(node scripts/check-zip.js:*)",
+      "Bash(for file in dining.json delivery.json daily.json ondemand.json unit.json)",
+      "Bash(do sed -i 's|\"\"./images/|\"\"./client/images/|g' \"$file\")",
+      "Bash(for dir in data medias images clientdata clientimages clientmedias corporatedata corporateimages corporatemedias projectdata projectimages projectmedias)",
+      "Bash(do if [ -d \"$dir\" ])",
+      "Bash(then echo \"Checking $dir:\")",
+      "Bash(find:*)",
+      "Bash(fi)",
+      "Bash(nul)",
+      "Bash(gh auth status:*)"
     ],
     "deny": [],
     "ask": []

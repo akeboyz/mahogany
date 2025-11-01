@@ -323,7 +323,7 @@
   // Load banner video
   const video = document.getElementById('bannerVideo');
   const videoSrc = document.getElementById('bannerSrc');
-  videoSrc.src = `./medias/${type}.mp4`;
+  videoSrc.src = `./corporate/medias/${type}.MP4`;
 
   video.onloadeddata = function() {
     console.log('Video loaded successfully');
@@ -487,7 +487,7 @@
         let restaurants = [];
 
         if (type === 'delivery') {
-          const response = await fetch('./data/delivery.json');
+          const response = await fetch('./client/data/delivery.json');
           const data = await response.json();
           restaurants = data.delivery || data || [];
           console.log('Loaded delivery items:', restaurants.length);
@@ -507,7 +507,7 @@
             item.category_en = item.category_en || item.category || '';
           });
         } else {
-          const response = await fetch('./data/dining.json');
+          const response = await fetch('./client/data/dining.json');
           restaurants = await response.json();
           console.log('Loaded dining restaurants:', restaurants.length);
 
@@ -521,7 +521,7 @@
         let services = [];
 
         if (type === 'daily') {
-          const response = await fetch('./data/daily.json');
+          const response = await fetch('./client/data/daily.json');
           const data = await response.json();
           services = data.daily || data || [];
           console.log('Loaded daily items:', services.length);
@@ -530,7 +530,7 @@
             true
           );
         } else {
-          const response = await fetch('./data/ondemand.json');
+          const response = await fetch('./client/data/ondemand.json');
           const data = await response.json();
           services = data.ondemand || data || [];
           console.log('Loaded ondemand items:', services.length);
@@ -550,7 +550,7 @@
         });
       }
       else if (type === 'deal') {
-        const response = await fetch('./data/unit.json');
+        const response = await fetch('./client/data/unit.json');
         const data = await response.json();
         console.log('Loaded units:', data.units.length);
 
@@ -568,7 +568,7 @@
         });
       }
       else if (type === 'juristic') {
-        const response = await fetch('./data/announce.json');
+        const response = await fetch('./project/data/announce.json');
         const announcements = await response.json();
         console.log('Loaded announcements:', announcements.length);
 
@@ -625,7 +625,7 @@
         div.className = 'shop-card';
 
         const name = item.name_th || item.name_en || item.id || 'Unknown';
-        let imageSrc = './medias/placeholder.jpg';
+        let imageSrc = './project/medias/placeholder.jpg';
 
         if (item.images && item.images.length > 0) {
           // Handle both absolute URLs (https://) and relative paths
@@ -672,7 +672,7 @@
         if (hasMultipleImages) {
           imageHTML = `
             <div class="card-image-container">
-              <img class="card-main-image" src="${imageSrc}" alt="${name}" onerror="this.src='./medias/placeholder.jpg'">
+              <img class="card-main-image" src="${imageSrc}" alt="${name}" onerror="this.src='./project/medias/placeholder.jpg'">
               ${priceOverlay}
               ${statusBadge}
               <button class="card-nav-btn prev" onclick="event.stopPropagation(); navigateCardImage(this, -1)">‹</button>
@@ -683,7 +683,7 @@
         } else {
           imageHTML = `
             <div class="card-image-container">
-              <img src="${imageSrc}" alt="${name}" onerror="this.src='./medias/placeholder.jpg'">
+              <img src="${imageSrc}" alt="${name}" onerror="this.src='./project/medias/placeholder.jpg'">
               ${priceOverlay}
               ${statusBadge}
             </div>
@@ -793,7 +793,7 @@
 
   // Get image source (same logic as category cards)
   function getImageSrc(item) {
-    let imageSrc = './medias/placeholder.jpg';
+    let imageSrc = './project/medias/placeholder.jpg';
 
     if (item.images && item.images.length > 0) {
       // Handle both absolute URLs (https://) and relative paths
@@ -848,7 +848,7 @@
                border-radius: 8px;
                box-shadow: 0 4px 20px rgba(0,0,0,0.5);
              "
-             onerror="this.src='./medias/placeholder.jpg'">
+             onerror="this.src='./project/medias/placeholder.jpg'">
         <div id="countdownText" style="
           color: white;
           font-size: 1.5rem;

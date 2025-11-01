@@ -57,6 +57,19 @@
     }
     .cta-head { top: 24px; left: 24px; }
     .cta-main { top: 24px; right: 24px; pointer-events: auto; cursor: pointer; }
+
+    /* Position swipeable buttons */
+    #ctaHead.swipe-button {
+      top: 24px;
+      left: 24px;
+      margin-left: 40px; /* Space for ball on left */
+    }
+    #ctaMain.swipe-button {
+      top: 24px;
+      right: 24px;
+      margin-right: 40px; /* Space for ball on right */
+      margin-left: 0;
+    }
     .blink { animation: blink 1.2s ease-in-out infinite; }
     @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.35} }
 
@@ -95,6 +108,226 @@
     .fade-in {
       opacity: 1 !important;
     }
+
+    /* Swipeable Button Styles */
+    .swipe-button {
+      position: absolute;
+      z-index: 80;
+      display: inline-flex;
+      align-items: center;
+      padding: 12px 20px 12px 54px;
+      background: rgba(42, 42, 42, 0.4);
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      border-radius: 50px;
+      color: #e0e0e0;
+      font-size: 32px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      animation: blink 1.2s ease-in-out infinite;
+      pointer-events: auto;
+      user-select: none;
+      overflow: visible;
+    }
+
+    .swipe-button .arrow-circle {
+      position: absolute;
+      left: -32px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      z-index: 10;
+      cursor: grab;
+      pointer-events: auto;
+      transition: left 0.3s ease, right 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    /* Swipe to Explore - Orange */
+    #ctaHead .arrow-circle {
+      background: rgba(192, 107, 47, 0.3); /* Orange #C06B2F */
+      box-shadow: 0 0 25px rgba(192, 107, 47, 0.5);
+    }
+
+    /* Swipe to Menu - Blue */
+    #ctaMain .arrow-circle {
+      background: rgba(0, 29, 86, 0.3); /* Blue #001D56 */
+      box-shadow: 0 0 25px rgba(0, 29, 86, 0.5);
+    }
+
+    .swipe-button .arrow-circle.dragging {
+      cursor: grabbing;
+      transition: none;
+      box-shadow: 0 0 40px rgba(0, 255, 136, 0.9);
+    }
+
+    .swipe-button.dragging {
+      animation: none;
+    }
+
+    .swipe-button.dragging .arrow-icon {
+      animation: none;
+    }
+
+    .swipe-button .arrow-icon {
+      position: relative;
+      width: 28px;
+      height: 28px;
+      animation: slideRight 2s ease-in-out infinite;
+    }
+
+    .swipe-button .arrow-icon::before,
+    .swipe-button .arrow-icon::after {
+      content: '';
+      position: absolute;
+      background: #ffffff;
+      border-radius: 2px;
+    }
+
+    .swipe-button .arrow-icon::before {
+      width: 20px;
+      height: 3px;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    .swipe-button .arrow-icon::after {
+      width: 12px;
+      height: 12px;
+      right: 0;
+      top: 50%;
+      transform: translateY(-50%) rotate(45deg);
+      border-right: 3px solid #ffffff;
+      border-top: 3px solid #ffffff;
+      background: transparent;
+    }
+
+    .swipe-button .button-text {
+      white-space: nowrap;
+      position: relative;
+      transition: opacity 0.1s linear;
+    }
+
+    /* Hover states with respective colors */
+    #ctaHead:hover .arrow-circle {
+      background: rgba(192, 107, 47, 0.5); /* Orange hover */
+      box-shadow: 0 0 30px rgba(192, 107, 47, 0.7);
+    }
+
+    #ctaMain:hover .arrow-circle {
+      background: rgba(0, 29, 86, 0.5); /* Blue hover */
+      box-shadow: 0 0 30px rgba(0, 29, 86, 0.7);
+    }
+
+    /* Reverse direction swipe button (ball on right, swipes left) */
+    .swipe-button.reverse {
+      padding: 12px 54px 12px 20px; /* Mirrored padding: right side for ball */
+    }
+
+    .swipe-button.reverse .arrow-circle {
+      left: auto;
+      right: -32px; /* Position on right side */
+      cursor: grab;
+      pointer-events: auto;
+      z-index: 100;
+      user-select: none;
+      -webkit-user-select: none;
+      touch-action: none;
+    }
+
+    .swipe-button.reverse .arrow-circle.dragging {
+      cursor: grabbing;
+    }
+
+    /* Reverse arrow - pointing left <-- */
+    .swipe-button.reverse .arrow-icon::before {
+      /* Shaft extends from left to right */
+      width: 18px;
+      height: 3px;
+      left: 0;
+      top: 50%;
+      right: auto;
+      transform: translateY(-50%);
+    }
+
+    .swipe-button.reverse .arrow-icon::after {
+      /* Arrow head on left side pointing left < */
+      width: 9px;
+      height: 9px;
+      left: -1px;
+      top: 50%;
+      right: auto;
+      transform: translateY(-50%) rotate(45deg);
+      border-left: 3px solid #ffffff;
+      border-bottom: 3px solid #ffffff;
+      border-right: none;
+      border-top: none;
+      background: transparent;
+    }
+
+    .swipe-button.reverse .arrow-icon {
+      animation: slideLeft 2s ease-in-out infinite;
+    }
+
+    @keyframes slideLeft {
+      0%, 100% { transform: translateX(0); }
+      50% { transform: translateX(-5px); }
+    }
+
+    /* Video navigation buttons (back/next) */
+    .nav-button {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 80;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 18px;
+      background: rgba(42, 42, 42, 0.4);
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      border-radius: 50px;
+      color: #e0e0e0;
+      font-size: 24px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      animation: blink 1.2s ease-in-out infinite;
+      pointer-events: auto;
+      user-select: none;
+      transition: all 0.3s ease;
+    }
+
+    .nav-button:hover {
+      background: rgba(42, 42, 42, 0.6);
+      border-color: rgba(255, 255, 255, 0.3);
+      transform: translateY(-50%) scale(1.05);
+    }
+
+    .nav-button:active {
+      transform: translateY(-50%) scale(0.95);
+    }
+
+    #navBack {
+      left: 24px;
+    }
+
+    #navNext {
+      right: 24px;
+    }
+
+    .nav-button .arrow {
+      font-size: 20px;
+      line-height: 1;
+    }
   </style>
 </head>
 <body>
@@ -104,7 +337,7 @@
     <div id="frame">
       <div class="stage" aria-live="polite">
         <!-- A) วิดีโอ/รูป -->
-        <video id="v" playsinline preload="none" muted></video>
+        <video id="v" playsinline preload="auto" muted></video>
         <img id="img" alt=""/>
 
         <!-- B) ประกาศ (iframe) -->
@@ -115,8 +348,28 @@
       </div>
 
       <!-- Working overlays for video player -->
-      <div id="ctaHead" class="cta-head blink">Tap to explore</div>
-      <div id="ctaMain" class="cta-main blink">☰ Menu</div>
+      <div id="ctaHead" class="swipe-button" tabindex="0">
+        <div class="arrow-circle">
+          <div class="arrow-icon"></div>
+        </div>
+        <span class="button-text">Swipe to Explore</span>
+      </div>
+      <div id="ctaMain" class="swipe-button reverse" tabindex="0">
+        <div class="arrow-circle">
+          <div class="arrow-icon"></div>
+        </div>
+        <span class="button-text">Swipe to Menu</span>
+      </div>
+
+      <!-- Video navigation buttons -->
+      <div id="navBack" class="nav-button" tabindex="0">
+        <span class="arrow">«</span>
+        <span>Back</span>
+      </div>
+      <div id="navNext" class="nav-button" tabindex="0">
+        <span>Next</span>
+        <span class="arrow">»</span>
+      </div>
 
       <!-- overlay อื่นในเฟรม -->
       <div id="status"></div>
@@ -181,8 +434,8 @@
 
     const qs = new URLSearchParams(location.search);
 
-    const playlistPath = `./data/playlist.json`;
-    const mediasPath   = `./data/medias.json`;
+    const playlistPath = `./project/data/playlist.json`;
+    const mediasPath   = `./project/data/medias.json`;
 
     const elV   = document.getElementById('v');
     const elImg = document.getElementById('img');
@@ -363,7 +616,7 @@
 // Add all announcements for this project as first items
       let announcements = [];
       try {
-        const announceRes = await fetch('./data/announce.json', {cache: 'no-store'});
+        const announceRes = await fetch('./project/data/announce.json', {cache: 'no-store'});
         announcements = await announceRes.json();
 
         // Find all active announcements
@@ -465,28 +718,41 @@
 
     // CTA main → menu.html
     function setupMainCta(){
-      const url=buildMainMenuUrl();
-      const go=()=>location.href=url;
-      ctaMain.onclick=go;
-      ctaMain.onkeydown=e=>{if(e.key==='Enter'||e.key===' ') go()};
+      // Menu button is now handled by setupSwipeButtonReverse
+      // No need to set up click handler here anymore
     }
 
-    // CTA head - tap to explore → product page
+    // CTA head - swipe to explore → product page
+    let headTargetUrl = null;
     function showHeadFor(meta){
       if(!meta || !meta.id_ref) return;
+
+      // Special handling for announcements
+      if(meta.id_ref.startsWith('announce:')) {
+        const categoryUrl = './category.html?type=juristic';
+        headTargetUrl = categoryUrl;
+        const go = () => location.href = categoryUrl;
+        ctaHead.onclick = go;
+        ctaHead.onkeydown = e => { if(e.key==='Enter'||e.key===' ') go(); };
+        ctaHead.style.pointerEvents = 'auto';
+        return;
+      }
 
       const url = buildDetailUrl(meta);
       if(!url) return;
 
+      headTargetUrl = url; // Store for swipe completion
       const go = () => location.href = url;
+
+      // Keep click functionality for fallback
       ctaHead.onclick = go;
       ctaHead.onkeydown = e => { if(e.key==='Enter'||e.key===' ') go(); };
       ctaHead.style.pointerEvents = 'auto';
-      ctaHead.style.cursor = 'pointer';
     }
 
     const lastKey='signage:lastIndex:prj003';
     let sequence=[],loopPlay=true,index=0;
+    let skipCurrentItem = false; // Flag to skip current item when navigation buttons are clicked
 
     async function playAll(){
       hideStatus();
@@ -502,9 +768,36 @@
       }
     }
 
+    // Preload next video in sequence for smooth playback
+    function preloadNextVideo(){
+      if (sequence.length === 0) return;
+
+      const nextIndex = (index + 1) >= sequence.length ? 0 : index + 1;
+      const nextItem = sequence[nextIndex];
+
+      if (nextItem && nextItem.kind === 'video') {
+        // Create a hidden video element to preload
+        const preloadVideo = document.createElement('video');
+        preloadVideo.preload = 'auto';
+        preloadVideo.src = nextItem.src;
+        preloadVideo.muted = true;
+        preloadVideo.style.display = 'none';
+
+        // Clean up after preload starts
+        setTimeout(() => {
+          if (preloadVideo.readyState >= 2) { // HAVE_CURRENT_DATA
+            console.log('📦 Preloaded next video:', nextItem.src);
+          }
+        }, 1000);
+      }
+    }
+
     async function playItem(item){
       hideAll();
       showHeadFor(item.meta);
+
+      // Preload next video in sequence
+      preloadNextVideo();
 
       // Simple like morning version - no overlay manipulation!
 
@@ -566,8 +859,8 @@
         await new Promise(resolve => {
           const sec = (isFinite(elV.duration) && elV.duration > 0) ? elV.duration : 30;
           const watchdog = setTimeout(() => { if (usingVideoAudio) /* bgmNext() */; resolve(); }, Math.ceil(sec + 1) * 1000);
-          elV.onended = () => { clearTimeout(watchdog); if (usingVideoAudio) /* bgmNext() */; resolve(); };
-          elV.onerror = () => { clearTimeout(watchdog); if (usingVideoAudio) /* bgmNext() */; resolve(); };
+          elV.onended = () => { clearTimeout(watchdog); if (usingVideoAudio) /* bgmNext() */; skipCurrentItem = false; resolve(); };
+          elV.onerror = () => { clearTimeout(watchdog); if (usingVideoAudio) /* bgmNext() */; skipCurrentItem = false; resolve(); };
         });
 
         // No overlay manipulation needed
@@ -575,7 +868,18 @@
       else if(item.kind==='image'){
         elImg.src=item.src;
         fadeIn(elImg);
-        await sleep((item.duration||IMG_DURATION_SEC)*1000);
+
+        // Wait with interruptible sleep
+        const duration = (item.duration||IMG_DURATION_SEC)*1000;
+        const startTime = Date.now();
+        while (Date.now() - startTime < duration) {
+          if (skipCurrentItem) {
+            skipCurrentItem = false; // Reset flag
+            break;
+          }
+          await sleep(100); // Check every 100ms
+        }
+
         await fadeOut(elImg);
       }
 else if (item.kind === 'announcement') {
@@ -611,7 +915,7 @@ else if (item.kind === 'announcement') {
       console.log('ANNOUNCEMENT IMAGE:', announcement.image);
 
       // Use the announcement image path and convert to relative path
-      let announcementImagePath = './medias/placeholder.jpg'; // Default fallback
+      let announcementImagePath = './project/medias/placeholder.jpg'; // Default fallback
 
       if (announcement.image || announcement.image_url) {
         const imageSource = announcement.image || announcement.image_url;
@@ -632,12 +936,23 @@ else if (item.kind === 'announcement') {
       // Fallback to placeholder if specific announcement image doesn't exist
       elImg.onerror = () => {
         console.warn('Announcement image failed to load:', announcementImagePath);
-        elImg.src = './medias/placeholder.jpg';
+        elImg.src = './project/medias/placeholder.jpg';
       };
 
       elImg.src = announcementImagePath;
       fadeIn(elImg);
-      await sleep((item.duration || 15) * 1000);
+
+      // Wait with interruptible sleep
+      const duration = (item.duration || 15) * 1000;
+      const startTime = Date.now();
+      while (Date.now() - startTime < duration) {
+        if (skipCurrentItem) {
+          skipCurrentItem = false; // Reset flag
+          break;
+        }
+        await sleep(100); // Check every 100ms
+      }
+
       await fadeOut(elImg);
     } else {
       // No announcement found, just wait
@@ -651,10 +966,36 @@ else if (item.kind === 'announcement') {
 }
       else if(item.kind==='url'){
         // Morning version - no overlay manipulation
-        const watchdog = setTimeout(()=>{ try{elWeb.src='about:blank';}catch{} }, Math.max((item.duration||URL_DURATION_SEC),5)*1000 + 3000);
+        let watchdog = null;
+        let timeoutId = null;
+
         await new Promise(resolve=>{
-          const done=()=>{ clearTimeout(watchdog); resolve(); };
-          elWeb.onload = ()=>{ setTimeout(done, (item.duration||URL_DURATION_SEC)*1000); };
+          const done=()=>{
+            if (watchdog) clearTimeout(watchdog);
+            if (timeoutId) clearTimeout(timeoutId);
+            try{elWeb.src='about:blank';}catch{}
+            resolve();
+          };
+
+          // Check for skip flag periodically
+          const checkSkip = () => {
+            if (skipCurrentItem) {
+              skipCurrentItem = false;
+              done();
+            }
+          };
+
+          watchdog = setTimeout(done, Math.max((item.duration||URL_DURATION_SEC),5)*1000 + 3000);
+
+          elWeb.onload = ()=>{
+            timeoutId = setTimeout(done, (item.duration||URL_DURATION_SEC)*1000);
+            // Check skip flag every 100ms
+            const skipInterval = setInterval(() => {
+              checkSkip();
+              if (!watchdog) clearInterval(skipInterval);
+            }, 100);
+          };
+
           elWeb.onerror= ()=>{ showStatus('โหลดหน้าไม่สำเร็จ'); setTimeout(done, 1500); };
           elWeb.src=item.src; elWeb.style.display='block';
         });
@@ -664,6 +1005,269 @@ else if (item.kind === 'announcement') {
     function setupUnlock(){
       // Audio unlock disabled - no functionality needed
       return;
+    }
+
+    // Setup swipe functionality for ctaHead button
+    function setupSwipeButton(){
+      const button = ctaHead;
+      const circle = button.querySelector('.arrow-circle');
+      const text = button.querySelector('.button-text');
+
+      if (!circle || !text) return;
+
+      let isDragging = false;
+      let startX = 0;
+      let currentX = 0;
+      let initialLeft = -32;
+
+      function getMaxDistance() {
+        const buttonWidth = button.offsetWidth;
+        const circleWidth = circle.offsetWidth;
+        return buttonWidth - circleWidth / 2 - 20;
+      }
+
+      function updateTextVisibility(progress) {
+        const textBounds = text.getBoundingClientRect();
+        const circleBounds = circle.getBoundingClientRect();
+        const overlap = Math.max(0, Math.min(circleBounds.right, textBounds.right) - Math.max(circleBounds.left, textBounds.left));
+        const textWidth = textBounds.width;
+        const hideProgress = Math.min(1, overlap / textWidth);
+        text.style.opacity = 1 - hideProgress;
+      }
+
+      function startDrag(e) {
+        isDragging = true;
+        startX = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX;
+        currentX = parseInt(circle.style.left || initialLeft);
+        circle.classList.add('dragging');
+        button.classList.add('dragging', 'swiping');
+        e.preventDefault();
+        e.stopPropagation();
+      }
+
+      function onDrag(e) {
+        if (!isDragging) return;
+        const clientX = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX;
+        const deltaX = clientX - startX;
+        const newLeft = Math.max(initialLeft, Math.min(currentX + deltaX, getMaxDistance()));
+        circle.style.left = `${newLeft}px`;
+        const maxDist = getMaxDistance() - initialLeft;
+        const progress = Math.max(0, Math.min(1, (newLeft - initialLeft) / maxDist));
+        updateTextVisibility(progress);
+        e.preventDefault();
+      }
+
+      function endDrag(e) {
+        if (!isDragging) return;
+        isDragging = false;
+        circle.classList.remove('dragging');
+        button.classList.remove('dragging');
+
+        const currentLeft = parseInt(circle.style.left || initialLeft);
+        const maxDist = getMaxDistance();
+        const progress = (currentLeft - initialLeft) / (maxDist - initialLeft);
+
+        if (progress >= 0.75) {
+          // Success! Navigate to detail page
+          circle.style.left = `${maxDist}px`;
+          text.style.opacity = '0';
+          setTimeout(() => {
+            if (headTargetUrl) {
+              location.href = headTargetUrl;
+            }
+          }, 200);
+        } else {
+          // Reset to initial position
+          resetSwipe();
+        }
+      }
+
+      function resetSwipe() {
+        button.classList.remove('swiping');
+        circle.style.left = `${initialLeft}px`;
+        text.style.opacity = '1';
+      }
+
+      // Mouse events
+      circle.addEventListener('mousedown', startDrag);
+      document.addEventListener('mousemove', onDrag);
+      document.addEventListener('mouseup', endDrag);
+
+      // Touch events
+      circle.addEventListener('touchstart', startDrag, { passive: false });
+      document.addEventListener('touchmove', onDrag, { passive: false });
+      document.addEventListener('touchend', endDrag);
+
+      // Prevent default click on button when dragging
+      button.addEventListener('click', (e) => {
+        if (button.classList.contains('swiping')) {
+          e.preventDefault();
+          e.stopPropagation();
+          return false;
+        }
+      });
+    }
+
+    // Setup reverse swipe functionality for ctaMain (Menu) button - EXACT COPY of setupSwipeButton but mirrored
+    function setupSwipeButtonReverse(){
+      const button = ctaMain;
+      const circle = button.querySelector('.arrow-circle');
+      const text = button.querySelector('.button-text');
+
+      if (!circle || !text) return;
+
+      let isDragging = false;
+      let startX = 0;
+      let currentX = 0;
+      let initialRight = -32; // Same as initialLeft but for right side
+
+      function getMaxDistance() {
+        const buttonWidth = button.offsetWidth;
+        const circleWidth = circle.offsetWidth;
+        return buttonWidth - circleWidth / 2 - 20;
+      }
+
+      function updateTextVisibility(progress) {
+        const textBounds = text.getBoundingClientRect();
+        const circleBounds = circle.getBoundingClientRect();
+        const overlap = Math.max(0, Math.min(circleBounds.right, textBounds.right) - Math.max(circleBounds.left, textBounds.left));
+        const textWidth = textBounds.width;
+        const hideProgress = Math.min(1, overlap / textWidth);
+        text.style.opacity = 1 - hideProgress;
+      }
+
+      function startDrag(e) {
+        isDragging = true;
+        startX = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX;
+        currentX = parseInt(circle.style.right || initialRight);
+        circle.classList.add('dragging');
+        button.classList.add('dragging', 'swiping');
+        e.preventDefault();
+        e.stopPropagation();
+      }
+
+      function onDrag(e) {
+        if (!isDragging) return;
+        const clientX = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX;
+        const deltaX = startX - clientX; // Reversed for right-to-left movement
+        const newRight = Math.max(initialRight, Math.min(currentX + deltaX, getMaxDistance()));
+        circle.style.right = `${newRight}px`;
+        const maxDist = getMaxDistance() - initialRight;
+        const progress = Math.max(0, Math.min(1, (newRight - initialRight) / maxDist));
+        updateTextVisibility(progress);
+        e.preventDefault();
+      }
+
+      function endDrag(e) {
+        if (!isDragging) return;
+        isDragging = false;
+        circle.classList.remove('dragging');
+        button.classList.remove('dragging');
+
+        const currentRight = parseInt(circle.style.right || initialRight);
+        const maxDist = getMaxDistance();
+        const progress = (currentRight - initialRight) / (maxDist - initialRight);
+
+        if (progress >= 0.75) {
+          // Success! Navigate to menu page
+          circle.style.right = `${maxDist}px`;
+          text.style.opacity = '0';
+          setTimeout(() => {
+            location.href = './menu.html';
+          }, 200);
+        } else {
+          // Reset to initial position
+          resetSwipe();
+        }
+      }
+
+      function resetSwipe() {
+        button.classList.remove('swiping');
+        circle.style.right = `${initialRight}px`;
+        text.style.opacity = '1';
+      }
+
+      // Mouse events
+      circle.addEventListener('mousedown', startDrag);
+      document.addEventListener('mousemove', onDrag);
+      document.addEventListener('mouseup', endDrag);
+
+      // Touch events
+      circle.addEventListener('touchstart', startDrag, { passive: false });
+      document.addEventListener('touchmove', onDrag, { passive: false });
+      document.addEventListener('touchend', endDrag);
+
+      // Prevent default click on button when dragging
+      button.addEventListener('click', (e) => {
+        if (button.classList.contains('swiping')) {
+          e.preventDefault();
+          e.stopPropagation();
+          return false;
+        }
+        // Normal click - navigate to menu
+        location.href = './menu.html';
+      });
+    }
+
+    // Video navigation functions
+    function setupVideoNavigation(){
+      const navBackBtn = document.getElementById('navBack');
+      const navNextBtn = document.getElementById('navNext');
+
+      if (!navBackBtn || !navNextBtn) return;
+
+      // Navigate to previous video
+      navBackBtn.addEventListener('click', () => {
+        if (sequence.length === 0) return;
+
+        // Set index to previous - 1 (because playAll will increment after current item ends)
+        index = index - 2;
+        if (index < -1) {
+          index = sequence.length - 2; // Wrap to end
+        }
+        if (index < 0) index = sequence.length - 1;
+
+        sessionStorage.setItem(lastKey, String(index + 1)); // Save the actual target
+
+        // Skip current item (works for all types: video, announcement, url)
+        skipCurrentItem = true;
+
+        // Also end video if it's playing
+        if (elV && elV.duration) {
+          elV.currentTime = elV.duration;
+        }
+      });
+
+      // Navigate to next video
+      navNextBtn.addEventListener('click', () => {
+        if (sequence.length === 0) return;
+
+        // Keep index as is (playAll will increment to next)
+        // Don't change index
+
+        sessionStorage.setItem(lastKey, String(index + 1)); // Save next index
+
+        // Skip current item (works for all types: video, announcement, url)
+        skipCurrentItem = true;
+
+        // Also end video if it's playing
+        if (elV && elV.duration) {
+          elV.currentTime = elV.duration;
+        }
+      });
+
+      // Keyboard support
+      navBackBtn.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          navBackBtn.click();
+        }
+      });
+
+      navNextBtn.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          navNextBtn.click();
+        }
+      });
     }
 
     (function pollVersion(){
@@ -681,16 +1285,68 @@ else if (item.kind === 'announcement') {
       tick(); setInterval(tick, VERSION_POLL_MS);
     })();
 
+    // Register Service Worker for media caching
+    function registerServiceWorker(){
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('./sw.js')
+          .then((registration) => {
+            console.log('✅ Service Worker registered successfully:', registration.scope);
+
+            // Preload all media files from the sequence
+            registration.active && preloadMediaFiles();
+          })
+          .catch((error) => {
+            console.error('❌ Service Worker registration failed:', error);
+          });
+
+        // Listen for updates
+        navigator.serviceWorker.addEventListener('controllerchange', () => {
+          console.log('🔄 Service Worker updated, reloading...');
+          window.location.reload();
+        });
+      } else {
+        console.warn('⚠️ Service Worker not supported in this browser');
+      }
+    }
+
+    // Preload all media files in the sequence for instant playback
+    function preloadMediaFiles(){
+      if (!navigator.serviceWorker.controller || sequence.length === 0) return;
+
+      const mediaUrls = sequence
+        .filter(item => item.kind === 'video' || item.kind === 'image')
+        .map(item => item.src);
+
+      if (mediaUrls.length > 0) {
+        console.log('📦 Requesting preload of', mediaUrls.length, 'media files...');
+        navigator.serviceWorker.controller.postMessage({
+          action: 'preloadMedia',
+          urls: mediaUrls
+        });
+      }
+    }
+
     function init(){
       console.log('🚀 Digital Signage Player (Yodeck Compatible)');
       console.log('⚙️ Config loaded:', window.CONFIG ? 'Yes (Inline)' : 'No');
       console.log('🔧 To change project: Edit PROJECT_ID in <head> section');
 
+      // Register Service Worker for caching
+      registerServiceWorker();
+
       setupMainCta();
       setupUnlock();
+      setupSwipeButton(); // Initialize swipe functionality for ctaHead
+      setupSwipeButtonReverse(); // Initialize reverse swipe functionality for ctaMain
+      setupVideoNavigation(); // Initialize back/next navigation buttons
       buildSequence().then(({sequence:seq,loop})=>{
         console.log('Built sequence:', seq);
-        sequence=seq; loopPlay=loop; playAll();
+        sequence=seq; loopPlay=loop;
+
+        // Preload media files after sequence is built
+        setTimeout(() => preloadMediaFiles(), 1000);
+
+        playAll();
       }).catch(e=>{
         console.error('buildSequence error:', e);
         console.error('Error stack:', e.stack);

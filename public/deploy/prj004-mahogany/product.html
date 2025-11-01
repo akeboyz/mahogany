@@ -1636,7 +1636,7 @@
 
     <!-- Bottom Mascot Banner -->
     <div class="bottom-banner" id="bottomBanner">
-      <img id="bottomBannerImage" src="./images/system/banners/aquamax_banner02.jpg" alt="AquamX Banner">
+      <img id="bottomBannerImage" src="./project/images/system/banners/aquamax_banner02.jpg" alt="AquamX Banner">
       <div id="bottomBannerText" class="banner-fallback" style="display: none;">BANNER</div>
     </div>
   </div>
@@ -1713,7 +1713,7 @@
 
     const CONFIG = {
       restaurant: {
-        dataFile: 'data/dining.json', // Fixed: Use dining.json for restaurant data
+        dataFile: 'client/data/dining.json', // Fixed: Use dining.json for restaurant data
         dataKey: null,
         theme: 'theme-restaurant',
         backTarget: 'dining',
@@ -1723,7 +1723,7 @@
         itemsKey: 'menu'
       },
       shop: {
-        dataFile: 'data/ondemand.json',
+        dataFile: 'client/data/ondemand.json',
         dataKey: 'ondemand',
         theme: 'theme-shop',
         backTarget: 'daily',
@@ -1733,7 +1733,7 @@
         itemsKey: 'items'
       },
       unit: {
-        dataFile: 'data/unit.json',
+        dataFile: 'client/data/unit.json',
         dataKey: 'units',
         theme: 'theme-unit',
         backTarget: 'deal',
@@ -1743,7 +1743,7 @@
         itemsKey: null
       },
       daily: {
-        dataFile: 'data/daily.json',
+        dataFile: 'client/data/daily.json',
         dataKey: 'daily',
         theme: 'theme-shop',
         backTarget: 'daily',
@@ -1753,7 +1753,7 @@
         itemsKey: null
       },
       ondemand: {
-        dataFile: 'data/ondemand.json',
+        dataFile: 'client/data/ondemand.json',
         dataKey: 'ondemand',
         theme: 'theme-shop',
         backTarget: 'ondemand',
@@ -1763,7 +1763,7 @@
         itemsKey: null
       },
       delivery: {
-        dataFile: 'data/delivery.json',
+        dataFile: 'client/data/delivery.json',
         dataKey: 'delivery',
         theme: 'theme-restaurant',
         backTarget: 'delivery',
@@ -1781,7 +1781,7 @@
     const withBase = (p) => './' + p.replace(/^\.?\//, '');
 
     function getImageUrl(imagePath) {
-      if (!imagePath) return withBase('medias/placeholder.jpg');
+      if (!imagePath) return withBase('project/medias/placeholder.jpg');
       if (imagePath.startsWith('http')) return imagePath;
       return withBase(imagePath);
     }
@@ -1852,7 +1852,7 @@
 
       if (Array.isArray(images)) allImages.push(...images);
       if (Array.isArray(videos)) allImages.push(...videos);
-      if (allImages.length === 0) allImages.push('medias/placeholder.jpg');
+      if (allImages.length === 0) allImages.push('project/medias/placeholder.jpg');
 
       const gallery = document.createElement('div');
       gallery.className = 'image-gallery';
@@ -1864,7 +1864,7 @@
       mainImage.className = 'main-image';
       mainImage.src = getImageUrl(allImages[0]);
       mainImage.alt = 'Product Image';
-      mainImage.onerror = function() { this.src = withBase('medias/placeholder.jpg'); };
+      mainImage.onerror = function() { this.src = withBase('project/medias/placeholder.jpg'); };
 
       const prevBtn = document.createElement('button');
       prevBtn.className = 'image-nav prev-btn';
@@ -2044,10 +2044,10 @@
       // Update bottom banner based on product type
       const bannerImage = document.getElementById('bottomBannerImage');
       if (productType === 'unit') {
-        bannerImage.src = './images/system/banners/aquamax_banner02.jpg';
+        bannerImage.src = './project/images/system/banners/aquamax_banner02.jpg';
       } else {
         // For shops (delivery, dining, ondemand, daily, restaurant)
-        bannerImage.src = './images/system/banners/aquamax_banner01.jpg';
+        bannerImage.src = './project/images/system/banners/aquamax_banner01.jpg';
       }
 
       // Update header
@@ -2830,7 +2830,7 @@
         let project = null;
         if (productType === 'unit') {
           try {
-            const projectResponse = await fetch('./data/project.json');
+            const projectResponse = await fetch('./project/data/project.json');
             const projectData = await projectResponse.json();
             project = projectData.projects?.[0] || {};
           } catch (e) {
@@ -2978,7 +2978,7 @@
 
       // Load LINE QR code
       const unitId = product.unit_id || product.id || 'unit001';
-      const lineQRPath = `./images/properties/${unitId}_IDline.jpg`;
+      const lineQRPath = `./client/images/properties/${unitId}_IDline.jpg`;
       const qrImage = document.getElementById('agentLineQR');
       const qrSection = document.getElementById('agentQRSection');
 
@@ -3008,7 +3008,7 @@
       // Set floor plan image from standardized path
       const floorPlanImage = document.getElementById('floorPlanImage');
       const unitId = product.unit_id || product.id || 'unt001';
-      const floorPlanPath = `./images/properties/${unitId}_floorplan.jpg`;
+      const floorPlanPath = `./client/images/properties/${unitId}_floorplan.jpg`;
 
       // Try loading the floor plan, fallback to first image or placeholder
       floorPlanImage.onerror = function() {
@@ -3364,9 +3364,9 @@
             `;
 
             menuItem.innerHTML = `
-              <img src="${item.image || './medias/placeholder.jpg'}"
+              <img src="${item.image || './project/medias/placeholder.jpg'}"
                    style="width: 60px; height: 60px; border-radius: 6px; object-fit: cover;"
-                   onerror="this.src='./medias/placeholder.jpg'">
+                   onerror="this.src='./project/medias/placeholder.jpg'">
               <div style="flex: 1;">
                 <div style="font-weight: 600; color: #333;">${item.title || item.title_th}</div>
                 <div style="font-size: 0.85rem; color: #666; margin: 2px 0;">${item.description || item.description_th || ''}</div>

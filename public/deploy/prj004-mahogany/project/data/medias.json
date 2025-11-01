@@ -1,0 +1,78 @@
+{
+  "version": "1.0.0",
+  "generated_at": "2025-08-14",
+  "medias": [
+    {
+      "media_id": "unit001-01",
+      "id_ref": "unit001",
+      "media_type": "video",
+      "file_name": "./client/medias/unit001-01.MP4",
+      "file_size_mb": 17.6,
+      "length_sec": 30,
+      "start_date": "2025-08-14",
+      "end_date": null,
+      "media_title": "Unit 001 Promo Cut 01",
+      "approval_status": "approved"
+    },
+    {
+      "media_id": "od001-01",
+      "id_ref": "od001",
+      "media_type": "video",
+      "file_name": "./client/medias/od001-01.MP4",
+      "file_size_mb": 4.2,
+      "length_sec": 31,
+      "start_date": "2025-08-10",
+      "end_date": null,
+      "media_title": "OD 001 Teaser 01",
+      "approval_status": "approved"
+    },
+    {
+      "media_id": "od002-01",
+      "id_ref": "od002",
+      "media_type": "video",
+      "file_name": "./client/medias/od002-01.MP4",
+      "file_size_mb": 6.4,
+      "length_sec": 31,
+      "start_date": "2025-08-10",
+      "end_date": null,
+      "media_title": "OD 002 Teaser 01",
+      "approval_status": "approved"
+    },
+    {
+      "media_id": "dine001-01",
+      "id_ref": "dine001",
+      "media_type": "video",
+      "file_name": "./client/medias/dine001-01.MP4",
+      "file_size_mb": 6.6,
+      "length_sec": 30,
+      "start_date": "2025-08-01",
+      "end_date": null,
+      "media_title": "Dine 001 KV",
+      "approval_status": "approved"
+    },
+    {
+      "media_id": "od003-01",
+      "id_ref": "od003",
+      "media_type": "video",
+      "file_name": "./client/medias/od003-01.MP4",
+      "file_size_mb": 5.0,
+      "length_sec": 30,
+      "start_date": "2025-08-14",
+      "end_date": null,
+      "media_title": "Manditale Interior Design",
+      "approval_status": "approved"
+    },
+    {
+      "media_id": "dine004-01",
+      "id_ref": "dine004",
+      "media_type": "video",
+      "file_name": "./client/medias/dine004-01.MP4",
+      "file_size_mb": 5.0,
+      "length_sec": 30,
+      "start_date": "2025-08-14",
+      "end_date": null,
+      "media_title": "Vistro Restaurant",
+      "approval_status": "approved"
+    }
+  ]
+}
