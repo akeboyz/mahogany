@@ -462,8 +462,18 @@
       const t=todayISO(), s=m.start_date||null, e=m.end_date||null;
       if(s && t<s) return false; if(e && t>e) return false; return true;
     }
-    function showStatus(msg){elStat.textContent=msg;elStat.classList.add('show')}
-    function hideStatus(){elStat.classList.remove('show')}
+    function showStatus(msg){
+      if(!msg){
+        hideStatus();
+        return;
+      }
+      elStat.textContent=msg;
+      elStat.classList.add('show');
+    }
+    function hideStatus(){
+      elStat.classList.remove('show');
+      elStat.textContent='';
+    }
 
     // Helper function for smooth fade transitions
     async function fadeOut(element) {
@@ -1316,7 +1326,7 @@ else if (item.kind === 'announcement') {
             const { downloaded, total } = event.data;
             console.log(`✅ All media files stored on device: ${downloaded}/${total}`);
             showStatus(`✅ Ready! All ${downloaded} media files stored on device`);
-            setTimeout(() => showStatus(''), 3000); // Clear status after 3 seconds
+            setTimeout(() => hideStatus(), 3000); // Hide status after 3 seconds
           }
         });
 
