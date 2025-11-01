@@ -49,3 +49,14 @@ temp-yodeck-upload.zip
 # Service account keys (security)
 *service-account*.json
 nul
+
+# Large media files (over 50MB)
+*.mp4
+*.MP4
+*.mov
+*.avi
+*.zip
+temp-review/
+netlify-deploy/
+public/project/ann.zip
+public/deploy/*.zip
