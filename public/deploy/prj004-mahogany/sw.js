@@ -1,8 +1,11 @@
 // Service Worker for Media Caching
-// Version 2.0 - Fixed first-load caching
+// Version 3.0 - Aggressive local storage for signage devices
 
-const CACHE_NAME = 'signage-media-cache-v2';
-const DATA_CACHE_NAME = 'signage-data-cache-v2';
+const CACHE_NAME = 'signage-media-cache-v3';
+const DATA_CACHE_NAME = 'signage-data-cache-v3';
+
+// Enable aggressive caching for signage devices
+const AGGRESSIVE_CACHE = true; // Set to true for signage, false for web
 
 // Files to cache immediately on install
 const STATIC_CACHE = [
@@ -59,15 +62,16 @@ self.addEventListener('fetch', (event) => {
   const isData = /\.json$/i.test(url.pathname) && !url.pathname.includes('version.txt');
 
   if (isMedia) {
-    // Media files: Cache-first strategy
+    // Media files: Cache-first strategy (ALWAYS serve from device storage if available)
     event.respondWith(
       caches.match(event.request).then((cachedResponse) => {
         if (cachedResponse) {
-          console.log('[Service Worker] Serving media from cache:', url.pathname);
+          console.log('[Service Worker] 💾 Serving from device storage:', url.pathname);
           return cachedResponse;
         }
 
-        console.log('[Service Worker] Fetching and caching media:', url.pathname);
+        // If not in cache, fetch and store for future use
+        console.log('[Service Worker] 📥 Downloading to device:', url.pathname);
         return fetch(event.request).then((response) => {
           // Don't cache if not successful
           if (!response || response.status !== 200 || response.type !== 'basic') {
@@ -79,12 +83,13 @@ self.addEventListener('fetch', (event) => {
 
           caches.open(CACHE_NAME).then((cache) => {
             cache.put(event.request, responseToCache);
-            console.log('[Service Worker] Cached media:', url.pathname);
+            console.log('[Service Worker] ✅ Stored on device:', url.pathname);
           });
 
           return response;
         }).catch((error) => {
-          console.error('[Service Worker] Fetch failed for media:', url.pathname, error);
+          console.error('[Service Worker] ❌ Download failed:', url.pathname, error);
+          // For signage: show placeholder or retry instead of error
           throw error;
         });
       })
@@ -134,21 +139,50 @@ self.addEventListener('message', (event) => {
   if (event.data.action === 'preloadMedia') {
     const urls = event.data.urls || [];
     event.waitUntil(
-      caches.open(CACHE_NAME).then((cache) => {
-        console.log('[Service Worker] Preloading media files:', urls.length);
-        return Promise.all(
-          urls.map((url) => {
-            return fetch(url).then((response) => {
-              if (response.ok) {
-                return cache.put(url, response);
-              }
-            }).catch((error) => {
-              console.warn('[Service Worker] Failed to preload:', url, error);
+      caches.open(CACHE_NAME).then(async (cache) => {
+        console.log('[Service Worker] 📥 Downloading', urls.length, 'media files to device storage...');
+        let downloaded = 0;
+
+        // Download files sequentially to avoid overwhelming the device
+        for (const url of urls) {
+          try {
+            const response = await fetch(url);
+            if (response.ok) {
+              await cache.put(url, response);
+              downloaded++;
+              console.log(`[Service Worker] ✅ Downloaded ${downloaded}/${urls.length}: ${url}`);
+
+              // Send progress update to page
+              self.clients.matchAll().then(clients => {
+                clients.forEach(client => {
+                  client.postMessage({
+                    action: 'downloadProgress',
+                    current: downloaded,
+                    total: urls.length,
+                    url: url
+                  });
+                });
+              });
+            } else {
+              console.warn('[Service Worker] ⚠️ Failed to download:', url, response.status);
+            }
+          } catch (error) {
+            console.error('[Service Worker] ❌ Error downloading:', url, error);
+          }
+        }
+
+        console.log(`[Service Worker] ✅ Download complete: ${downloaded}/${urls.length} files stored on device`);
+
+        // Notify page that download is complete
+        self.clients.matchAll().then(clients => {
+          clients.forEach(client => {
+            client.postMessage({
+              action: 'downloadComplete',
+              downloaded: downloaded,
+              total: urls.length
             });
-          })
-        );
-      }).then(() => {
-        console.log('[Service Worker] Preloading complete');
+          });
+        });
       })
     );
   }

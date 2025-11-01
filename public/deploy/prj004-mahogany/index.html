@@ -1303,6 +1303,23 @@ else if (item.kind === 'announcement') {
             console.error('❌ Service Worker registration failed:', error);
           });
 
+        // Listen for download progress messages from Service Worker
+        navigator.serviceWorker.addEventListener('message', (event) => {
+          if (event.data.action === 'downloadProgress') {
+            const { current, total, url } = event.data;
+            const percent = Math.round((current / total) * 100);
+            console.log(`📥 Downloading media: ${current}/${total} (${percent}%)`);
+            showStatus(`Downloading media to device: ${current}/${total} (${percent}%)`);
+          }
+
+          if (event.data.action === 'downloadComplete') {
+            const { downloaded, total } = event.data;
+            console.log(`✅ All media files stored on device: ${downloaded}/${total}`);
+            showStatus(`✅ Ready! All ${downloaded} media files stored on device`);
+            setTimeout(() => showStatus(''), 3000); // Clear status after 3 seconds
+          }
+        });
+
         // Listen for updates
         navigator.serviceWorker.addEventListener('controllerchange', () => {
           console.log('🔄 Service Worker updated, reloading...');
