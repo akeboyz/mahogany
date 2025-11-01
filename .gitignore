@@ -61,3 +61,8 @@ netlify-deploy/
 yodeck-build/
 public/project/ann.zip
 public/deploy/*.zip
+
+# Git submodule directories (converted to regular directories)
+mahogany-signage/
+signage-ops-prototype/
+public/project/ann/
