@@ -51,10 +51,7 @@ temp-yodeck-upload.zip
 nul
 
 # Large media files (over 50MB)
-*.mp4
-*.MP4
-*.mov
-*.avi
+# Videos now tracked via Git LFS (see .gitattributes)
 *.zip
 temp-review/
 netlify-deploy/
@@ -66,3 +63,6 @@ public/deploy/*.zip
 mahogany-signage/
 signage-ops-prototype/
 public/project/ann/
+
+# Local Netlify folder
+.netlify
