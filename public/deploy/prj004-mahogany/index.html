@@ -1385,6 +1385,48 @@ else if (item.kind === 'announcement') {
       await Promise.all(promises);
     }
 
+    // Auto-update: Detect content changes and clear old cache
+    async function checkForContentUpdates(){
+      try {
+        const currentMediaList = sequence.map(item => item.src).sort().join('|');
+        const lastMediaList = localStorage.getItem('cachedMediaList');
+
+        if (lastMediaList && lastMediaList !== currentMediaList) {
+          console.log('🔄 Content changed! Old:', lastMediaList.split('|').length, 'files → New:', sequence.length, 'files');
+          showStatus('🔄 Detecting new content, updating cache...');
+
+          // Clear old cache to make room for new content
+          if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
+            const messageChannel = new MessageChannel();
+
+            messageChannel.port1.onmessage = (event) => {
+              if (event.data.success) {
+                console.log('✅ Old cache cleared, downloading new content...');
+                localStorage.setItem('cachedMediaList', currentMediaList);
+                // Reload to download new content
+                setTimeout(() => window.location.reload(), 500);
+              }
+            };
+
+            navigator.serviceWorker.controller.postMessage(
+              { action: 'clearCache' },
+              [messageChannel.port2]
+            );
+          } else {
+            // No service worker, just update and reload
+            localStorage.setItem('cachedMediaList', currentMediaList);
+            setTimeout(() => window.location.reload(), 500);
+          }
+        } else {
+          // First time or no changes
+          localStorage.setItem('cachedMediaList', currentMediaList);
+          console.log('✅ Content list stored:', sequence.length, 'files');
+        }
+      } catch (error) {
+        console.error('❌ Update check failed:', error);
+      }
+    }
+
     function init(){
       console.log('🚀 Digital Signage Player (Yodeck Compatible)');
       console.log('⚙️ Config loaded:', window.CONFIG ? 'Yes (Inline)' : 'No');
@@ -1401,6 +1443,9 @@ else if (item.kind === 'announcement') {
       buildSequence().then(({sequence:seq,loop})=>{
         console.log('Built sequence:', seq);
         sequence=seq; loopPlay=loop;
+
+        // Check for content updates and clear old cache if needed
+        checkForContentUpdates();
 
         // Preload media files after sequence is built
         setTimeout(() => preloadMediaFiles(), 1000);
