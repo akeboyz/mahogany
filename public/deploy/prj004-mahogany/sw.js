@@ -1,8 +1,8 @@
 // Service Worker for Media Caching
-// Version 3.0 - Aggressive local storage for signage devices
+// Version 4.0 - Smart cache checking before download
 
-const CACHE_NAME = 'signage-media-cache-v3';
-const DATA_CACHE_NAME = 'signage-data-cache-v3';
+const CACHE_NAME = 'signage-media-cache-v4';
+const DATA_CACHE_NAME = 'signage-data-cache-v4';
 
 // Enable aggressive caching for signage devices
 const AGGRESSIVE_CACHE = true; // Set to true for signage, false for web
@@ -140,17 +140,44 @@ self.addEventListener('message', (event) => {
     const urls = event.data.urls || [];
     event.waitUntil(
       caches.open(CACHE_NAME).then(async (cache) => {
-        console.log('[Service Worker] 📥 Downloading', urls.length, 'media files to device storage...');
+        // First, check which files are NOT in cache
+        const cachedUrls = await Promise.all(
+          urls.map(async (url) => {
+            const cached = await cache.match(url);
+            return cached ? url : null;
+          })
+        );
+
+        const alreadyCached = cachedUrls.filter(url => url !== null);
+        const needsDownload = urls.filter(url => !alreadyCached.includes(url));
+
+        console.log(`[Service Worker] Cache status: ${alreadyCached.length}/${urls.length} files already cached`);
+
+        if (needsDownload.length === 0) {
+          console.log('[Service Worker] ✅ All files already cached, no download needed');
+          // Notify that everything is ready (no download needed)
+          self.clients.matchAll().then(clients => {
+            clients.forEach(client => {
+              client.postMessage({
+                action: 'alreadyCached',
+                total: urls.length
+              });
+            });
+          });
+          return;
+        }
+
+        console.log(`[Service Worker] 📥 Downloading ${needsDownload.length} new files to device storage...`);
         let downloaded = 0;
 
-        // Download files sequentially to avoid overwhelming the device
-        for (const url of urls) {
+        // Download only files that are NOT in cache
+        for (const url of needsDownload) {
           try {
             const response = await fetch(url);
             if (response.ok) {
               await cache.put(url, response);
               downloaded++;
-              console.log(`[Service Worker] ✅ Downloaded ${downloaded}/${urls.length}: ${url}`);
+              console.log(`[Service Worker] ✅ Downloaded ${downloaded}/${needsDownload.length}: ${url}`);
 
               // Send progress update to page
               self.clients.matchAll().then(clients => {
@@ -158,7 +185,7 @@ self.addEventListener('message', (event) => {
                   client.postMessage({
                     action: 'downloadProgress',
                     current: downloaded,
-                    total: urls.length,
+                    total: needsDownload.length,
                     url: url
                   });
                 });
@@ -171,7 +198,7 @@ self.addEventListener('message', (event) => {
           }
         }
 
-        console.log(`[Service Worker] ✅ Download complete: ${downloaded}/${urls.length} files stored on device`);
+        console.log(`[Service Worker] ✅ Download complete: ${downloaded}/${needsDownload.length} new files stored on device`);
 
         // Notify page that download is complete
         self.clients.matchAll().then(clients => {
@@ -179,7 +206,8 @@ self.addEventListener('message', (event) => {
             client.postMessage({
               action: 'downloadComplete',
               downloaded: downloaded,
-              total: urls.length
+              total: needsDownload.length,
+              totalFiles: urls.length
             });
           });
         });

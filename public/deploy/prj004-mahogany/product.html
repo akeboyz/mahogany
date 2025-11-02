@@ -1531,7 +1531,7 @@
 
     .modal-header h3 {
       margin: 0;
-      font-size: 1rem;
+      font-size: 0.65rem;
       font-weight: 600;
       color: #333;
     }
@@ -3350,7 +3350,7 @@
           const section = document.createElement('div');
           section.className = 'menu-section';
           section.innerHTML = `
-            <h4 style="margin: 20px 0 10px 0; color: var(--primary-color); border-bottom: 2px solid var(--primary-color); padding-bottom: 5px;">${type}</h4>
+            <h4 style="margin: 20px 0 10px 0; color: var(--primary-color); border-bottom: 2px solid var(--primary-color); padding-bottom: 5px; font-size: 0.91rem;">${type}</h4>
             <div class="menu-grid" style="display: grid; gap: 12px;"></div>
           `;
 
@@ -3368,9 +3368,9 @@
                    style="width: 60px; height: 60px; border-radius: 6px; object-fit: cover;"
                    onerror="this.src='./project/medias/placeholder.jpg'">
               <div style="flex: 1;">
-                <div style="font-weight: 600; color: #333;">${item.title || item.title_th}</div>
-                <div style="font-size: 0.85rem; color: #666; margin: 2px 0;">${item.description || item.description_th || ''}</div>
-                <div style="font-weight: 700; color: var(--primary-color);">฿${item.price}</div>
+                <div style="font-weight: 600; color: #333; font-size: 0.65rem;">${item.title || item.title_th}</div>
+                <div style="font-size: 0.55rem; color: #666; margin: 2px 0;">${item.description || item.description_th || ''}</div>
+                <div style="font-weight: 700; color: var(--primary-color); font-size: 0.65rem;">฿${item.price}</div>
               </div>
             `;
             grid.appendChild(menuItem);
@@ -3591,5 +3591,142 @@
     </div>
   </div> <!-- Close page-wrapper -->
 
+  <script>
+    // Register Service Worker for media caching
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('./sw.js')
+        .then((registration) => {
+          console.log('✅ Service Worker registered successfully:', registration.scope);
+          return navigator.serviceWorker.ready;
+        })
+        .then(() => {
+          console.log('✅ Service Worker is ready');
+          preloadMediaFiles();
+        })
+        .catch((error) => {
+          console.error('❌ Service Worker registration failed:', error);
+        });
+
+      // Listen for download progress messages from Service Worker
+      navigator.serviceWorker.addEventListener('message', (event) => {
+        if (event.data.action === 'downloadProgress') {
+          const { current, total } = event.data;
+          const percent = Math.round((current / total) * 100);
+          console.log(`📥 Downloading media: ${current}/${total} (${percent}%)`);
+        }
+
+        if (event.data.action === 'downloadComplete') {
+          const { downloaded, total } = event.data;
+          console.log(`✅ All media files stored on device: ${downloaded}/${total}`);
+        }
+      });
+    } else {
+      console.warn('⚠️ Service Worker not supported in this browser');
+    }
+
+    // Helper function to load JSON
+    async function loadJson(url) {
+      const response = await fetch(url, { cache: 'no-store' });
+      return await response.json();
+    }
+
+    // Preload ALL media files (videos and images) for instant playback
+    async function preloadMediaFiles(){
+      if ('serviceWorker' in navigator) {
+        try {
+          const registration = await navigator.serviceWorker.ready;
+
+          if (!navigator.serviceWorker.controller) {
+            console.log('⏳ Service Worker not controlling yet, waiting...');
+            return;
+          }
+
+          // Collect ALL media files (videos and images)
+          let allMediaUrls = [];
+
+          // 1. Load images from dining.json
+          try {
+            const diningData = await loadJson('./client/data/dining.json');
+            if (diningData && Array.isArray(diningData)) {
+              let diningCount = 0;
+              diningData.forEach(rest => {
+                if (rest.logo) { allMediaUrls.push(rest.logo); diningCount++; }
+                if (rest.images) { allMediaUrls.push(...rest.images); diningCount += rest.images.length; }
+                if (rest.menu && Array.isArray(rest.menu)) {
+                  rest.menu.forEach(item => {
+                    if (item.image) { allMediaUrls.push(item.image); diningCount++; }
+                  });
+                }
+              });
+              console.log('📦 Found', diningCount, 'dining images');
+            }
+          } catch (error) {
+            console.warn('⚠️ Could not load dining images:', error);
+          }
+
+          // 2. Load images from ondemand.json
+          try {
+            const ondemandData = await loadJson('./client/data/ondemand.json');
+            if (ondemandData && ondemandData.ondemand) {
+              let ondemandCount = 0;
+              ondemandData.ondemand.forEach(od => {
+                if (od.logo) { allMediaUrls.push(od.logo); ondemandCount++; }
+                if (od.images) { allMediaUrls.push(...od.images); ondemandCount += od.images.length; }
+              });
+              console.log('📦 Found', ondemandCount, 'ondemand images');
+            }
+          } catch (error) {
+            console.warn('⚠️ Could not load ondemand images:', error);
+          }
+
+          // 3. Load images from unit.json
+          try {
+            const unitData = await loadJson('./client/data/unit.json');
+            if (unitData && unitData.units) {
+              let unitCount = 0;
+              unitData.units.forEach(unit => {
+                if (unit.images) { allMediaUrls.push(...unit.images); unitCount += unit.images.length; }
+                if (unit.floor_plan) { allMediaUrls.push(unit.floor_plan); unitCount++; }
+              });
+              console.log('📦 Found', unitCount, 'unit images');
+            }
+          } catch (error) {
+            console.warn('⚠️ Could not load unit images:', error);
+          }
+
+          // 4. Load images from project.json
+          try {
+            const projectData = await loadJson('./project/data/project.json');
+            if (projectData && projectData.projects && Array.isArray(projectData.projects)) {
+              let projectCount = 0;
+              projectData.projects.forEach(proj => {
+                if (proj.logo) { allMediaUrls.push(proj.logo); projectCount++; }
+                if (proj.images) { allMediaUrls.push(...proj.images); projectCount += proj.images.length; }
+              });
+              console.log('📦 Found', projectCount, 'project images');
+            }
+          } catch (error) {
+            console.warn('⚠️ Could not load project images:', error);
+          }
+
+          // Remove duplicates and filter out empty/null values
+          allMediaUrls = [...new Set(allMediaUrls.filter(url => url && url.trim()))];
+
+          if (allMediaUrls.length > 0) {
+            console.log('📦 Requesting preload of', allMediaUrls.length, 'total media files (videos + images) via Service Worker...');
+
+            navigator.serviceWorker.controller.postMessage({
+              action: 'preloadMedia',
+              urls: allMediaUrls
+            });
+          } else {
+            console.warn('⚠️ No media files found to preload');
+          }
+        } catch (error) {
+          console.error('❌ Service Worker preload failed:', error);
+        }
+      }
+    }
+  </script>
 </body>
 </html>
