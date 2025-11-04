@@ -1,0 +1,45 @@
+[build]
+  # No build command needed for static HTML site
+  command = ""
+  # Publish the root directory
+  publish = "."
+
+# Ensure HTML files are served properly
+[[headers]]
+  for = "/*.html"
+  [headers.values]
+    Content-Type = "text/html; charset=UTF-8"
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+# Cache static assets
+[[headers]]
+  for = "/medias/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/images/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/client/images/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/project/images/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/corporate/images/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# Enable SPA-style routing (optional)
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+  force = false
