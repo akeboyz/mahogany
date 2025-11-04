@@ -4,7 +4,7 @@
   # No build command needed - static HTML files
   command = "echo 'Deploying static HTML site - no build required'"
   # Publish the static HTML directory
-  publish = "public/deploy/prj001-lumpini24"
+  publish = "public/deploy/prj002-mahogany"
 
 # Headers for Service Worker and caching
 [[headers]]
