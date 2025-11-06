@@ -11,9 +11,9 @@
     "display_duration": 8000
   },
   {
-    "announcement_id": "ann007",
-    "title_th": "ขอความร่วมมือคัดแยกขยะ",
-    "title_en": "Your Cooperation in Separating Waste",
+    "announcement_id": "ann002",
+    "title_th": "แจ้งกำหนดการเปิดใช้ลิฟท์หมายเลข 1",
+    "title_en": "The Schedule for Reopening of Passenger Elevator #1",
     "date": "28/8/25",
     "image": "./project/images/announcements/announce002.jpg",
     "priority": "medium",
