@@ -64,6 +64,16 @@
     "status": "active",
     "created_date": "2025-08-30",
     "display_duration": 4000
+  },
+  {
+    "announcement_id": "ann007",
+    "title_th": "แจ้งปิดลิฟท์ชั่วคราวเนื่องจากมีการซ้อมอพยพหนีไฟ",
+    "title_en": "Elevator Service Temporarily Suspended due to the Annual Fire Evacuation",
+    "date": "05/9/25",
+    "image": "./project/images/announcements/announce007.jpg",
+    "priority": "low",
+    "status": "active",
+    "created_date": "2025-08-30",
+    "display_duration": 4000
   }
-
 ]

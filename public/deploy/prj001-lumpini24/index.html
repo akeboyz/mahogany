@@ -8,6 +8,10 @@
   <meta name="color-scheme" content="dark light"/>
   <link rel="icon" href="data:,">
 
+  <!-- Firebase for Analytics -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+
   <!-- Inline Configuration for Yodeck Compatibility -->
   <script>
     // Digital Signage Configuration
@@ -15,8 +19,86 @@
     window.CONFIG = {
       PROJECT_ID: 'prj004',  // <- เปลี่ยนค่านี้: prj001, prj002, prj003, etc.
       DEFAULT_PAGE: 'index.html',
-      VERSION: '1.0.1'
+      VERSION: '1.0.1',
+      DEVICE_ID: 'prj002-mahogany-main' // Unique device identifier
     };
+
+    // Initialize Firebase
+    if (!firebase.apps.length) {
+      const firebaseConfig = {
+        apiKey: "AIzaSy" + "CZ4TnAas5EY0iLrNP2m-NlMEh46hRe1d4",
+        authDomain: "aquamx-system.firebaseapp.com",
+        projectId: "aquamx-system",
+        storageBucket: "aquamx-system.firebasestorage.app",
+        messagingSenderId: "893876394311",
+        appId: "1:893876394311:web:85541afc56d2325d631462"
+      };
+      firebase.initializeApp(firebaseConfig);
+    }
+    window.db = firebase.firestore();
+
+    // Touch Analytics Tracker
+    let touchCount = 0;
+    let lastSyncTime = Date.now();
+    const SYNC_INTERVAL = 60000; // Sync every 1 minute
+
+    function trackTouch(element, action) {
+      touchCount++;
+      const touchData = {
+        device_id: window.CONFIG.DEVICE_ID,
+        project_id: window.CONFIG.PROJECT_ID,
+        timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+        element: element || 'screen',
+        action: action || 'touch',
+        page: window.location.pathname.split('/').pop(),
+        session_date: new Date().toISOString().split('T')[0]
+      };
+
+      // Send to Firestore
+      db.collection('touch_analytics').add(touchData).catch(err => {
+        console.error('Touch tracking error:', err);
+      });
+
+      // Update daily summary every minute
+      const now = Date.now();
+      if (now - lastSyncTime >= SYNC_INTERVAL) {
+        updateDailySummary();
+        lastSyncTime = now;
+      }
+    }
+
+    function updateDailySummary() {
+      if (touchCount === 0) return;
+
+      const today = new Date().toISOString().split('T')[0];
+      const summaryRef = db.collection('touch_summary').doc(`${window.CONFIG.DEVICE_ID}_${today}`);
+
+      summaryRef.set({
+        device_id: window.CONFIG.DEVICE_ID,
+        project_id: window.CONFIG.PROJECT_ID,
+        date: today,
+        touch_count: firebase.firestore.FieldValue.increment(touchCount),
+        last_updated: firebase.firestore.FieldValue.serverTimestamp()
+      }, { merge: true }).then(() => {
+        console.log(`✅ Synced ${touchCount} touches to daily summary`);
+        touchCount = 0;
+      }).catch(err => {
+        console.error('Summary sync error:', err);
+      });
+    }
+
+    // Track all touches on the document
+    document.addEventListener('touchstart', () => trackTouch('screen', 'touch'), { passive: true });
+    document.addEventListener('click', () => trackTouch('screen', 'click'), { passive: true });
+
+    // Sync remaining touches before page unload
+    window.addEventListener('beforeunload', () => {
+      if (touchCount > 0) {
+        updateDailySummary();
+      }
+    });
+
+    console.log('🔍 Touch analytics enabled for', window.CONFIG.DEVICE_ID);
   </script>
 
   <style>
@@ -316,6 +398,7 @@
     #navNext {
       right: 24px;
     }
+
   </style>
 </head>
 <body>
@@ -333,6 +416,9 @@
 
         <!-- C) URL อื่น ๆ -->
         <iframe id="web" allow="autoplay; fullscreen" style="display:none"></iframe>
+
+        <!-- D) Menu preview overlay -->
+        <iframe id="menuPreview" src="./menu.html" allow="autoplay; fullscreen" style="display:none; position:absolute; inset:0; width:100%; height:100%; border:0; z-index:70;"></iframe>
       </div>
 
       <!-- Working overlays for video player -->
@@ -705,7 +791,13 @@
       }
 
       const loop=pl?.loop!==false;
-      return {sequence:out,loop};
+
+      // Insert menu preview items into the sequence
+      const sequenceWithMenuPreviews = insertMenuPreviews(out);
+
+      console.log(`📋 Final sequence: ${sequenceWithMenuPreviews.length} items (${out.length} original + ${sequenceWithMenuPreviews.length - out.length} menu previews)`);
+
+      return {sequence:sequenceWithMenuPreviews,loop};
     }
 
     // CTA main → menu.html
@@ -745,6 +837,8 @@
     const lastKey='signage:lastIndex:prj003';
     let sequence=[],loopPlay=true,index=0;
     let skipCurrentItem = false; // Flag to skip current item when navigation buttons are clicked
+    const MENU_PREVIEW_INTERVAL = 3; // Insert menu preview every 3 items
+    const MENU_PREVIEW_DURATION = 10000; // Show menu for 10 seconds (10000ms)
 
     async function playAll(){
       hideStatus();
@@ -784,9 +878,38 @@
       }
     }
 
+    // Insert menu preview items into sequence
+    function insertMenuPreviews(originalSequence) {
+      const result = [];
+
+      for (let i = 0; i < originalSequence.length; i++) {
+        result.push(originalSequence[i]);
+
+        // Insert menu preview after every MENU_PREVIEW_INTERVAL items
+        if ((i + 1) % MENU_PREVIEW_INTERVAL === 0) {
+          result.push({
+            kind: 'menu_preview',
+            duration: MENU_PREVIEW_DURATION / 1000, // Convert ms to seconds
+            meta: { id_ref: 'menu_preview' }
+          });
+          console.log(`📋 Inserted menu preview after item ${i + 1}`);
+        }
+      }
+
+      return result;
+    }
+
     async function playItem(item){
+      console.log(`📺 Playing: ${item.kind}`, item);
+
       hideAll();
-      showHeadFor(item.meta);
+
+      // Special handling for menu preview
+      if (item.kind === 'menu_preview') {
+        showHeadFor(null); // No "Swipe to Explore" for menu preview
+      } else {
+        showHeadFor(item.meta);
+      }
 
       // Preload next video in sequence
       preloadNextVideo();
@@ -874,7 +997,49 @@
 
         await fadeOut(elImg);
       }
-else if (item.kind === 'announcement') {
+      else if (item.kind === 'menu_preview') {
+        // Display menu.html as iframe overlay
+        const menuPreview = document.getElementById('menuPreview');
+        const navBack = document.getElementById('navBack');
+        const navNext = document.getElementById('navNext');
+
+        if (!menuPreview) {
+          console.error('Menu preview iframe not found');
+          await sleep(2000);
+          return;
+        }
+
+        console.log('🎯 Showing menu preview for', item.duration || 10, 'seconds...');
+
+        // Show menu preview iframe
+        menuPreview.style.display = 'block';
+
+        // Hide CTA buttons during menu preview, but KEEP navigation buttons visible
+        ctaHead.style.display = 'none';
+        ctaMain.style.display = 'none';
+        if (navBack) navBack.style.display = 'inline-flex';
+        if (navNext) navNext.style.display = 'inline-flex';
+
+        // Wait with interruptible sleep
+        const duration = (item.duration || 10) * 1000;
+        const startTime = Date.now();
+        while (Date.now() - startTime < duration) {
+          if (skipCurrentItem) {
+            skipCurrentItem = false; // Reset flag
+            console.log('⏭️ Menu preview skipped by user');
+            break;
+          }
+          await sleep(100); // Check every 100ms
+        }
+
+        // Hide menu preview, restore CTAs
+        menuPreview.style.display = 'none';
+        ctaHead.style.display = 'inline-flex';
+        ctaMain.style.display = 'inline-flex';
+
+        console.log('✅ Menu preview ended');
+      }
+      else if (item.kind === 'announcement') {
   // Direct announcement display - use pre-loaded announcement data
 
   try {
@@ -1221,7 +1386,7 @@ else if (item.kind === 'announcement') {
 
         sessionStorage.setItem(lastKey, String(index + 1)); // Save the actual target
 
-        // Skip current item (works for all types: video, announcement, url)
+        // Skip current item (works for all types: video, announcement, url, menu preview)
         skipCurrentItem = true;
 
         // Also end video if it's playing
@@ -1239,7 +1404,7 @@ else if (item.kind === 'announcement') {
 
         sessionStorage.setItem(lastKey, String(index + 1)); // Save next index
 
-        // Skip current item (works for all types: video, announcement, url)
+        // Skip current item (works for all types: video, announcement, url, menu preview)
         skipCurrentItem = true;
 
         // Also end video if it's playing
