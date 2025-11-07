@@ -19,17 +19,29 @@
     "priority": "medium",
     "status": "active",
     "created_date": "2025-08-22",
-    "display_duration": 6000
+    "display_duration": 5000
   },
   {
-    "announcement_id": "ann010",
-    "title_th": "ขอความร่วมมือคัดแยกขยะ",
-    "title_en": "Your Cooperation in Separating Waste",
+    "announcement_id": "ann003",
+    "title_th": "เชิญเข้าร่วมกิจกรรมฝึกซ้อมอพยพหนีไฟ ประจำปี 2568",
+    "title_en": "The annual fire drill 20225",
     "date": "05/9/25",
     "image": "./project/images/announcements/announce003.jpg",
     "priority": "low",
     "status": "active",
     "created_date": "2025-08-30",
+    "display_duration": 7000
+  },
+  {
+    "announcement_id": "ann004",
+    "title_th": "ขอความร่วมมือคัดแยกขยะ",
+    "title_en": "Your Cooperation in Separating Waste",
+    "date": "05/9/25",
+    "image": "./project/images/announcements/announce004.jpg",
+    "priority": "low",
+    "status": "active",
+    "created_date": "2025-08-30",
     "display_duration": 4000
   }
+
 ]

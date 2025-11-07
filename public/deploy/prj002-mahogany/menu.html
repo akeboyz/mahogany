@@ -9,6 +9,76 @@
   <title>Main Menu</title>
   <link rel="icon" href="data:,">
 
+  <!-- Firebase for Analytics -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+
+  <script>
+    // Device Configuration
+    window.CONFIG = {
+      PROJECT_ID: 'prj004',
+      DEVICE_ID: 'prj002-mahogany-menu'
+    };
+
+    // Initialize Firebase
+    if (!firebase.apps.length) {
+      const firebaseConfig = {
+        apiKey: "AIzaSyCZ4TnAas5EY0iLrNP2m-NlMEh46hRe1d4",
+        authDomain: "aquamx-system.firebaseapp.com",
+        projectId: "aquamx-system",
+        storageBucket: "aquamx-system.firebasestorage.app",
+        messagingSenderId: "893876394311",
+        appId: "1:893876394311:web:85541afc56d2325d631462"
+      };
+      firebase.initializeApp(firebaseConfig);
+    }
+    window.db = firebase.firestore();
+
+    // Touch Analytics
+    let touchCount = 0;
+    let lastSyncTime = Date.now();
+
+    function trackTouch(element) {
+      touchCount++;
+      db.collection('touch_analytics').add({
+        device_id: window.CONFIG.DEVICE_ID,
+        project_id: window.CONFIG.PROJECT_ID,
+        timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+        element: element || 'menu-item',
+        action: 'click',
+        page: 'menu.html',
+        session_date: new Date().toISOString().split('T')[0]
+      }).catch(err => console.error('Touch tracking error:', err));
+
+      // Update summary every minute
+      if (Date.now() - lastSyncTime >= 60000) {
+        updateDailySummary();
+        lastSyncTime = Date.now();
+      }
+    }
+
+    function updateDailySummary() {
+      if (touchCount === 0) return;
+      const today = new Date().toISOString().split('T')[0];
+      db.collection('touch_summary').doc(`${window.CONFIG.DEVICE_ID}_${today}`).set({
+        device_id: window.CONFIG.DEVICE_ID,
+        project_id: window.CONFIG.PROJECT_ID,
+        date: today,
+        touch_count: firebase.firestore.FieldValue.increment(touchCount),
+        last_updated: firebase.firestore.FieldValue.serverTimestamp()
+      }, { merge: true }).then(() => {
+        console.log(`✅ Synced ${touchCount} touches`);
+        touchCount = 0;
+      });
+    }
+
+    document.addEventListener('click', () => trackTouch('menu-screen'), { passive: true });
+    document.addEventListener('touchstart', () => trackTouch('menu-screen'), { passive: true });
+    window.addEventListener('beforeunload', () => { if (touchCount > 0) updateDailySummary(); });
+
+    console.log('🔍 Touch analytics enabled for menu');
+  </script>
+
   <style>
     /* ✅ รีเซ็ตพื้นฐาน */
     * {
@@ -19,8 +89,8 @@
 
     /* ✅ ขนาดเต็มหน้าจอและจัดตำแหน่งกึ่งกลาง */
     html, body {
-      width: 100vw;
-      height: 100vh;
+      width: 1080px;
+      height: 1920px;
       background-color: black; /* พื้นหลัง */
       overflow: hidden;
       display: flex;
@@ -34,8 +104,8 @@
       display: grid;
       grid-template-columns: repeat(2, 1fr);
       grid-template-rows: repeat(3, 1fr);
-      width: 100vw;
-      height: 100vh;
+      width: 1080px;
+      height: 1920px;
       max-width: 56.25vh;        /* 9:16 ratio */
       background-color: white;
       gap: 0;
@@ -144,6 +214,57 @@
         transform: translateX(-100%);
       }
     }
+
+    /* Hand pointer overlay styles */
+    .video-cell {
+      position: relative;
+    }
+
+    .hand-pointer {
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      font-size: 1.75rem;
+      z-index: 20;
+      pointer-events: none;
+      animation: handBounceFlash 2s ease-in-out infinite;
+      filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
+      opacity: 0.75;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+    }
+
+    .touch-text {
+      font-size: 0.455rem;
+      font-weight: 600;
+      color: white;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+      line-height: 1;
+      opacity: 0.4;
+    }
+
+    @keyframes handBounceFlash {
+      0%, 100% {
+        transform: translate(0, 0) rotate(-15deg);
+        opacity: 1;
+      }
+      25% {
+        transform: translate(5px, 5px) rotate(-20deg);
+        opacity: 0.7;
+      }
+      50% {
+        transform: translate(8px, 8px) rotate(-15deg);
+        opacity: 1;
+      }
+      75% {
+        transform: translate(5px, 5px) rotate(-20deg);
+        opacity: 0.7;
+      }
+    }
   </style>
 </head>
 <body>
@@ -160,12 +281,48 @@
     </div>
 
     <!-- ✅ 6 วิดีโอด้านล่างแบบ 2 คอลัมน์ 3 แถว -->
-    <video src="./corporate/medias/dining.MP4" autoplay muted loop playsinline preload="metadata" onclick="navigate('./category.html?type=dining')"></video>
-    <video src="./corporate/medias/delivery.MP4" autoplay muted loop playsinline preload="metadata" onclick="navigate('./category.html?type=delivery')"></video>
-    <video src="./corporate/medias/daily.MP4" autoplay muted loop playsinline preload="metadata" onclick="navigate('./category.html?type=daily')"></video>
-    <video src="./corporate/medias/ondemand.MP4" autoplay muted loop playsinline preload="metadata" onclick="navigate('./category.html?type=ondemand')"></video>
-    <video src="./corporate/medias/deal.MP4" autoplay muted loop playsinline preload="metadata" onclick="navigate('./category.html?type=deal')"></video>
-    <video src="./corporate/medias/juristic.MP4" autoplay muted loop playsinline preload="metadata" onclick="navigate('./category.html?type=juristic')"></video>
+    <div class="video-cell">
+      <video src="./corporate/medias/dining.MP4" autoplay muted loop playsinline preload="metadata" onclick="navigate('./category.html?type=dining')"></video>
+      <div class="hand-pointer">
+        👆
+        <span class="touch-text">touch</span>
+      </div>
+    </div>
+    <div class="video-cell">
+      <video src="./corporate/medias/delivery.MP4" autoplay muted loop playsinline preload="metadata" onclick="navigate('./category.html?type=delivery')"></video>
+      <div class="hand-pointer">
+        👆
+        <span class="touch-text">touch</span>
+      </div>
+    </div>
+    <div class="video-cell">
+      <video src="./corporate/medias/daily.MP4" autoplay muted loop playsinline preload="metadata" onclick="navigate('./category.html?type=daily')"></video>
+      <div class="hand-pointer">
+        👆
+        <span class="touch-text">touch</span>
+      </div>
+    </div>
+    <div class="video-cell">
+      <video src="./corporate/medias/ondemand.MP4" autoplay muted loop playsinline preload="metadata" onclick="navigate('./category.html?type=ondemand')"></video>
+      <div class="hand-pointer">
+        👆
+        <span class="touch-text">touch</span>
+      </div>
+    </div>
+    <div class="video-cell">
+      <video src="./corporate/medias/deal.MP4" autoplay muted loop playsinline preload="metadata" onclick="navigate('./category.html?type=deal')"></video>
+      <div class="hand-pointer">
+        👆
+        <span class="touch-text">touch</span>
+      </div>
+    </div>
+    <div class="video-cell">
+      <video src="./corporate/medias/juristic.MP4" autoplay muted loop playsinline preload="metadata" onclick="navigate('./category.html?type=juristic')"></video>
+      <div class="hand-pointer">
+        👆
+        <span class="touch-text">touch</span>
+      </div>
+    </div>
 
     <!-- Countdown overlay -->
     <div id="countdownOverlay" style="
