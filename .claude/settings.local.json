@@ -105,7 +105,19 @@
       "Bash(else echo \"NOT FOUND: $dir\")",
       "Bash(do if [ -d \"$dir/.git\" ])",
       "Bash(then echo \"GIT REPO: $dir\")",
-      "Bash(else echo \"NOT A GIT REPO: $dir\")"
+      "Bash(else echo \"NOT A GIT REPO: $dir\")",
+      "Bash(git merge:*)",
+      "Bash(if [ -d \".git\" ])",
+      "Bash(then echo \"Has .git directory\")",
+      "Bash(else echo \"No .git directory - not a separate repo\")",
+      "Bash(rsync:*)",
+      "Bash(netlify status:*)",
+      "Bash(netlify sites:list:*)",
+      "Bash(.gitignore)",
+      "WebFetch(domain:www.kasikornbank.com)",
+      "Bash(del:*)",
+      "Bash(netlify init:*)",
+      "Bash(netlify sites:create:*)"
     ],
     "deny": [],
     "ask": []
