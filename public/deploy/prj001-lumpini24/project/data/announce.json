@@ -1,0 +1,79 @@
+[
+  {
+    "announcement_id": "ann001",
+    "title_th": "ขอน้อมส่งเสด็จสู่สวรรคาลัย",
+    "title_en": "In Remembrance of Her Majesty Queen Sirikit",
+    "date": "15/8/25",
+    "image": "./project/images/announcements/announce001.jpg",
+    "priority": "high",
+    "status": "active",
+    "created_date": "2025-08-10",
+    "display_duration": 8000
+  },
+  {
+    "announcement_id": "ann002",
+    "title_th": "แจ้งเปลี่ยนจุดรับ-ส่งชั่วคราวสำหรับไดร์เวอร์",
+    "title_en": "Temporary Change of Pick-up and Drop-off Points for Drivers",
+    "date": "28/8/25",
+    "image": "./project/images/announcements/announce002.jpg",
+    "priority": "medium",
+    "status": "active",
+    "created_date": "2025-08-22",
+    "display_duration": 6000
+  },
+  {
+    "announcement_id": "ann003",
+    "title_th": "เข้าปรับปรุงพื้นที่ส่วนกลาง เพื่อซ่อมพื้นแตกร้าว",
+    "title_en": "Repairs of Floor Cracks caused by Earthquake",
+    "date": "05/9/25",
+    "image": "./project/images/announcements/announce003.jpg",
+    "priority": "low",
+    "status": "active",
+    "created_date": "2025-08-30",
+    "display_duration": 4000
+  },
+  {
+    "announcement_id": "ann004",
+    "title_th": "จุดรับส่งอาหารชั่วคราวในช่วงซ่อมแซมพื้นที่ส่วนกลาง",
+    "title_en": "Temporary route to the food pick-up point during the maintenance work",
+    "date": "05/9/25",
+    "image": "./project/images/announcements/announce004.jpg",
+    "priority": "low",
+    "status": "active",
+    "created_date": "2025-08-30",
+    "display_duration": 4000
+  },
+  {
+    "announcement_id": "ann005",
+    "title_th": "ฉีดพ่นยากำจัดปลวก มด แมลง",
+    "title_en": "Insecticide Treatment for Termites, Ants and Insects",
+    "date": "05/9/25",
+    "image": "./project/images/announcements/announce005.jpg",
+    "priority": "low",
+    "status": "active",
+    "created_date": "2025-08-30",
+    "display_duration": 4000
+  },
+  {
+    "announcement_id": "ann006",
+    "title_th": "ขัดล้างพื้นห้องน้ำและพื้นทางเดินชั้น 41",
+    "title_en": "Clean the restroom and corridor on 41st floor",
+    "date": "05/9/25",
+    "image": "./project/images/announcements/announce006.jpg",
+    "priority": "low",
+    "status": "active",
+    "created_date": "2025-08-30",
+    "display_duration": 4000
+  },
+  {
+    "announcement_id": "ann007",
+    "title_th": "การยื่นเคลมประกันแผ่นดินไหว",
+    "title_en": "Documents for the earthquake insurance claim",
+    "date": "05/9/25",
+    "image": "./project/images/announcements/announce007.jpg",
+    "priority": "low",
+    "status": "active",
+    "created_date": "2025-08-30",
+    "display_duration": 4000
+  }
+]

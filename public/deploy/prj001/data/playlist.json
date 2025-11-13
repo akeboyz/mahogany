@@ -1,8 +1,0 @@
-{
-  "project_id": "prj001",
-  "loop": true,
-  "items": [
-    { "media_id": "unit001-01" },
-    { "media_id": "shop001-01" }
-  ]
-}
