@@ -8,7 +8,8 @@
     "priority": "high",
     "status": "active",
     "created_date": "2025-08-10",
-    "display_duration": 8000
+    "display_duration": 8000,
+    "display_location": "both"
   },
   {
     "announcement_id": "ann002",
@@ -19,7 +20,8 @@
     "priority": "medium",
     "status": "active",
     "created_date": "2025-08-22",
-    "display_duration": 5000
+    "display_duration": 5000,
+    "display_location": "both"
   },
   {
     "announcement_id": "ann003",
@@ -30,7 +32,8 @@
     "priority": "low",
     "status": "active",
     "created_date": "2025-08-30",
-    "display_duration": 7000
+    "display_duration": 7000,
+    "display_location": "category"
   },
   {
     "announcement_id": "ann004",
@@ -41,7 +44,7 @@
     "priority": "low",
     "status": "active",
     "created_date": "2025-08-30",
-    "display_duration": 4000
+    "display_duration": 4000,
+    "display_location": "both"
   }
-
 ]

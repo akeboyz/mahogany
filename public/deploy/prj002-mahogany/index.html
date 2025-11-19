@@ -697,9 +697,10 @@
         const announceRes = await fetch('./project/data/announce.json', {cache: 'no-store'});
         announcements = await announceRes.json();
 
-        // Find all active announcements
+        // Find all active announcements for index page
         const projectAnnouncements = announcements.filter(a =>
-          a.status === 'active'
+          a.status === 'active' &&
+          (!a.display_location || a.display_location === 'index' || a.display_location === 'both')
         );
 
         // Add each announcement as a separate item

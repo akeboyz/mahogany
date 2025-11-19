@@ -681,7 +681,8 @@
         console.log('Loaded announcements:', announcements.length);
 
         items = announcements.filter(item =>
-          item.status === 'active'
+          item.status === 'active' &&
+          (!item.display_location || item.display_location === 'category' || item.display_location === 'both')
         );
 
         // Transform announcement data
