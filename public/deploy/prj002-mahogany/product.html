@@ -1651,7 +1651,7 @@
       </div>
       <div class="modal-body">
         <div id="mapContainer" style="flex: 1; position: relative;">
-          <iframe id="mapIframe" width="100%" height="100%" frameborder="0" allowfullscreen style="display: none;"></iframe>
+          <iframe id="mapIframe" width="100%" height="100%" frameborder="0" allowfullscreen style="display: none; pointer-events: none;"></iframe>
           <!-- Yodeck fallback: QR code and static info -->
           <div id="mapFallback" style="display: none; text-align: center; padding: 40px;">
             <div style="font-size: 1.125rem; font-weight: bold; margin-bottom: 20px; color: #333;">Location Information</div>
@@ -2648,6 +2648,7 @@
           const callBtn = document.createElement('button');
           callBtn.className = 'contact-btn';
           callBtn.textContent = '📞 Call Now';
+          callBtn.addEventListener('click', () => showContactModal(product));
 
           let secondBtn = document.createElement('button');
           secondBtn.className = 'contact-btn secondary';
@@ -3277,6 +3278,10 @@
           // Show table reservation form with OTP
           showReservationModal(product);
           break;
+        case 'reservation_qr':
+          // Show reservation QR code
+          showReservationQRModal(product);
+          break;
         case 'shopping_cart':
           // Show shopping cart modal with checkout
           showShoppingCartModal(product);
@@ -3401,6 +3406,63 @@
       // TODO: Implement reservation form with guest count, phone, OTP
     }
 
+    function showReservationQRModal(product) {
+      if (!product.reservation_url) {
+        console.warn('No reservation URL for:', product.name_en);
+        return;
+      }
+
+      // Create modal if it doesn't exist
+      let modal = document.getElementById('reservationQRModal');
+      if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'reservationQRModal';
+        modal.className = 'condo-modal';
+        modal.innerHTML = `
+          <div class="modal-content" style="max-width: 46.3vh; max-height: 82.4vh; display: flex; flex-direction: column; overflow: hidden;">
+            <button class="modal-close" onclick="closeReservationQRModal()" style="width: 4.16vh; height: 4.16vh; font-size: 3.12vh;">×</button>
+            <div class="modal-header" style="padding: 2.08vh 2.08vh 1.56vh 2.08vh;">
+              <img id="reservationQRLogo" src="" alt="Logo" style="width: 6.24vh; height: 6.24vh; object-fit: contain; border-radius: 0.52vh;">
+              <div>
+                <h3 id="reservationQRTitle" style="font-size: 2.34vh; margin: 0;">Table Reservation</h3>
+                <p id="reservationQRSubtitle" style="font-size: 1.82vh; color: #666; margin: 0.52vh 0 0 0;"></p>
+              </div>
+            </div>
+            <div style="padding: 2.08vh; flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+              <div style="text-align: center; margin-bottom: 2.08vh;">
+                <div style="font-size: 1.82vh; color: #666; margin-bottom: 1.04vh;">Scan QR Code to Reserve Table</div>
+                <img id="reservationQRImage" src="" alt="Reservation QR Code" style="width: 31.2vh; height: 31.2vh; border: 0.52vh solid #ddd; border-radius: 1.04vh;">
+              </div>
+            </div>
+          </div>
+        `;
+        document.body.appendChild(modal);
+      }
+
+      // Populate modal
+      document.getElementById('reservationQRLogo').src = product.logo || '';
+      document.getElementById('reservationQRTitle').textContent = `Reserve Table at ${product.name_en || product.name_th}`;
+      document.getElementById('reservationQRSubtitle').textContent = product.location_en || product.location_th || '';
+
+      // Generate QR code for reservation URL
+      const qrImage = document.getElementById('reservationQRImage');
+      qrImage.src = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(product.reservation_url)}`;
+
+      // Show modal
+      modal.classList.add('show');
+      document.body.style.overflow = 'hidden';
+      resetAutoReturn();
+    }
+
+    function closeReservationQRModal() {
+      const modal = document.getElementById('reservationQRModal');
+      if (modal) {
+        modal.classList.remove('show');
+        document.body.style.overflow = 'auto';
+      }
+      resetAutoReturn();
+    }
+
     function showShoppingCartModal(product) {
       console.log('Show shopping cart modal for:', product.name_en);
       // TODO: Implement shopping cart with checkout and OTP
@@ -3413,7 +3475,64 @@
 
     function showContactModal(product) {
       console.log('Show contact modal for:', product.name_en);
-      // TODO: Implement contact modal with social media and QR codes
+
+      // Set logo
+      const logoElement = document.getElementById('contactModalLogo');
+      if (product.logo) {
+        logoElement.src = product.logo;
+        logoElement.style.display = 'block';
+      } else {
+        logoElement.style.display = 'none';
+      }
+
+      // Populate contact information
+      document.getElementById('contactModalTitle').textContent = product.name_en || product.name_th || 'Contact Information';
+      document.getElementById('contactModalSubtitle').textContent = product.location_en || product.location_th || '';
+
+      // Phone
+      const phoneElement = document.getElementById('contactPhoneNumber');
+      const phoneSection = document.getElementById('contactPhoneSection');
+
+      if (product.contact && product.contact.phone) {
+        phoneElement.innerHTML = product.contact.phone;
+        phoneSection.style.display = 'flex';
+      } else {
+        phoneSection.style.display = 'none';
+      }
+
+      // Line
+      const lineSection = document.getElementById('contactLineSection');
+      const lineElement = document.getElementById('contactLine');
+
+      if (product.contact && product.contact.line) {
+        lineElement.innerHTML = product.contact.line;
+        // Generate QR code for Line
+        const lineQR = document.getElementById('contactLineQR');
+        lineQR.src = 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=' + encodeURIComponent('https://line.me/ti/p/~' + product.contact.line);
+        lineSection.style.display = 'flex';
+      } else {
+        lineSection.style.display = 'none';
+      }
+
+      // Location
+      const locationSection = document.getElementById('contactLocationSection');
+      if (product.address_en || product.address_th) {
+        document.getElementById('contactAddress').textContent = product.address_en || product.address_th;
+        locationSection.style.display = 'flex';
+      } else {
+        locationSection.style.display = 'none';
+      }
+
+      // Show modal
+      document.getElementById('contactModal').classList.add('show');
+      document.body.style.overflow = 'hidden';
+      resetAutoReturn();
+    }
+
+    function closeContactModal() {
+      document.getElementById('contactModal').classList.remove('show');
+      document.body.style.overflow = 'auto';
+      resetAutoReturn();
     }
   </script>
   <!-- Condo CTA Modals -->
@@ -3590,6 +3709,57 @@
       </div>
     </div>
   </div> <!-- Close page-wrapper -->
+
+  <!-- Contact Modal -->
+  <div id="contactModal" class="condo-modal">
+    <div class="modal-content" style="max-width: 46.3vh; max-height: 82.4vh; display: flex; flex-direction: column; overflow: hidden;">
+      <button class="modal-close" onclick="closeContactModal()" style="width: 4.16vh; height: 4.16vh; font-size: 3.12vh;">×</button>
+      <div class="modal-header" style="padding: 2.08vh 2.08vh 1.56vh 2.08vh;">
+        <img id="contactModalLogo" src="" alt="Logo" style="width: 6.24vh; height: 6.24vh; object-fit: contain; border-radius: 0.52vh;">
+        <div>
+          <h3 id="contactModalTitle" style="font-size: 2.34vh; margin: 0;">Contact Information</h3>
+          <p id="contactModalSubtitle" style="font-size: 1.82vh; color: #666; margin: 0.52vh 0 0 0;"></p>
+        </div>
+      </div>
+      <div style="padding: 2.08vh; flex: 1; overflow-y: auto;">
+        <!-- Phone Section -->
+        <div id="contactPhoneSection" style="display: flex; align-items: center; gap: 1.66vh; padding: 1.66vh; background: #f8f9fa; border-radius: 1.04vh; margin-bottom: 1.66vh;">
+          <div style="font-size: 4.16vh;">📱</div>
+          <div style="flex: 1;">
+            <div style="font-size: 1.56vh; color: #666; margin-bottom: 0.52vh;">Phone</div>
+            <div id="contactPhoneNumber" style="font-size: 3.12vh; font-weight: 700; color: #333;"></div>
+          </div>
+        </div>
+
+        <!-- Line Section -->
+        <div id="contactLineSection" style="display: flex; flex-direction: column; gap: 1.25vh; padding: 1.66vh; background: #f8f9fa; border-radius: 1.04vh; margin-bottom: 1.66vh;">
+          <div style="display: flex; align-items: center; gap: 1.66vh; margin-bottom: 1.04vh;">
+            <div style="font-size: 4.16vh;">💬</div>
+            <div style="flex: 1;">
+              <div style="font-size: 1.56vh; color: #666; margin-bottom: 0.52vh;">Line ID</div>
+              <div id="contactLine" style="font-size: 3.12vh; font-weight: 700; color: #06C755;"></div>
+            </div>
+          </div>
+          <div style="text-align: center; padding: 1.25vh 0;">
+            <div style="font-size: 1.56vh; color: #666; margin-bottom: 1.04vh;">Scan QR Code to Add Line</div>
+            <img id="contactLineQR" src="" alt="Line QR Code" style="width: 15.6vh; height: 15.6vh; border: 0.26vh solid #06C755; border-radius: 1.04vh;">
+          </div>
+        </div>
+
+        <!-- Location Section -->
+        <div id="contactLocationSection" style="display: flex; align-items: flex-start; gap: 1.66vh; padding: 1.66vh; background: #f8f9fa; border-radius: 1.04vh;">
+          <div style="font-size: 4.16vh;">📍</div>
+          <div style="flex: 1;">
+            <div style="font-size: 1.56vh; color: #666; margin-bottom: 0.52vh;">Location</div>
+            <div id="contactAddress" style="font-size: 1.82vh; color: #333; line-height: 1.5;"></div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-buttons" style="padding: 0 2.08vh 2.08vh 2.08vh;">
+        <button class="modal-btn secondary" onclick="closeContactModal()" style="width: 100%; font-size: 2.08vh; padding: 1.56vh;">Close</button>
+      </div>
+    </div>
+  </div>
 
   <script>
     // Register Service Worker for media caching
