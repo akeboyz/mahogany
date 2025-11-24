@@ -1,0 +1,15 @@
+{
+  "_instructions": [
+    "Ticker messages displayed at bottom below A4 video",
+    "Max 50 characters per message",
+    "Scrolls until fully visible, pauses 2 sec, continues",
+    "Use - to separate phrases"
+  ],
+  "messages": [
+    "Sell - Rent - Buy Condo HERE",
+    "Order Pastries - Dine Vegan",
+    "Hair Cut with Sytle HERE",
+    "Renovate Apartment HERE",
+    "Many More Coming Soon Here"
+  ]
+}

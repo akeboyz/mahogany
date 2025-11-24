@@ -1,0 +1,14 @@
+{
+  "_instructions": [
+    "Ticker messages for each menu category in menu.html",
+    "Max 50 characters per message",
+    "Messages scroll continuously below each video category",
+    "Use - to separate phrases"
+  ],
+  "dining": "Fresh Cuisine - Reserve Table - Dine In",
+  "delivery": "Order Coffee or Pastries, Fast Delivery",
+  "daily": "Daily Essentials - Shop Now - Quick Pickup",
+  "ondemand": "Book Service - Spa - Salon - Wellness",
+  "deal": "Available Condo for Sale and Rent - List you Condo Here",
+  "juristic": "Residents Info - Announcements - Services"
+}

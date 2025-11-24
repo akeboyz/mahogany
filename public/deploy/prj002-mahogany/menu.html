@@ -150,37 +150,37 @@
     /* Back to Video button */
     .back-to-video {
       position: absolute;
-      top: 10px;
-      left: 10px;
+      top: 0.52vh;
+      left: 0.52vh;
       z-index: 80;
       margin: 0;
-      padding: 5px 10px;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 13px;
+      padding: 0.26vh 0.52vh;
+      border: 0.05vh solid rgba(255, 255, 255, 0.1);
+      border-radius: 0.68vh;
       background: rgba(0, 0, 0, 0.15);
-      backdrop-filter: blur(8px);
+      backdrop-filter: blur(0.42vh);
       box-shadow: none;
       color: #fff;
       font-weight: 600;
-      font-size: 0.9375rem;
-      letter-spacing: 0.3px;
-      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
+      font-size: 1.46vh;
+      letter-spacing: 0.016vh;
+      text-shadow: 0 0.1vh 0.42vh rgba(0, 0, 0, 0.8);
       display: flex;
       align-items: center;
-      gap: 5px;
+      gap: 0.26vh;
       cursor: pointer;
       user-select: none;
       transition: all 0.3s ease;
     }
     .back-to-video::before {
       content: "‹‹";
-      font-size: 0.8125rem;
+      font-size: 1.27vh;
       font-weight: 400;
     }
     .back-to-video:hover {
       background: rgba(0, 0, 0, 0.25);
       border-color: rgba(255, 255, 255, 0.2);
-      transform: translateY(-2px);
+      transform: translateY(-0.1vh);
     }
 
     /* Running text overlay */
@@ -190,9 +190,9 @@
       left: 0;
       width: 100%;
       background: rgba(0, 0, 0, 0.0756);
-      backdrop-filter: blur(8px);
+      backdrop-filter: blur(0.42vh);
       color: white;
-      padding: 12px 0;
+      padding: 0.63vh 0;
       overflow: hidden;
       z-index: 10;
       pointer-events: none;
@@ -202,9 +202,9 @@
       display: inline-block;
       white-space: nowrap;
       animation: scroll-left-immediate 60s linear infinite;
-      font-size: 1.35rem;
+      font-size: 2.1vh;
       font-weight: 500;
-      letter-spacing: 0.45px;
+      letter-spacing: 0.024vh;
     }
 
     @keyframes scroll-left-immediate {
@@ -223,27 +223,27 @@
 
     .hand-pointer {
       position: absolute;
-      bottom: 10px;
-      right: 10px;
-      font-size: 1.75rem;
+      top: 0.5vh;
+      right: 0.5vh;
+      font-size: 2.5vh;
       z-index: 20;
       pointer-events: none;
       animation: handBounceFlash 2s ease-in-out infinite;
-      filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
+      filter: drop-shadow(0 0.1vh 0.2vh rgba(0, 0, 0, 0.5));
       opacity: 0.75;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 2px;
+      gap: 0.1vh;
     }
 
     .touch-text {
-      font-size: 0.455rem;
+      font-size: 0.65vh;
       font-weight: 600;
       color: white;
       text-transform: uppercase;
-      letter-spacing: 0.5px;
-      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+      letter-spacing: 0.03vh;
+      text-shadow: 0 0.1vh 0.2vh rgba(0, 0, 0, 0.8);
       line-height: 1;
       opacity: 0.4;
     }
@@ -254,16 +254,50 @@
         opacity: 1;
       }
       25% {
-        transform: translate(5px, 5px) rotate(-20deg);
+        transform: translate(0.3vh, 0.3vh) rotate(-20deg);
         opacity: 0.7;
       }
       50% {
-        transform: translate(8px, 8px) rotate(-15deg);
+        transform: translate(0.5vh, 0.5vh) rotate(-15deg);
         opacity: 1;
       }
       75% {
-        transform: translate(5px, 5px) rotate(-20deg);
+        transform: translate(0.3vh, 0.3vh) rotate(-20deg);
         opacity: 0.7;
+      }
+    }
+
+    /* Menu Ticker styles */
+    .menu-ticker {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 5.17vh;
+      background: rgba(0, 0, 0, 0.25);
+      overflow: hidden;
+      z-index: 15;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .menu-ticker-text {
+      white-space: nowrap;
+      font-size: 2.75vh;
+      font-weight: 700;
+      color: #ffffff;
+      letter-spacing: 0.14vh;
+      text-shadow: 0 0.18vh 0.66vh rgba(0, 0, 0, 0.8);
+      animation: menuTickerScroll 14s linear infinite;
+    }
+
+    @keyframes menuTickerScroll {
+      0% {
+        transform: translateX(100%);
+      }
+      100% {
+        transform: translateX(-100%);
       }
     }
   </style>
@@ -288,12 +322,18 @@
         👆
         <span class="touch-text">touch</span>
       </div>
+      <div class="menu-ticker">
+        <div class="menu-ticker-text" data-category="dining"></div>
+      </div>
     </div>
     <div class="video-cell">
       <video src="./corporate/medias/delivery.MP4" autoplay muted loop playsinline preload="metadata" onclick="navigate('./category.html?type=delivery')"></video>
       <div class="hand-pointer">
         👆
         <span class="touch-text">touch</span>
+      </div>
+      <div class="menu-ticker">
+        <div class="menu-ticker-text" data-category="delivery"></div>
       </div>
     </div>
     <div class="video-cell">
@@ -302,12 +342,18 @@
         👆
         <span class="touch-text">touch</span>
       </div>
+      <div class="menu-ticker">
+        <div class="menu-ticker-text" data-category="daily"></div>
+      </div>
     </div>
     <div class="video-cell">
       <video src="./corporate/medias/ondemand.MP4" autoplay muted loop playsinline preload="metadata" onclick="navigate('./category.html?type=ondemand')"></video>
       <div class="hand-pointer">
         👆
         <span class="touch-text">touch</span>
+      </div>
+      <div class="menu-ticker">
+        <div class="menu-ticker-text" data-category="ondemand"></div>
       </div>
     </div>
     <div class="video-cell">
@@ -316,6 +362,9 @@
         👆
         <span class="touch-text">touch</span>
       </div>
+      <div class="menu-ticker">
+        <div class="menu-ticker-text" data-category="deal"></div>
+      </div>
     </div>
     <div class="video-cell">
       <video src="./corporate/medias/juristic.MP4" autoplay muted loop playsinline preload="metadata" onclick="navigate('./category.html?type=juristic')"></video>
@@ -323,33 +372,36 @@
         👆
         <span class="touch-text">touch</span>
       </div>
+      <div class="menu-ticker">
+        <div class="menu-ticker-text" data-category="juristic"></div>
+      </div>
     </div>
 
     <!-- Countdown overlay -->
     <div id="countdownOverlay" style="
       position: absolute;
-      top: 10px;
-      right: 10px;
+      top: 0.52vh;
+      right: 0.52vh;
     margin: 0;
-    padding: 3px 7px;
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    border-radius: 7px;
+    padding: 0.16vh 0.36vh;
+    border: 0.05vh solid rgba(255, 255, 255, 0.3);
+    border-radius: 0.36vh;
     background: rgba(255, 255, 255, 0.2);
-    backdrop-filter: blur(4px);
+    backdrop-filter: blur(0.21vh);
     box-shadow: none;
     color: #fff;
     font-weight: 600;
-    font-size: 8px;
-    letter-spacing: 0.1px;
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.7);
+    font-size: 0.42vh;
+    letter-spacing: 0.005vh;
+    text-shadow: 0 0.05vh 0.16vh rgba(0, 0, 0, 0.7);
     display: flex;
     align-items: center;
     cursor: pointer;
     user-select: none;
     transition: all 0.3s ease;
     white-space: nowrap;
-    min-width: 35px;
-    height: 20px;
+    min-width: 1.82vh;
+    height: 1.04vh;
     justify-content: center;
     z-index: 100;
     animation: blink 1.2s ease-in-out infinite;
@@ -375,6 +427,31 @@ function navigate(url) {
   clearTimeout(timeout);
   location.href = url;
 }
+
+// Load menu ticker messages
+(async function() {
+  try {
+    console.log('🔍 Loading menu ticker messages...');
+    const response = await fetch('./corporate/data/menu-ticker.json');
+    if (!response.ok) {
+      console.warn('❌ Could not load menu-ticker.json');
+      return;
+    }
+    const tickerData = await response.json();
+    console.log('✅ Loaded menu ticker data:', tickerData);
+
+    // Set text for each category ticker
+    document.querySelectorAll('.menu-ticker-text').forEach(element => {
+      const category = element.getAttribute('data-category');
+      if (tickerData[category]) {
+        element.textContent = tickerData[category];
+        console.log(`✅ Set ticker for ${category}:`, tickerData[category]);
+      }
+    });
+  } catch (error) {
+    console.error('❌ Failed to load menu ticker:', error);
+  }
+})();
 
     // ✅ Auto Return หากไม่มีการแตะจอเกิน 1 นาที
     let timeout;

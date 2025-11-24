@@ -399,6 +399,46 @@
       right: 24px;
     }
 
+    /* Ticker styles */
+    #ticker {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 20.84vh;
+      background: rgba(0, 0, 0, 0.85);
+      overflow: hidden;
+      z-index: 75;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #tickerText {
+      white-space: nowrap;
+      font-size: 10vh;
+      font-weight: 700;
+      color: #ffffff;
+      letter-spacing: 0.252vh;
+      text-shadow: 0 0.4vh 1.68vh rgba(0, 0, 0, 0.8), 0 0 4.16vh rgba(255, 255, 255, 0.3);
+      transform: translateX(100%);
+      animation: none;
+      z-index: 100;
+    }
+
+    @keyframes tickerScrollToLeft {
+      0% {
+        transform: translateX(100%);
+      }
+      100% {
+        transform: translateX(-100%);
+      }
+    }
+
+    #tickerText.scrolling {
+      animation: tickerScroll linear forwards;
+    }
+
   </style>
 </head>
 <body>
@@ -438,6 +478,11 @@
       <!-- Video navigation buttons -->
       <div id="navBack" class="nav-button" tabindex="0">«</div>
       <div id="navNext" class="nav-button" tabindex="0">»</div>
+
+      <!-- Ticker at bottom -->
+      <div id="ticker">
+        <div id="tickerText"></div>
+      </div>
 
       <!-- overlay อื่นในเฟรม -->
       <div id="status"></div>
@@ -1003,6 +1048,7 @@
         const menuPreview = document.getElementById('menuPreview');
         const navBack = document.getElementById('navBack');
         const navNext = document.getElementById('navNext');
+        const ticker = document.getElementById('ticker');
 
         if (!menuPreview) {
           console.error('Menu preview iframe not found');
@@ -1015,9 +1061,10 @@
         // Show menu preview iframe
         menuPreview.style.display = 'block';
 
-        // Hide CTA buttons during menu preview, but KEEP navigation buttons visible
+        // Hide CTA buttons and ticker during menu preview, but KEEP navigation buttons visible
         ctaHead.style.display = 'none';
         ctaMain.style.display = 'none';
+        if (ticker) ticker.style.display = 'none';
         if (navBack) navBack.style.display = 'inline-flex';
         if (navNext) navNext.style.display = 'inline-flex';
 
@@ -1033,10 +1080,11 @@
           await sleep(100); // Check every 100ms
         }
 
-        // Hide menu preview, restore CTAs
+        // Hide menu preview, restore CTAs and ticker
         menuPreview.style.display = 'none';
         ctaHead.style.display = 'inline-flex';
         ctaMain.style.display = 'inline-flex';
+        if (ticker) ticker.style.display = 'flex';
 
         console.log('✅ Menu preview ended');
       }
@@ -1711,6 +1759,125 @@
     }
 
     init();
+  })();
+
+  // Ticker functionality
+  (function(){
+    let tickerMessages = [];
+    let currentMessageIndex = 0;
+    const PAUSE_DURATION = 2000; // 2 seconds pause when fully visible
+    const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+    async function loadTickerMessages(){
+      try {
+        console.log('🔍 Attempting to load ticker.json...');
+        const response = await fetch('./corporate/data/ticker.json', {cache: 'default'});
+        if (!response.ok) {
+          console.warn('❌ Could not load ticker.json, status:', response.status);
+          return;
+        }
+        const data = await response.json();
+        tickerMessages = data.messages || [];
+        console.log('✅ Loaded ticker messages:', tickerMessages.length, tickerMessages);
+      } catch (error) {
+        console.error('❌ Failed to load ticker messages:', error);
+      }
+    }
+
+    function calculateScrollDuration(text) {
+      // Calculate duration for full scroll: right edge to completely off left
+      const textWidth = text.length * 29; // 48px font ~= 29px per char
+      const screenWidth = 1080;
+      const totalDistance = screenWidth + textWidth; // Full journey
+      const pixelsPerSecond = 150;
+      return (totalDistance / pixelsPerSecond) * 1000;
+    }
+
+    async function animateMessage(){
+      if (tickerMessages.length === 0) return;
+
+      const tickerText = document.getElementById('tickerText');
+      if (!tickerText) {
+        console.error('❌ tickerText element not found!');
+        return;
+      }
+
+      const message = tickerMessages[currentMessageIndex];
+      console.log('📰 Animating message:', message);
+      tickerText.textContent = message;
+
+      // Reset to starting position (off-screen right)
+      tickerText.style.animation = 'none';
+      tickerText.style.transform = 'translateX(100%)';
+
+      // Force reflow to reset animation
+      void tickerText.offsetWidth;
+
+      // Calculate animation duration for full scroll
+      const fullDuration = calculateScrollDuration(message);
+      const textWidth = message.length * 29;
+      const screenWidth = 1080;
+
+      // Time to scroll from right edge (100%) until text fully visible at left (text's right edge at left edge of screen)
+      // That's when transform = -100% (text shifted left by its full width)
+      const timeToReachLeft = (screenWidth / (screenWidth + textWidth)) * fullDuration;
+
+      // Apply animation - scroll from right (100%) to off-screen left (-100%)
+      tickerText.style.animation = `tickerScrollToLeft ${fullDuration}ms linear`;
+      console.log('✅ Animation started, will pause at', timeToReachLeft, 'ms');
+
+      // Wait until text reaches left edge (fully visible)
+      await sleep(timeToReachLeft);
+
+      // PAUSE animation at left edge
+      tickerText.style.animationPlayState = 'paused';
+      console.log('⏸️ PAUSED at left edge for 2 seconds');
+      await sleep(PAUSE_DURATION);
+
+      // RESUME - continue scrolling off screen
+      tickerText.style.animationPlayState = 'running';
+      console.log('▶️ RESUMED scrolling off screen');
+
+      // Wait for rest of animation (scrolling off screen)
+      const remainingDuration = fullDuration - timeToReachLeft;
+      await sleep(remainingDuration);
+
+      // Move to next message
+      currentMessageIndex = (currentMessageIndex + 1) % tickerMessages.length;
+      console.log('➡️ Next message index:', currentMessageIndex);
+
+      // Small gap before next message
+      await sleep(300);
+
+      // Recursively animate next message
+      animateMessage();
+    }
+
+    async function initTicker(){
+      console.log('🚀 Initializing ticker...');
+      const tickerElement = document.getElementById('ticker');
+      const tickerText = document.getElementById('tickerText');
+
+      console.log('Ticker element:', tickerElement);
+      console.log('TickerText element:', tickerText);
+
+      await loadTickerMessages();
+      if (tickerMessages.length > 0) {
+        console.log('✅ Starting ticker animation with', tickerMessages.length, 'messages');
+        animateMessage();
+      } else {
+        console.warn('⚠️ No ticker messages to display');
+        if (tickerElement) tickerElement.style.display = 'none';
+      }
+    }
+
+    // Auto-initialize ticker when DOM is ready
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initTicker);
+    } else {
+      // DOM already loaded, initialize immediately
+      initTicker();
+    }
   })();
   </script>
 </body>
