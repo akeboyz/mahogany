@@ -677,7 +677,8 @@
       }
       else if (type === 'juristic') {
         const response = await fetch('./project/data/announce.json');
-        const announcements = await response.json();
+        const announceData = await response.json();
+        const announcements = announceData.announcements || announceData; // Support both old and new format
         console.log('Loaded announcements:', announcements.length);
 
         items = announcements.filter(item =>

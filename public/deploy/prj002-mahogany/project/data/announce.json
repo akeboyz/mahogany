@@ -1,62 +1,73 @@
-[
-  {
-    "announcement_id": "ann001",
-    "title_th": "น้อมสำนึกในพระมหากรุณาธิคุณฯ",
-    "title_en": "In Remembrance of Her Majesty Queen Sirikit",
-    "date": "15/8/25",
-    "image": "./project/images/announcements/announce001.jpg",
-    "priority": "high",
-    "status": "active",
-    "created_date": "2025-08-10",
-    "display_duration": 8000,
-    "display_location": "both"
-  },
-  {
-    "announcement_id": "ann002",
-    "title_th": "แจ้งกำหนดการเปิดใช้ลิฟท์หมายเลข 1",
-    "title_en": "The Schedule for Reopening of Passenger Elevator #1",
-    "date": "28/8/25",
-    "image": "./project/images/announcements/announce002.jpg",
-    "priority": "medium",
-    "status": "active",
-    "created_date": "2025-08-22",
-    "display_duration": 5000,
-    "display_location": "both"
-  },
-  {
-    "announcement_id": "ann003",
-    "title_th": "เชิญเข้าร่วมกิจกรรมฝึกซ้อมอพยพหนีไฟ ประจำปี 2568",
-    "title_en": "The annual fire drill 20225",
-    "date": "05/9/25",
-    "image": "./project/images/announcements/announce003.jpg",
-    "priority": "low",
-    "status": "active",
-    "created_date": "2025-08-30",
-    "display_duration": 7000,
-    "display_location": "category"
-  },
-  {
-    "announcement_id": "ann004",
-    "title_th": "ขอความร่วมมือคัดแยกขยะ",
-    "title_en": "Your Cooperation in Separating Waste",
-    "date": "05/9/25",
-    "image": "./project/images/announcements/announce004.jpg",
-    "priority": "low",
-    "status": "active",
-    "created_date": "2025-08-30",
-    "display_duration": 4000,
-    "display_location": "both"
-  },
-  {
-    "announcement_id": "ann005",
-    "title_th": "ซ่อมน้ำรั่วและฝ้าเพดานบริเวณชั้น 5",
-    "title_en": "Water leak and ceiling repair workson 5th floor",
-    "date": "05/9/25",
-    "image": "./project/images/announcements/announce005.jpg",
-    "priority": "low",
-    "status": "active",
-    "created_date": "2025-08-30",
-    "display_duration": 4000,
-    "display_location": "both"
-  }
-]
+{
+  "_instructions": [
+    "Announcement configuration for digital signage",
+    "display_location options:",
+    "  - 'both': Display on both index.html and category.html",
+    "  - 'category': Display only on category.html",
+    "priority options: 'high', 'medium', 'low'",
+    "display_duration: Time in milliseconds (e.g., 5000 = 5 seconds)",
+    "status: 'active' or 'inactive'"
+  ],
+  "announcements": [
+    {
+      "announcement_id": "ann001",
+      "title_th": "น้อมสำนึกในพระมหากรุณาธิคุณฯ",
+      "title_en": "In Remembrance of Her Majesty Queen Sirikit",
+      "date": "15/8/25",
+      "image": "./project/images/announcements/announce001.jpg",
+      "priority": "high",
+      "status": "active",
+      "created_date": "2025-08-10",
+      "display_duration": 8000,
+      "display_location": "both"
+    },
+    {
+      "announcement_id": "ann002",
+      "title_th": "แจ้งกำหนดการเปิดใช้ลิฟท์หมายเลข 1",
+      "title_en": "The Schedule for Reopening of Passenger Elevator #1",
+      "date": "28/8/25",
+      "image": "./project/images/announcements/announce002.jpg",
+      "priority": "medium",
+      "status": "active",
+      "created_date": "2025-08-22",
+      "display_duration": 5000,
+      "display_location": "both"
+    },
+    {
+      "announcement_id": "ann003",
+      "title_th": "เชิญเข้าร่วมกิจกรรมฝึกซ้อมอพยพหนีไฟ ประจำปี 2568",
+      "title_en": "The annual fire drill 20225",
+      "date": "05/9/25",
+      "image": "./project/images/announcements/announce003.jpg",
+      "priority": "low",
+      "status": "active",
+      "created_date": "2025-08-30",
+      "display_duration": 7000,
+      "display_location": "category"
+    },
+    {
+      "announcement_id": "ann004",
+      "title_th": "ขอความร่วมมือคัดแยกขยะ",
+      "title_en": "Your Cooperation in Separating Waste",
+      "date": "05/9/25",
+      "image": "./project/images/announcements/announce004.jpg",
+      "priority": "low",
+      "status": "active",
+      "created_date": "2025-08-30",
+      "display_duration": 4000,
+      "display_location": "both"
+    },
+    {
+      "announcement_id": "ann005",
+      "title_th": "ซ่อมน้ำรั่วและฝ้าเพดานบริเวณชั้น 5",
+      "title_en": "Water leak and ceiling repair workson 5th floor",
+      "date": "05/9/25",
+      "image": "./project/images/announcements/announce005.jpg",
+      "priority": "low",
+      "status": "active",
+      "created_date": "2025-08-30",
+      "display_duration": 4000,
+      "display_location": "both"
+    }
+  ]
+}

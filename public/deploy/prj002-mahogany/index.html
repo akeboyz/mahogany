@@ -740,7 +740,8 @@
       let announcements = [];
       try {
         const announceRes = await fetch('./project/data/announce.json', {cache: 'no-store'});
-        announcements = await announceRes.json();
+        const announceData = await announceRes.json();
+        announcements = announceData.announcements || announceData; // Support both old and new format
 
         // Find all active announcements for index page
         const projectAnnouncements = announcements.filter(a =>
