@@ -1,9 +1,13 @@
-# Project PRJ001 - The Sukhumvit Residence
+# Project PRJ001 - Lumpini 24
 ## Deployment Package
 
-This is a standalone deployment package for **The Sukhumvit Residence** (prj001) that can be deployed to:
+This is a standalone deployment package for **Lumpini 24** (prj001-lumpini24) that can be deployed to:
 - ✅ **Netlify** (as web app)
 - ✅ **Yodeck** (loads Netlify URL as HTML app)
+
+## 🔗 Repository
+- **GitHub**: https://github.com/akeboyz/Lumpini24
+- **Remote**: origin → https://github.com/akeboyz/Lumpini24.git
 
 ## 📁 Package Contents
 

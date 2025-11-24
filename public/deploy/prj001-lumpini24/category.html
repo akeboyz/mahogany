@@ -246,7 +246,7 @@
       50% { opacity: 0.4; }
     }
 
-    /* Category text overlay */
+    /* Running text overlay for category banner */
     .category-text-overlay {
       position: absolute;
       bottom: 0;
@@ -294,9 +294,8 @@
       <div id="prevCategoryBtn" class="category-nav-btn prev blink">‹‹</div>
       <div id="nextCategoryBtn" class="category-nav-btn next blink">››</div>
       <div id="backBtn" class="back-to-menu blink">Menu</div>
-      <div class="category-text-overlay">
-        <div class="category-text-overlay-content" id="categoryTextOverlay">
-        </div>
+      <div id="categoryTextOverlay" class="category-text-overlay">
+        <div class="category-text-overlay-content"></div>
       </div>
     </div>
 
@@ -365,10 +364,7 @@
 
   console.log('Parameters:', { type });
 
-  // Category navigation order (looping)
-  const categoryOrder = ['dining', 'delivery', 'daily', 'ondemand', 'deal', 'juristic'];
-
-  // Category text overlay content
+  // Category text overlays
   const categoryTexts = {
     'dining': 'ค้นหาร้านอาหารใกล้โครงการ พร้อมบริการจองโต๊ะจากร้านพาร์ทเนอร์ &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; Find nearby restaurants and reserve your table with ease.',
     'delivery': 'สั่งอาหารจากร้านดังถึงห้องของคุณได้ทันที &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp; Order your favorite meals delivered straight to your room.',
@@ -379,8 +375,13 @@
   };
 
   // Set category text overlay
-  const categoryTextOverlay = document.getElementById('categoryTextOverlay');
-  categoryTextOverlay.innerHTML = categoryTexts[type] || '';
+  const overlayContent = document.querySelector('.category-text-overlay-content');
+  if (overlayContent && categoryTexts[type]) {
+    overlayContent.innerHTML = categoryTexts[type];
+  }
+
+  // Category navigation order (looping)
+  const categoryOrder = ['dining', 'delivery', 'daily', 'ondemand', 'deal', 'juristic'];
 
   function navigateCategory(direction) {
     const currentIndex = categoryOrder.indexOf(type);
@@ -680,7 +681,8 @@
         console.log('Loaded announcements:', announcements.length);
 
         items = announcements.filter(item =>
-          item.status === 'active'
+          item.status === 'active' &&
+          (!item.display_location || item.display_location === 'category' || item.display_location === 'both')
         );
 
         // Transform announcement data

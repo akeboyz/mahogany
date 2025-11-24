@@ -1,6 +1,16 @@
-[
-  {
-    "announcement_id": "ann001",
+{
+  "_instructions": [
+    "Announcement configuration for digital signage",
+    "display_location options:",
+    "  - 'both': Display on both index.html and category.html",
+    "  - 'category': Display only on category.html",
+    "priority options: 'high', 'medium', 'low'",
+    "display_duration: Time in milliseconds (e.g., 5000 = 5 seconds)",
+    "status: 'active' or 'inactive'"
+  ],
+  "announcements": [
+    {
+      "announcement_id": "ann001",
     "title_th": "ขอน้อมส่งเสด็จสู่สวรรคาลัย",
     "title_en": "In Remembrance of Her Majesty Queen Sirikit",
     "date": "15/8/25",
@@ -8,7 +18,8 @@
     "priority": "high",
     "status": "active",
     "created_date": "2025-08-10",
-    "display_duration": 8000
+    "display_duration": 8000,
+    "display_location": "both"
   },
   {
     "announcement_id": "ann002",
@@ -19,7 +30,8 @@
     "priority": "medium",
     "status": "active",
     "created_date": "2025-08-22",
-    "display_duration": 6000
+    "display_duration": 6000,
+    "display_location": "both"
   },
   {
     "announcement_id": "ann003",
@@ -30,7 +42,8 @@
     "priority": "low",
     "status": "active",
     "created_date": "2025-08-30",
-    "display_duration": 4000
+    "display_duration": 4000,
+    "display_location": "both"
   },
   {
     "announcement_id": "ann004",
@@ -41,7 +54,8 @@
     "priority": "low",
     "status": "active",
     "created_date": "2025-08-30",
-    "display_duration": 4000
+    "display_duration": 4000,
+    "display_location": "category"
   },
   {
     "announcement_id": "ann005",
@@ -52,7 +66,8 @@
     "priority": "low",
     "status": "active",
     "created_date": "2025-08-30",
-    "display_duration": 4000
+    "display_duration": 4000,
+    "display_location": "category"
   },
   {
     "announcement_id": "ann006",
@@ -63,7 +78,8 @@
     "priority": "low",
     "status": "active",
     "created_date": "2025-08-30",
-    "display_duration": 4000
+    "display_duration": 4000,
+    "display_location": "category"
   },
   {
     "announcement_id": "ann007",
@@ -74,6 +90,44 @@
     "priority": "low",
     "status": "active",
     "created_date": "2025-08-30",
-    "display_duration": 4000
+    "display_duration": 4000,
+    "display_location": "category"
+  },
+  {
+    "announcement_id": "ann008",
+    "title_th": "งานซ่อมแซมโถงหน้าลิฟท์ขนของ ห้องไฟฟ้า ห้องซักรีด",
+    "title_en": "Repair Work in the Service Elevator Lobby, Electrical Room and Laundry Room",
+    "date": "05/9/25",
+    "image": "./project/images/announcements/announce008.jpg",
+    "priority": "low",
+    "status": "active",
+    "created_date": "2025-08-30",
+    "display_duration": 4000,
+    "display_location": "both"
+  },
+  {
+    "announcement_id": "ann009",
+    "title_th": "งานซ่อมแซมโถงหน้าลิฟท์ขนของ ห้องไฟฟ้า ห้องซักรีด",
+    "title_en": "Repair Work in the Service Elevator Lobby, Electrical Room and Laundry Room",
+    "date": "05/9/25",
+    "image": "./project/images/announcements/announce009.jpg",
+    "priority": "low",
+    "status": "active",
+    "created_date": "2025-08-30",
+    "display_duration": 4000,
+    "display_location": "both"
+  },
+  {
+    "announcement_id": "ann010",
+    "title_th": "การโรยตัวเพื่อดำเนินการแก้ไขน้ำรั่วซึมเร่งด่วน",
+    "title_en": "Urgent Seal Reparation for the Exterior",
+    "date": "05/9/25",
+    "image": "./project/images/announcements/announce010.jpg",
+    "priority": "low",
+    "status": "active",
+    "created_date": "2025-08-30",
+    "display_duration": 4000,
+    "display_location": "both"
   }
-]
+  ]
+}
