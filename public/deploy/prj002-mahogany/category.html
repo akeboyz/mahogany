@@ -304,28 +304,28 @@
     <!-- Countdown overlay -->
     <div id="countdownOverlay" style="
       position: absolute;
-      top: 10px;
-      right: 10px;
+      top: 1.04vh;
+      right: 1.04vh;
       margin: 0;
-      padding: 3px 7px;
-      border: 1px solid rgba(255, 255, 255, 0.3);
-      border-radius: 7px;
+      padding: 0.45vh 1.04vh;
+      border: 0.1vh solid rgba(255, 255, 255, 0.3);
+      border-radius: 1.04vh;
       background: rgba(255, 255, 255, 0.2);
-      backdrop-filter: blur(4px);
+      backdrop-filter: blur(0.4vh);
       box-shadow: none;
       color: #fff;
       font-weight: 600;
-      font-size: 0.5rem;
-      letter-spacing: 0.1px;
-      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.7);
+      font-size: 1.6vh;
+      letter-spacing: 0.01vh;
+      text-shadow: 0 0.1vh 0.3vh rgba(0, 0, 0, 0.7);
       display: flex;
       align-items: center;
       cursor: pointer;
       user-select: none;
       transition: all 0.3s ease;
       white-space: nowrap;
-      min-width: 35px;
-      height: 20px;
+      min-width: 3.6vh;
+      height: 2.96vh;
       justify-content: center;
       z-index: 100;
       animation: blink 1.2s ease-in-out infinite;
@@ -1188,6 +1188,19 @@
       }
     }
   }
+
+  // ==================== PIP Video Pass-through ====================
+  // Intercept navigation to product.html to preserve PIP video state
+  document.addEventListener('click', function(e) {
+    const target = e.target;
+    // Check if clicking on a card that leads to product.html
+    const card = target.closest('.item-card, .product-card');
+    if (card) {
+      // PIP data should already be in localStorage from index.html
+      // Just let it pass through - product.html will pick it up
+      console.log('📹 Navigating to product.html, PIP data preserved');
+    }
+  }, true);
 </script>
 </body>
 </html>

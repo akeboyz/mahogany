@@ -1589,6 +1589,78 @@
       display: flex;
       flex-direction: column;
     }
+
+    /* ================== Mini Video Player (PIP) ================== */
+    #miniVideoPlayer {
+      position: fixed;
+      width: 30vh;
+      height: 53.33vh; /* 9:16 aspect ratio */
+      bottom: 10vh;
+      right: 5vh;
+      z-index: 9999;
+      border-radius: 2vh;
+      overflow: hidden;
+      box-shadow: 0 1vh 3vh rgba(0, 0, 0, 0.5);
+      background: #000;
+      display: none;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      touch-action: none;
+      cursor: move;
+    }
+
+    #miniVideoPlayer.show {
+      display: block;
+      opacity: 1;
+    }
+
+    #miniVideoPlayer video {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      background: #000;
+    }
+
+    #miniVideoPlayer .mini-controls {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      padding: 1.5vh;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: linear-gradient(to bottom, rgba(0,0,0,0.7), transparent);
+      z-index: 10;
+    }
+
+    #miniVideoPlayer .mini-btn {
+      width: 4vh;
+      height: 4vh;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.9);
+      border: none;
+      color: #333;
+      font-size: 2.5vh;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      line-height: 1;
+    }
+
+    #miniVideoPlayer .mini-btn:active {
+      transform: scale(0.9);
+      background: rgba(255, 255, 255, 1);
+    }
+
+    #miniVideoPlayer .expand-btn {
+      background: rgba(255, 255, 255, 0.3);
+      color: #fff;
+      font-size: 2vh;
+    }
   </style>
 </head>
 <body>
@@ -1651,15 +1723,15 @@
       </div>
       <div class="modal-body">
         <div id="mapContainer" style="flex: 1; position: relative;">
-          <iframe id="mapIframe" width="100%" height="100%" frameborder="0" allowfullscreen style="display: none; pointer-events: none;"></iframe>
-          <!-- Yodeck fallback: QR code and static info -->
+          <iframe id="mapIframe" width="100%" height="100%" frameborder="0" allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade" style="display: none;"></iframe>
+          <!-- Fallback: QR code and static info when map fails to load -->
           <div id="mapFallback" style="display: none; text-align: center; padding: 40px;">
-            <div style="font-size: 1.125rem; font-weight: bold; margin-bottom: 20px; color: #333;">Location Information</div>
+            <div style="font-size: 1.125rem; font-weight: bold; margin-bottom: 20px; color: #333;">Location Map</div>
             <div id="fallbackQR" style="margin-bottom: 20px;">
               <img id="fallbackQRImage" style="width: 120px; height: 120px; border: 2px solid #ddd; border-radius: 12px;" alt="QR Code">
               <div style="font-size: 0.875rem; color: #666; margin-top: 8px;">Scan to open in Maps</div>
             </div>
-            <div id="fallbackAddress" style="font-size: 1rem; color: #555; line-height: 1.4;"></div>
+            <div id="fallbackAddress" style="font-size: 1rem; color: #555; line-height: 1.4; margin-top: 20px;"></div>
           </div>
         </div>
         <div style="padding: 16px 20px; background: #f8f9fa; border-top: 1px solid #eee; flex-shrink: 0;">
@@ -2700,50 +2772,32 @@
       const contact = document.getElementById('mapContact');
       const qrSection = document.getElementById('qrCodeSection');
       const qrImage = document.getElementById('qrCodeImage');
+      const mapFallback = document.getElementById('mapFallback');
+      const fallbackAddress = document.getElementById('fallbackAddress');
+      const fallbackQRImage = document.getElementById('fallbackQRImage');
 
       title.textContent = `${product.name_en || product.name_th || 'Product'} - Location`;
 
-      // Check if we're in Yodeck offline environment (no internet)
-      const isOffline = !navigator.onLine || window.location.protocol === 'file:';
+      // Google Maps iframe is frequently blocked by X-Frame-Options
+      // Always use QR code fallback for better reliability
+      // This is the best approach for kiosk/signage environments
+      console.log('Showing map fallback (QR code only) - iframe blocked by Google');
+      showMapFallback();
 
-      if (isOffline || !product.map_embed_url) {
-        // Offline mode: Show static map placeholder
+      function showMapFallback() {
         iframe.style.display = 'none';
-        const mapContainer = document.getElementById('mapContainer');
+        mapFallback.style.display = 'block';
 
-        // Create offline map placeholder if not exists
-        let offlineMap = mapContainer.querySelector('.offline-map');
-        if (!offlineMap) {
-          offlineMap = document.createElement('div');
-          offlineMap.className = 'offline-map';
-          offlineMap.style.cssText = `
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100%;
-            background: #f8f9fa;
-            border: 2px dashed #dee2e6;
-            border-radius: 8px;
-            color: #6c757d;
-            text-align: center;
-            padding: 20px;
-          `;
-          offlineMap.innerHTML = `
-            <div style="font-size: 3rem; margin-bottom: 16px;">📍</div>
-            <div style="font-size: 1rem; font-weight: 600; margin-bottom: 8px;">Location Map</div>
-            <div style="font-size: 0.875rem; margin-bottom: 16px;">Scan QR code below to open in Maps app</div>
-            <div style="font-size: 0.75rem; color: #868e96;">Interactive map requires internet connection</div>
-          `;
-          mapContainer.appendChild(offlineMap);
+        // Set up fallback content
+        if (product.address) {
+          fallbackAddress.textContent = product.address_th || product.address_en || product.address || '';
         }
-        offlineMap.style.display = 'flex';
-      } else {
-        // Online mode: Show embedded map
-        iframe.style.display = 'block';
-        iframe.src = product.map_embed_url;
-        const offlineMap = document.getElementById('mapContainer').querySelector('.offline-map');
-        if (offlineMap) offlineMap.style.display = 'none';
+
+        // Set up QR code for map URL
+        if (product.map_url) {
+          const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=${encodeURIComponent(product.map_url)}`;
+          fallbackQRImage.src = qrUrl;
+        }
       }
 
       if (product.address) {
@@ -3897,6 +3951,142 @@
         }
       }
     }
+
+    // ==================== Mini Video Player (PIP) ====================
+    const miniPlayer = document.createElement('div');
+    miniPlayer.id = 'miniVideoPlayer';
+    miniPlayer.innerHTML = `
+      <div class="mini-controls">
+        <button class="mini-btn expand-btn" onclick="expandMiniVideo()" title="Return to Video">⛶</button>
+        <button class="mini-btn close-btn" onclick="closeMiniVideo()" title="Close">×</button>
+      </div>
+      <video id="miniVideo" playsinline></video>
+    `;
+    document.body.appendChild(miniPlayer);
+
+    // Draggable functionality
+    let isDragging = false;
+    let currentX, currentY, initialX, initialY;
+    let xOffset = 0, yOffset = 0;
+
+    miniPlayer.addEventListener('touchstart', dragStart);
+    miniPlayer.addEventListener('touchend', dragEnd);
+    miniPlayer.addEventListener('touchmove', drag);
+
+    miniPlayer.addEventListener('mousedown', dragStart);
+    miniPlayer.addEventListener('mouseup', dragEnd);
+    miniPlayer.addEventListener('mousemove', drag);
+
+    function dragStart(e) {
+      const target = e.target;
+      // Don't drag if clicking buttons
+      if (target.classList.contains('mini-btn')) return;
+
+      if (e.type === "touchstart") {
+        initialX = e.touches[0].clientX - xOffset;
+        initialY = e.touches[0].clientY - yOffset;
+      } else {
+        initialX = e.clientX - xOffset;
+        initialY = e.clientY - yOffset;
+      }
+
+      isDragging = true;
+    }
+
+    function dragEnd(e) {
+      initialX = currentX;
+      initialY = currentY;
+      isDragging = false;
+    }
+
+    function drag(e) {
+      if (!isDragging) return;
+
+      e.preventDefault();
+
+      if (e.type === "touchmove") {
+        currentX = e.touches[0].clientX - initialX;
+        currentY = e.touches[0].clientY - initialY;
+      } else {
+        currentX = e.clientX - initialX;
+        currentY = e.clientY - initialY;
+      }
+
+      xOffset = currentX;
+      yOffset = currentY;
+
+      setTranslate(currentX, currentY, miniPlayer);
+    }
+
+    function setTranslate(xPos, yPos, el) {
+      el.style.transform = `translate(${xPos}px, ${yPos}px)`;
+    }
+
+    function closeMiniVideo() {
+      const miniVideo = document.getElementById('miniVideo');
+      if (miniVideo) {
+        miniVideo.pause();
+        miniVideo.src = '';
+      }
+      miniPlayer.classList.remove('show');
+      // Clear localStorage
+      localStorage.removeItem('pipVideoData');
+      resetAutoReturn();
+    }
+
+    function expandMiniVideo() {
+      // Return to index.html and continue from current time
+      const miniVideo = document.getElementById('miniVideo');
+      if (miniVideo) {
+        const currentTime = miniVideo.currentTime;
+        const videoSrc = miniVideo.src;
+
+        // Store video state to resume on index.html
+        localStorage.setItem('resumeVideoData', JSON.stringify({
+          src: videoSrc,
+          time: currentTime,
+          timestamp: Date.now()
+        }));
+      }
+
+      window.location.href = 'index.html';
+    }
+
+    // Check for PIP video data on page load
+    window.addEventListener('DOMContentLoaded', () => {
+      console.log('🔍 Checking for PIP video data...');
+      const pipData = localStorage.getItem('pipVideoData');
+      console.log('📦 PIP data from localStorage:', pipData);
+
+      if (pipData) {
+        try {
+          const data = JSON.parse(pipData);
+          console.log('📹 Parsed PIP data:', data);
+
+          // Only show if data is less than 5 minutes old
+          const age = Date.now() - data.timestamp;
+          console.log(`⏰ PIP data age: ${age}ms (${Math.round(age/1000)}s)`);
+
+          if (age < 300000) {
+            const miniVideo = document.getElementById('miniVideo');
+            console.log('🎬 Setting up mini video player');
+            miniVideo.src = data.src;
+            miniVideo.currentTime = data.time;
+            miniVideo.play().catch(e => console.log('⚠️ Autoplay prevented:', e));
+            miniPlayer.classList.add('show');
+            console.log('✅ Mini video player shown!');
+          } else {
+            console.log('⏰ PIP data too old, removing');
+            localStorage.removeItem('pipVideoData');
+          }
+        } catch (e) {
+          console.error('❌ Failed to load PIP video:', e);
+          localStorage.removeItem('pipVideoData');
+        }
+      } else {
+        console.log('ℹ️ No PIP data found in localStorage');
+      }
+    });
   </script>
 </body>
 </html>
