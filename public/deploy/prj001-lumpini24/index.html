@@ -114,8 +114,8 @@
            transform:translate(-50%,-50%) scale(1);transform-origin:center center;will-change:transform}
 
     /* พื้นที่เล่นสื่อ */
-    .stage{position:absolute;inset:0;background:#000}
-    video,img,iframe{position:absolute;inset:0;width:100%;height:100%;background:#000}
+    .stage{position:absolute;top:0;left:0;right:0;bottom:8.336vh;background:#000}
+    video,img,iframe{position:absolute;top:0;left:0;right:0;bottom:0;width:100%;height:100%;background:#000}
     video,img{object-fit:contain} /* เลือก cover ได้ถ้าต้องการครอบ */
     iframe{border:0}
 
@@ -372,19 +372,19 @@
       display: inline-flex;
       align-items: center;
       color: #e0e0e0;
-      font-size: 138px;
+      font-size: 19.17vh;
       font-weight: 700;
       cursor: pointer;
       animation: blink 1.2s ease-in-out infinite;
       pointer-events: auto;
       user-select: none;
       transition: all 0.3s ease;
-      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+      text-shadow: 0 0.28vh 1.11vh rgba(0, 0, 0, 0.5);
     }
 
     .nav-button:hover {
       transform: translateY(-50%) scale(1.1);
-      text-shadow: 0 4px 12px rgba(0, 0, 0, 0.7);
+      text-shadow: 0 0.56vh 1.67vh rgba(0, 0, 0, 0.7);
     }
 
     .nav-button:active {
@@ -392,11 +392,11 @@
     }
 
     #navBack {
-      left: 24px;
+      left: 3.33vh;
     }
 
     #navNext {
-      right: 24px;
+      right: 3.33vh;
     }
 
     /* Ticker styles */
@@ -405,7 +405,7 @@
       bottom: 0;
       left: 0;
       width: 100%;
-      height: 20.84vh;
+      height: 8.336vh;
       background: rgba(0, 0, 0, 0.85);
       overflow: hidden;
       z-index: 75;
@@ -416,7 +416,7 @@
 
     #tickerText {
       white-space: nowrap;
-      font-size: 10vh;
+      font-size: 4vh;
       font-weight: 700;
       color: #ffffff;
       letter-spacing: 0.252vh;
@@ -1880,6 +1880,88 @@
       initTicker();
     }
   })();
+
+  // ==================== Picture-in-Picture (PIP) Video Support ====================
+  // Save current video state before navigating away
+  function savePIPVideoState() {
+    console.log('💾 savePIPVideoState called');
+    const videoElement = document.querySelector('.stage video');
+    console.log('🎥 Video element:', videoElement);
+
+    if (!videoElement) {
+      console.log('❌ No video element found');
+      return;
+    }
+
+    console.log('📊 Video state:', {
+      src: videoElement.src,
+      paused: videoElement.paused,
+      currentTime: videoElement.currentTime
+    });
+
+    if (videoElement && videoElement.src && !videoElement.paused) {
+      const pipData = {
+        src: videoElement.src,
+        time: videoElement.currentTime,
+        timestamp: Date.now()
+      };
+      localStorage.setItem('pipVideoData', JSON.stringify(pipData));
+      console.log('✅ Saved PIP video state:', pipData);
+    } else {
+      console.log('⚠️ Video not saved - video is paused or has no src');
+    }
+  }
+
+  // Intercept navigation to save video state
+  const originalWindowLocation = window.location.href;
+
+  // Override location.href setter
+  let _href = window.location.href;
+  Object.defineProperty(window.location, 'href', {
+    get: function() { return _href; },
+    set: function(newHref) {
+      if (newHref.includes('category.html') || newHref.includes('menu.html') || newHref.includes('product.html')) {
+        savePIPVideoState();
+      }
+      _href = newHref;
+      window.location.replace(newHref);
+    }
+  });
+
+  // Also intercept clicks on links
+  document.addEventListener('click', function(e) {
+    const link = e.target.closest('a');
+    if (link && link.href) {
+      const href = link.href;
+      if (href.includes('category.html') || href.includes('menu.html') || href.includes('product.html')) {
+        savePIPVideoState();
+      }
+    }
+  }, true);
+
+  // Check for resume video data on page load
+  window.addEventListener('DOMContentLoaded', () => {
+    const resumeData = localStorage.getItem('resumeVideoData');
+    if (resumeData) {
+      try {
+        const data = JSON.parse(resumeData);
+        // Only resume if data is less than 5 minutes old
+        if (Date.now() - data.timestamp < 300000) {
+          const videoElement = document.querySelector('.stage video');
+          if (videoElement) {
+            videoElement.src = data.src;
+            videoElement.currentTime = data.time;
+            videoElement.play().catch(e => console.log('Autoplay prevented:', e));
+            console.log('▶️ Resumed video from PIP');
+          }
+        }
+        localStorage.removeItem('resumeVideoData');
+      } catch (e) {
+        console.error('Failed to resume video:', e);
+        localStorage.removeItem('resumeVideoData');
+      }
+    }
+  });
   </script>
 </body>
 </html>

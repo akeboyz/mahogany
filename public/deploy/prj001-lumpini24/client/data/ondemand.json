@@ -17,7 +17,7 @@
       "category_th": "บริการโฆษณา",
       "category_en": "Advertising Services",
       "contact": {
-        "phone": "020000000",
+        "phone": "0897726535",
         "line": "@aquamx"
       },
       "location_th": "ทุกคอนโดที่มีหน้าจอของ aquamax",
@@ -58,7 +58,7 @@
       "category_th": "นายหน้าอสังหาริมทรัพย์",
       "category_en": "Property Agent",
       "contact": {
-        "phone": "021234567",
+        "phone": "0826169949",
         "line": "@aquamx"
       },
       "location_th": "สำนักงานใหญ่ ถนนสุขุมวิท",
@@ -154,6 +154,79 @@
           "icon": "📋",
           "priority": "primary",
           "features": ["service_details", "phone_input", "message_input", "otp_request", "otp_verify"]
+        },
+        {
+          "id": "contact_us",
+          "text_th": "ติดต่อเรา",
+          "text_en": "Contact Us",
+          "type": "modal",
+          "action": "contact_info",
+          "icon": "📞",
+          "priority": "secondary",
+          "features": ["social_media", "qr_code", "phone", "line", "website"]
+        }
+      ]
+    },
+    {
+      "id": "od004",
+      "name_th": "de icon salon",
+      "name_en": "de icon salon",
+      "logo": "./client/images/businesses/od004_logo.png",
+      "images": [
+        "./client/images/businesses/od004_interior.jpg"
+      ],
+      "videos": [
+        "medias/od004-01.MP4"
+      ],
+      "description_th": "บริการออกแบบทรงผม",
+      "description_en": "Salon Specialist",
+      "type": "service",
+      "category_th": "ผู้เชี่ยวชาญทรงผม",
+      "category_en": "Hair design specialist",
+      "contact": {
+        "phone": "0918232424",
+        "line": "deiconsalon"
+      },
+      "location_th": "สุขุมวิท 49",
+      "location_en": "Sukhumvit 49",
+      "address_th": "สำนักงานใหญ่: ถนนสุขุมวิท 49 เขตวัฒนา กรุงเทพฯ",
+      "address_en": "Head Office: Sukhumvit 49 Road, Wattana, Bangkok",
+      "status": "active",
+      "service_type": ["ads_only", "walk_in", "reservation"],
+      "image": "medias/od004-01.MP4",
+      "map_url": "https://maps.app.goo.gl/91xxKMjshohrJ9w47",
+      "map_embed_url": "https://maps.app.goo.gl/91xxKMjshohrJ9w47",
+      "promotions": [
+        {
+          "title_th": "ค่าคอมมิชชัน 0% เดือนแรก",
+          "title_en": "0% Commission for First Month",
+          "description_th": "เมื่อฝากขาย/เช่า กับ aquamax ภายในเดือนนี้",
+          "description_en": "Valid when listing with aquamax this month",
+          "start_date": "2025-08-01",
+          "end_date": "2025-08-31",
+          "image": "images/promo-aquamxagent.jpg"
+        }
+      ],
+      "ctas": [
+        {
+          "id": "send_request",
+          "text_th": "ส่งคำขอ",
+          "text_en": "Send Request",
+          "type": "modal",
+          "action": "service_request",
+          "icon": "📋",
+          "priority": "primary",
+          "features": ["service_details", "phone_input", "message_input", "otp_request", "otp_verify"]
+        },
+        {
+          "id": "view_map",
+          "text_th": "ดูแผนที่",
+          "text_en": "View Map",
+          "type": "modal",
+          "action": "show_map",
+          "icon": "🗺️",
+          "priority": "secondary",
+          "features": ["google_maps", "directions", "address"]
         },
         {
           "id": "contact_us",
