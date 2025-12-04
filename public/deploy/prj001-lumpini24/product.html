@@ -280,22 +280,27 @@
       transform: translateY(-1px);
     }
 
-    /* Back button styling - now inline with other header buttons */
+    /* Back button styling - positioned at top left like menu.html */
     .back-btn {
-      position: relative;
-      padding: 3px 7px;
-      border: 1px solid rgba(255, 255, 255, 0.3);
-      border-radius: 7px;
-      background: rgba(255, 255, 255, 0.2);
-      backdrop-filter: blur(4px);
+      position: absolute;
+      top: 0.52vh;
+      left: 0.52vh;
+      z-index: 80;
+      margin: 0;
+      padding: 0.39vh 0.78vh;
+      border: 0.075vh solid rgba(255, 255, 255, 0.1);
+      border-radius: 1.02vh;
+      background: rgba(0, 0, 0, 0.15);
+      backdrop-filter: blur(0.63vh);
+      box-shadow: none;
       color: #fff;
-      font-size: 0.5rem;
       font-weight: 600;
-      height: 20px;
-      min-width: 35px;
+      font-size: 2.19vh;
+      letter-spacing: 0.024vh;
+      text-shadow: 0 0.15vh 0.63vh rgba(0, 0, 0, 0.8);
       display: flex;
       align-items: center;
-      justify-content: center;
+      gap: 0.39vh;
       cursor: pointer;
       user-select: none;
       transition: all 0.3s ease;
@@ -303,9 +308,9 @@
     }
 
     .back-btn:hover {
-      background: rgba(255, 255, 255, 0.3);
-      border-color: rgba(255, 255, 255, 0.5);
-      transform: translateY(-1px);
+      background: rgba(0, 0, 0, 0.25);
+      border-color: rgba(255, 255, 255, 0.2);
+      transform: translateY(-0.1vh);
     }
 
     /* ================== Content Section ================== */
@@ -1671,9 +1676,10 @@
         <img id="productLogo" class="product-logo" style="display:none;" alt="" />
         <div class="product-title" id="productTitle">Product Details</div>
       </div>
+      <!-- Back button positioned at top left -->
+      <button class="back-btn blink" id="backBtn">Back to&nbsp;<span id="backTarget">menu</span></button>
       <div class="header-overlays">
         <div class="header-status-badge" id="headerStatusBadge" style="display:none;"></div>
-        <button class="header-overlay-btn back-btn blink" id="backBtn">Back to&nbsp;<span id="backTarget">menu</span></button>
         <button class="header-overlay-btn return-video-btn blink" id="returnVideoBtn" style="display:none;">Return to video</button>
         <button class="header-overlay-btn menu-btn blink" id="menuBtn">☰ Menu</button>
       </div>
@@ -1723,15 +1729,15 @@
       </div>
       <div class="modal-body">
         <div id="mapContainer" style="flex: 1; position: relative;">
-          <iframe id="mapIframe" width="100%" height="100%" frameborder="0" allowfullscreen style="display: none; pointer-events: none;"></iframe>
-          <!-- Yodeck fallback: QR code and static info -->
+          <iframe id="mapIframe" width="100%" height="100%" frameborder="0" allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade" style="display: none;"></iframe>
+          <!-- Fallback: QR code and static info when map fails to load -->
           <div id="mapFallback" style="display: none; text-align: center; padding: 40px;">
-            <div style="font-size: 1.125rem; font-weight: bold; margin-bottom: 20px; color: #333;">Location Information</div>
+            <div style="font-size: 1.125rem; font-weight: bold; margin-bottom: 20px; color: #333;">Location Map</div>
             <div id="fallbackQR" style="margin-bottom: 20px;">
               <img id="fallbackQRImage" style="width: 120px; height: 120px; border: 2px solid #ddd; border-radius: 12px;" alt="QR Code">
               <div style="font-size: 0.875rem; color: #666; margin-top: 8px;">Scan to open in Maps</div>
             </div>
-            <div id="fallbackAddress" style="font-size: 1rem; color: #555; line-height: 1.4;"></div>
+            <div id="fallbackAddress" style="font-size: 1rem; color: #555; line-height: 1.4; margin-top: 20px;"></div>
           </div>
         </div>
         <div style="padding: 16px 20px; background: #f8f9fa; border-top: 1px solid #eee; flex-shrink: 0;">
@@ -2772,50 +2778,32 @@
       const contact = document.getElementById('mapContact');
       const qrSection = document.getElementById('qrCodeSection');
       const qrImage = document.getElementById('qrCodeImage');
+      const mapFallback = document.getElementById('mapFallback');
+      const fallbackAddress = document.getElementById('fallbackAddress');
+      const fallbackQRImage = document.getElementById('fallbackQRImage');
 
       title.textContent = `${product.name_en || product.name_th || 'Product'} - Location`;
 
-      // Check if we're in Yodeck offline environment (no internet)
-      const isOffline = !navigator.onLine || window.location.protocol === 'file:';
+      // Google Maps iframe is frequently blocked by X-Frame-Options
+      // Always use QR code fallback for better reliability
+      // This is the best approach for kiosk/signage environments
+      console.log('Showing map fallback (QR code only) - iframe blocked by Google');
+      showMapFallback();
 
-      if (isOffline || !product.map_embed_url) {
-        // Offline mode: Show static map placeholder
+      function showMapFallback() {
         iframe.style.display = 'none';
-        const mapContainer = document.getElementById('mapContainer');
+        mapFallback.style.display = 'block';
 
-        // Create offline map placeholder if not exists
-        let offlineMap = mapContainer.querySelector('.offline-map');
-        if (!offlineMap) {
-          offlineMap = document.createElement('div');
-          offlineMap.className = 'offline-map';
-          offlineMap.style.cssText = `
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100%;
-            background: #f8f9fa;
-            border: 2px dashed #dee2e6;
-            border-radius: 8px;
-            color: #6c757d;
-            text-align: center;
-            padding: 20px;
-          `;
-          offlineMap.innerHTML = `
-            <div style="font-size: 3rem; margin-bottom: 16px;">📍</div>
-            <div style="font-size: 1rem; font-weight: 600; margin-bottom: 8px;">Location Map</div>
-            <div style="font-size: 0.875rem; margin-bottom: 16px;">Scan QR code below to open in Maps app</div>
-            <div style="font-size: 0.75rem; color: #868e96;">Interactive map requires internet connection</div>
-          `;
-          mapContainer.appendChild(offlineMap);
+        // Set up fallback content
+        if (product.address) {
+          fallbackAddress.textContent = product.address_th || product.address_en || product.address || '';
         }
-        offlineMap.style.display = 'flex';
-      } else {
-        // Online mode: Show embedded map
-        iframe.style.display = 'block';
-        iframe.src = product.map_embed_url;
-        const offlineMap = document.getElementById('mapContainer').querySelector('.offline-map');
-        if (offlineMap) offlineMap.style.display = 'none';
+
+        // Set up QR code for map URL
+        if (product.map_url) {
+          const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=${encodeURIComponent(product.map_url)}`;
+          fallbackQRImage.src = qrUrl;
+        }
       }
 
       if (product.address) {

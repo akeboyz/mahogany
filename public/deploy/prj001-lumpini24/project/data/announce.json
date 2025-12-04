@@ -128,6 +128,42 @@
     "created_date": "2025-08-30",
     "display_duration": 4000,
     "display_location": "both"
+  },
+  {
+    "announcement_id": "ann011",
+    "title_th": "เก้าอี้นวดไฟฟ้า ให้บริการแล้วชั้น 41",
+    "title_en": "Electric Massage Chair available on 41st floor",
+    "date": "05/9/25",
+    "image": "./project/images/announcements/announce011.jpg",
+    "priority": "low",
+    "status": "active",
+    "created_date": "2025-08-30",
+    "display_duration": 4000,
+    "display_location": "both"
+  },
+  {
+    "announcement_id": "ann012",
+    "title_th": "ขอเชิญประชุมใหญ่สามัญประจำปี 2568",
+    "title_en": "Annual General Meeting for 2025",
+    "date": "05/9/25",
+    "image": "./project/images/announcements/announce012.jpg",
+    "priority": "low",
+    "status": "active",
+    "created_date": "2025-08-30",
+    "display_duration": 4000,
+    "display_location": "both"
+  },
+  {
+    "announcement_id": "ann013",
+    "title_th": "วันพ่อแห่งชาติ สำนักงานนิติบุคคลหยุดทำการ",
+    "title_en": "National Father Day - Juristic Office is Closed",
+    "date": "05/9/25",
+    "image": "./project/images/announcements/announce013.jpg",
+    "priority": "low",
+    "status": "active",
+    "created_date": "2025-08-30",
+    "display_duration": 4000,
+    "display_location": "both"
   }
   ]
 }
