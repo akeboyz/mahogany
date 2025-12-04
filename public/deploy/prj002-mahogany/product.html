@@ -280,22 +280,27 @@
       transform: translateY(-1px);
     }
 
-    /* Back button styling - now inline with other header buttons */
+    /* Back button styling - positioned at top left like menu.html */
     .back-btn {
-      position: relative;
-      padding: 3px 7px;
-      border: 1px solid rgba(255, 255, 255, 0.3);
-      border-radius: 7px;
-      background: rgba(255, 255, 255, 0.2);
-      backdrop-filter: blur(4px);
+      position: absolute;
+      top: 0.52vh;
+      left: 0.52vh;
+      z-index: 80;
+      margin: 0;
+      padding: 0.39vh 0.78vh;
+      border: 0.075vh solid rgba(255, 255, 255, 0.1);
+      border-radius: 1.02vh;
+      background: rgba(0, 0, 0, 0.15);
+      backdrop-filter: blur(0.63vh);
+      box-shadow: none;
       color: #fff;
-      font-size: 0.5rem;
       font-weight: 600;
-      height: 20px;
-      min-width: 35px;
+      font-size: 2.19vh;
+      letter-spacing: 0.024vh;
+      text-shadow: 0 0.15vh 0.63vh rgba(0, 0, 0, 0.8);
       display: flex;
       align-items: center;
-      justify-content: center;
+      gap: 0.39vh;
       cursor: pointer;
       user-select: none;
       transition: all 0.3s ease;
@@ -303,9 +308,9 @@
     }
 
     .back-btn:hover {
-      background: rgba(255, 255, 255, 0.3);
-      border-color: rgba(255, 255, 255, 0.5);
-      transform: translateY(-1px);
+      background: rgba(0, 0, 0, 0.25);
+      border-color: rgba(255, 255, 255, 0.2);
+      transform: translateY(-0.1vh);
     }
 
     /* ================== Content Section ================== */
@@ -1671,9 +1676,10 @@
         <img id="productLogo" class="product-logo" style="display:none;" alt="" />
         <div class="product-title" id="productTitle">Product Details</div>
       </div>
+      <!-- Back button positioned at top left -->
+      <button class="back-btn blink" id="backBtn">Back to&nbsp;<span id="backTarget">menu</span></button>
       <div class="header-overlays">
         <div class="header-status-badge" id="headerStatusBadge" style="display:none;"></div>
-        <button class="header-overlay-btn back-btn blink" id="backBtn">Back to&nbsp;<span id="backTarget">menu</span></button>
         <button class="header-overlay-btn return-video-btn blink" id="returnVideoBtn" style="display:none;">Return to video</button>
         <button class="header-overlay-btn menu-btn blink" id="menuBtn">☰ Menu</button>
       </div>
