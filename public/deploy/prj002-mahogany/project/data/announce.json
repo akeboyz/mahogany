@@ -31,7 +31,7 @@
       "status": "active",
       "created_date": "2025-08-22",
       "display_duration": 5000,
-      "display_location": "both"
+      "display_location": "category"
     },
     {
       "announcement_id": "ann003",
@@ -67,7 +67,20 @@
       "status": "active",
       "created_date": "2025-08-30",
       "display_duration": 4000,
+      "display_location": "category"
+    },
+    {
+      "announcement_id": "ann006",
+      "title_th": "กำหนดดับไฟอาคารเพื่อบำรุงรักษาระบบไฟฟ้าประจำปี",
+      "title_en": "Scheduled Power Outage throughout the entire building for annual maintenance",
+      "date": "05/9/25",
+      "image": "./project/images/announcements/announce006.jpg",
+      "priority": "low",
+      "status": "active",
+      "created_date": "2025-08-30",
+      "display_duration": 4000,
       "display_location": "both"
     }
+
   ]
 }
