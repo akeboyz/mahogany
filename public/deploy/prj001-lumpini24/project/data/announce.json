@@ -31,7 +31,7 @@
     "status": "active",
     "created_date": "2025-08-22",
     "display_duration": 6000,
-    "display_location": "both"
+    "display_location": "category"
   },
   {
     "announcement_id": "ann003",
@@ -43,7 +43,7 @@
     "status": "active",
     "created_date": "2025-08-30",
     "display_duration": 4000,
-    "display_location": "both"
+    "display_location": "category"
   },
   {
     "announcement_id": "ann004",
@@ -103,7 +103,7 @@
     "status": "active",
     "created_date": "2025-08-30",
     "display_duration": 4000,
-    "display_location": "both"
+    "display_location": "category"
   },
   {
     "announcement_id": "ann009",
@@ -115,7 +115,7 @@
     "status": "active",
     "created_date": "2025-08-30",
     "display_duration": 4000,
-    "display_location": "both"
+    "display_location": "category"
   },
   {
     "announcement_id": "ann010",
@@ -127,7 +127,7 @@
     "status": "active",
     "created_date": "2025-08-30",
     "display_duration": 4000,
-    "display_location": "both"
+    "display_location": "category"
   },
   {
     "announcement_id": "ann011",
@@ -151,7 +151,7 @@
     "status": "active",
     "created_date": "2025-08-30",
     "display_duration": 4000,
-    "display_location": "both"
+    "display_location": "category"
   },
   {
     "announcement_id": "ann013",
@@ -159,6 +159,54 @@
     "title_en": "National Father Day - Juristic Office is Closed",
     "date": "05/9/25",
     "image": "./project/images/announcements/announce013.jpg",
+    "priority": "low",
+    "status": "active",
+    "created_date": "2025-08-30",
+    "display_duration": 4000,
+    "display_location": "category"
+  },
+  {
+    "announcement_id": "ann014",
+    "title_th": "ลงทะเบียนยืนยันการใช้สิทธิจอดรถ",
+    "title_en": "Register to confirm the parking rights",
+    "date": "05/9/25",
+    "image": "./project/images/announcements/announce014.jpg",
+    "priority": "low",
+    "status": "active",
+    "created_date": "2025-08-30",
+    "display_duration": 4000,
+    "display_location": "both"
+  },
+  {
+    "announcement_id": "ann015",
+    "title_th": "เข้าเก็บงานซ่อมแซมพื้นด้านหน้าอาคารฝั่งขาออก",
+    "title_en": "Repair work on the exterior floor area at building drop-off area",
+    "date": "05/9/25",
+    "image": "./project/images/announcements/announce015.jpg",
+    "priority": "low",
+    "status": "active",
+    "created_date": "2025-08-30",
+    "display_duration": 4000,
+    "display_location": "both"
+  },
+  {
+    "announcement_id": "ann016",
+    "title_th": "ฉีดพ่นยากำจัดปลวกและแมลงบริเวณพื้นที่ส่วนกลาง",
+    "title_en": "Treatment for termites, ants and insects at all common areas",
+    "date": "05/9/25",
+    "image": "./project/images/announcements/announce016.jpg",
+    "priority": "low",
+    "status": "active",
+    "created_date": "2025-08-30",
+    "display_duration": 4000,
+    "display_location": "both"
+  },
+  {
+    "announcement_id": "ann017",
+    "title_th": "รายงานการลงคะแนนเสียงการประชุมใหญ่สามัญปี 2568",
+    "title_en": "Resolution of General Meeting of the Co-owners in 2025",
+    "date": "05/9/25",
+    "image": "./project/images/announcements/announce017.jpg",
     "priority": "low",
     "status": "active",
     "created_date": "2025-08-30",

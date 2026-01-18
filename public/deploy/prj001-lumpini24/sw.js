@@ -1,8 +1,8 @@
 // Service Worker for Media Caching
-// Version 4.0 - Smart cache checking before download
+// Version 8.0 - Removed debug red box
 
-const CACHE_NAME = 'signage-media-cache-v4';
-const DATA_CACHE_NAME = 'signage-data-cache-v4';
+const CACHE_NAME = 'signage-media-cache-v8';
+const DATA_CACHE_NAME = 'signage-data-cache-v8';
 
 // Enable aggressive caching for signage devices
 const AGGRESSIVE_CACHE = true; // Set to true for signage, false for web

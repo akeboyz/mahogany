@@ -63,6 +63,18 @@
       "approval_status": "approved"
     },
     {
+      "media_id": "od004-01",
+      "id_ref": "od004",
+      "media_type": "video",
+      "file_name": "./client/medias/od004-01.MP4",
+      "file_size_mb": 5.0,
+      "length_sec": 30,
+      "start_date": "2025-08-14",
+      "end_date": null,
+      "media_title": "De Icon Salon",
+      "approval_status": "approved"
+    },
+    {
       "media_id": "dine004-01",
       "id_ref": "dine004",
       "media_type": "video",
