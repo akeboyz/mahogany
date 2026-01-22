@@ -80,7 +80,18 @@
       "created_date": "2025-08-30",
       "display_duration": 4000,
       "display_location": "category"
+    },
+    {
+      "announcement_id": "ann007",
+      "title_th": "เปลี่ยนวาล์วควบคุมแรงดันน้ำ",
+      "title_en": "Carry out the replacement of PRV (Pressure Relief Valve)",
+      "date": "05/9/25",
+      "image": "./project/images/announcements/announce007.jpg",
+      "priority": "low",
+      "status": "active",
+      "created_date": "2025-08-30",
+      "display_duration": 4000,
+      "display_location": "both"
     }
-
   ]
 }
