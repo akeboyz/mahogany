@@ -1,0 +1,3 @@
+[submodule "vertical-signage-project"]
+	path = vertical-signage-project
+	url = https://github.com/akeboyz/vertical-signage.git
