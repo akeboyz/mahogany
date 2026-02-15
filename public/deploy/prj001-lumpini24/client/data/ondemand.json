@@ -166,8 +166,7 @@
           "features": ["social_media", "qr_code", "phone", "line", "website"]
         }
       ]
-    },
-    {
+    },{
       "id": "od004",
       "name_th": "de icon salon",
       "name_en": "de icon salon",
@@ -239,6 +238,59 @@
           "features": ["social_media", "qr_code", "phone", "line", "website"]
         }
       ]
-    }
+    },
+    {
+      "id": "od005",
+      "name_th": "A.T.S. Engineering System (Thailand)",
+      "name_en": "A.T.S. Engineering System (Thailand) ",
+      "logo": "./client/images/businesses/od005_logo.png",
+      "images": [
+        "./client/images/businesses/od005_interior.jpg"
+      ],
+      "videos": [
+        "medias/od005-01.MP4"
+      ],
+      "description_th": "บริษัทรับเหมาตกแต่งภายในและซ่อมแซมอาคาร ให้บริการงานรีโนเวท ปรับปรุง และซ่อมบำรุง คอนโด บ้าน และอาคารสำนักงาน ด้วยประสบการณ์มากกว่า 10 ปี ทีมช่างเฉพาะทาง มาตรฐานงานมืออาชีพ",
+      "description_en": "Interior repair and renovation contractor for residential and commercial properties.",
+      "type": "service",
+      "category_th": "ซ่อมแซม รีโนเวท คอนโด",
+      "category_en": "Condo Repair and Renovation",
+      "contact": {
+        "phone": "0957892698",
+        "line": "0957892698"
+      },
+      "location_th": "บริการทั่วกรุงเทพและปริมณฑล",
+      "location_en": "Service in Bangkok and surrounding areas",
+      "address_th": "กรุงเทพฯ",
+      "address_en": "Bangkok",
+      "status": "active",
+      "service_type": ["ads_only", "reservation"],
+      "image": "medias/od005-01.MP4",
+      "map_url": "-",
+      "map_embed_url": "-",
+      "promotions": [],
+      "ctas": [
+        {
+          "id": "send_request",
+          "text_th": "ส่งคำขอ",
+          "text_en": "Send Request",
+          "type": "modal",
+          "action": "service_request",
+          "icon": "📋",
+          "priority": "primary",
+          "features": ["service_details", "phone_input", "message_input", "otp_request", "otp_verify"]
+        },
+        {
+          "id": "contact_us",
+          "text_th": "ติดต่อเรา",
+          "text_en": "Contact Us",
+          "type": "modal",
+          "action": "contact_info",
+          "icon": "📞",
+          "priority": "secondary",
+          "features": ["social_media", "qr_code", "phone", "line", "website"]
+        }
+      ]
+    }    
   ]
 }
